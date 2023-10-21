@@ -1,7 +1,12 @@
-target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+
+### Minecraft OSE
+game/target
+launcher/target
+modification/target
+server/target
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
