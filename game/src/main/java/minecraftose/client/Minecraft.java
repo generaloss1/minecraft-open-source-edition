@@ -9,6 +9,8 @@ import jpize.math.Mathc;
 import jpize.math.Maths;
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.physic.utils.Velocity3f;
+import jpize.util.io.JpizeOutputStream;
+import jpize.util.time.TickGenerator;
 import minecraftose.Main;
 import minecraftose.client.audio.MusicGroup;
 import minecraftose.client.audio.MusicPlayer;
@@ -28,12 +30,22 @@ import minecraftose.main.Version;
 import minecraftose.main.block.BlockData;
 import minecraftose.main.modification.loader.ModEntryPointType;
 import minecraftose.main.modification.loader.ModLoader;
+import minecraftose.main.nbt.io.NbtIO;
+import minecraftose.main.nbt.tag.list.NbtCompound;
+import minecraftose.main.nbt.tag.type.NbtByte;
+import minecraftose.main.nbt.tag.type.NbtInt;
+import minecraftose.main.nbt.tag.list.NbtList;
+import minecraftose.main.nbt.tag.NbtTag;
+import minecraftose.main.nbt.tag.type.NbtString;
 import minecraftose.main.net.PlayerProfile;
 import minecraftose.main.registry.Registry;
 import minecraftose.main.time.GameTime;
 import minecraftose.server.IntegratedServer;
 import jpize.util.Utils;
 import jpize.util.time.Sync;
+
+import java.util.Comparator;
+import java.util.Map;
 
 public class Minecraft extends JpizeApplication{
 
@@ -56,6 +68,37 @@ public class Minecraft extends JpizeApplication{
 
     @Override
     public void init(){
+        // Check NBT
+        System.out.println("NBT TEST:");
+
+        Resource res = new Resource("stream", true);
+        res.create();
+
+        final NbtCompound pizza = new NbtCompound();
+        pizza.putInt("cost", 234);
+        pizza.putFloat("radius", 25.5F);
+        pizza.putString("name", "mozarela");
+
+        final NbtList<NbtString> listIngredients = new NbtList<>();
+        listIngredients.addString("cheese");
+        listIngredients.addString("flavor");
+        listIngredients.addString("salt");
+        listIngredients.addString("tomato");
+        listIngredients.addString("a mne bavarskie kolbaski doroje rodini");
+
+        pizza.put("ingredients", listIngredients);
+
+        // write
+        NbtIO.tryWriteToStream(res.getJpizeOut(), pizza);
+        // load
+        final NbtCompound loadedPizza = (NbtCompound) NbtIO.tryReadStream(res.getJpizeIn());
+
+        // iterate
+        for(Map.Entry<String, NbtTag<?>> entry: loadedPizza)
+            System.out.println(entry);
+
+        System.exit(0);
+
         // Create Instances //
         Thread.currentThread().setName("Render-Thread");
 
@@ -83,7 +126,6 @@ public class Minecraft extends JpizeApplication{
         new Resource(SharedConstants.GAME_DIR_PATH, true).mkDirs();
         new Resource(SharedConstants.MODS_PATH, true).mkDirs();
 
-        Jpize.startFixedUpdate(GameTime.TICKS_PER_SECOND);
         options.load();
 
         // Mod Loader //
@@ -111,6 +153,9 @@ public class Minecraft extends JpizeApplication{
 
         // Music
         musicPlayer.setGroup(MusicGroup.GAME);
+
+        final TickGenerator ticks = new TickGenerator(GameTime.TICKS_PER_SECOND);
+        ticks.startAsync(clientGame::tick);
     }
     
     @Override
@@ -123,11 +168,6 @@ public class Minecraft extends JpizeApplication{
         clientRenderer.render();
         
         modLoader.invokeMethod(ModEntryPointType.CLIENT, "render");
-    }
-    
-    @Override
-    public void fixedUpdate(){
-        clientGame.tick();
     }
     
     @Override

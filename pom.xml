@@ -39,7 +39,7 @@
         <dependency>
             <groupId>com.github.GeneralPashon</groupId>
             <artifactId>jpize-engine</artifactId>
-            <version>v23.10.4</version>
+            <version>v23.10.6</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.json/json -->
         <dependency>

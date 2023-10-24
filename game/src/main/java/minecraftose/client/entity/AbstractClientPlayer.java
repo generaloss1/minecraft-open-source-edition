@@ -55,7 +55,7 @@ public class AbstractClientPlayer extends Player{
     
     
     public void updateInterpolation(){
-        final float lastTickTime = (System.currentTimeMillis() - lastTime) / 1000F / Jpize.getFixedUpdateDt();
+        final float lastTickTime = (System.currentTimeMillis() - lastTime) / 1000F / getLevel().getGame().getTps();
         lerpPosition.lerp(lastPosition, getPosition(), lastTickTime);
         lerpRotation.lerp(lastRotation, getRotation(), lastTickTime);
     }

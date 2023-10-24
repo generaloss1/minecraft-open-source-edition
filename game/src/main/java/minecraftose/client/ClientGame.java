@@ -3,6 +3,7 @@ package minecraftose.client;
 import jpize.Jpize;
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.net.tcp.TcpClient;
+import jpize.util.time.FpsCounter;
 import minecraftose.client.chat.Chat;
 import minecraftose.client.control.BlockRayCast;
 import minecraftose.client.control.camera.GameCamera;
@@ -29,6 +30,8 @@ public class ClientGame implements Tickable{
     private final LocalPlayer player;
     private final GameCamera camera;
 
+    private final FpsCounter tps;
+
 
     private ClientLevel level;
     
@@ -46,6 +49,8 @@ public class ClientGame implements Tickable{
 
         this.camera = new GameCamera(this, 0.1, 5000, session.getOptions().getFieldOfView());
         this.camera.setDistance(session.getOptions().getRenderDistance());
+
+        this.tps = new FpsCounter();
     }
     
     public Minecraft getSession(){
@@ -62,6 +67,8 @@ public class ClientGame implements Tickable{
 
     @Override
     public void tick(){
+        tps.count();
+
         if(level == null)
             return;
 
@@ -141,6 +148,10 @@ public class ClientGame implements Tickable{
 
     public final ClientConnectionHandler getConnectionHandler(){
         return connectionHandler;
+    }
+
+    public int getTps(){
+        return tps.get();
     }
 
 }
