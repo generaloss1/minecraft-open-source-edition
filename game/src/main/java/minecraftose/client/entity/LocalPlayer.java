@@ -8,19 +8,23 @@ import minecraftose.client.block.Block;
 import minecraftose.client.block.Blocks;
 import minecraftose.client.control.PlayerController;
 import minecraftose.main.audio.SoundGroup;
+import minecraftose.main.inventory.PlayerInventory;
+import minecraftose.main.item.ItemStack;
+import minecraftose.main.item.Items;
 import minecraftose.main.level.Level;
 
 public class LocalPlayer extends AbstractClientPlayer{
     
     private final PlayerController controller;
     private float jumpDownY, lastVelocityY, fallHeight;
-    
-    public Block holdBlock = Blocks.OAK_PLANKS_STAIRS;
+    private final PlayerInventory inventory;
     
     public LocalPlayer(Level levelOF, String name){
         super(levelOF, name);
 
         this.controller = new PlayerController(this);
+        this.inventory = new PlayerInventory();
+        this.inventory.setItemStack(0, new ItemStack(Items.AIR));
     }
 
     @Override
@@ -157,6 +161,10 @@ public class LocalPlayer extends AbstractClientPlayer{
 
     public PlayerController getController(){
         return controller;
+    }
+
+    public PlayerInventory getInventory(){
+        return inventory;
     }
     
 }

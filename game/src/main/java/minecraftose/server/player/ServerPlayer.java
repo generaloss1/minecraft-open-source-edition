@@ -7,6 +7,7 @@ import jpize.net.tcp.packet.IPacket;
 import minecraftose.main.audio.Sound;
 import minecraftose.main.entity.Entity;
 import minecraftose.main.entity.Player;
+import minecraftose.main.inventory.PlayerInventory;
 import minecraftose.main.level.Level;
 import minecraftose.main.net.packet.clientbound.CBPacketAbilities;
 import minecraftose.main.net.packet.clientbound.CBPacketChatMessage;
@@ -21,6 +22,7 @@ public class ServerPlayer extends Player{
     
     private final Server server;
     private final PlayerGameConnection connectionAdapter;
+    private final PlayerInventory inventory;
     
     private int renderDistance;
 
@@ -29,6 +31,7 @@ public class ServerPlayer extends Player{
         this.server = level.getServer();
         this.connectionAdapter = new PlayerGameConnection(this, connection);
         this.renderDistance = server.getConfiguration().getMaxRenderDistance(); //: 0
+        this.inventory = new PlayerInventory();
     }
     
     public Server getServer(){
@@ -108,6 +111,11 @@ public class ServerPlayer extends Player{
     
     public void setRenderDistance(int renderDistance){
         this.renderDistance = renderDistance;
+    }
+
+
+    public PlayerInventory getInventory(){
+        return inventory;
     }
     
 }

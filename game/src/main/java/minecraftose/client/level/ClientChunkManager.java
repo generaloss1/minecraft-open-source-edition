@@ -231,7 +231,7 @@ public class ClientChunkManager extends ChunkManager {
     
     
     public void unloadChunk(ClientChunk chunk){
-        Jpize.execSync(() -> chunk.getMeshStack().dispose() );
+        Jpize.execSync(() -> chunk.getMeshStack().dispose());
         allChunks.remove(chunk.getPosition());
     }
     

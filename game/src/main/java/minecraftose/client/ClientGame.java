@@ -3,6 +3,7 @@ package minecraftose.client;
 import jpize.Jpize;
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.net.tcp.TcpClient;
+import jpize.util.time.DeltaTimeCounter;
 import jpize.util.time.FpsCounter;
 import minecraftose.client.chat.Chat;
 import minecraftose.client.control.BlockRayCast;
@@ -30,7 +31,7 @@ public class ClientGame implements Tickable{
     private final LocalPlayer player;
     private final GameCamera camera;
 
-    private final FpsCounter tps;
+    private final DeltaTimeCounter tickDtCounter;
 
 
     private ClientLevel level;
@@ -41,7 +42,7 @@ public class ClientGame implements Tickable{
         this.connectionHandler = new ClientConnectionHandler(this);
         this.client = new TcpClient(connectionHandler);
         
-        this.blockRayCast = new BlockRayCast(session, 2000);
+        this.blockRayCast = new BlockRayCast(session, 10);
         this.chat = new Chat(this);
         this.time = new ClientGameTime(this);
 
@@ -50,7 +51,7 @@ public class ClientGame implements Tickable{
         this.camera = new GameCamera(this, 0.1, 5000, session.getOptions().getFieldOfView());
         this.camera.setDistance(session.getOptions().getRenderDistance());
 
-        this.tps = new FpsCounter();
+        this.tickDtCounter = new DeltaTimeCounter();
     }
     
     public Minecraft getSession(){
@@ -67,7 +68,7 @@ public class ClientGame implements Tickable{
 
     @Override
     public void tick(){
-        tps.count();
+        tickDtCounter.count();
 
         if(level == null)
             return;
@@ -95,25 +96,27 @@ public class ClientGame implements Tickable{
     }
     
     public void createClientLevel(String worldName){
-        if(level != null)
+        if(level != null){
             Jpize.execSync(() ->{
                 level.getConfiguration().setName(worldName);
                 level.getChunkManager().reset();
             });
-        else{
+        }else{
             level = new ClientLevel(this, worldName);
             blockRayCast.setLevel(level);
+            player.setLevel(level);
         }
     }
     
     public void disconnect(){
         client.disconnect();
         
-        if(level != null)
-            Jpize.execSync(()->{
+        if(level != null){
+            Jpize.execSync(() -> {
                 System.out.println(10000);
                 level.getChunkManager().dispose();
             });
+        }
     }
     
     
@@ -150,8 +153,8 @@ public class ClientGame implements Tickable{
         return connectionHandler;
     }
 
-    public int getTps(){
-        return tps.get();
+    public float getTickDt(){
+        return tickDtCounter.get();
     }
 
 }

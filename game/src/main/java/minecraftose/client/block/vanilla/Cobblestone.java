@@ -9,6 +9,7 @@ import minecraftose.client.resources.GameResources;
 import minecraftose.main.Dir;
 import minecraftose.main.audio.BlockSoundPack;
 import minecraftose.main.chunk.ChunkUtils;
+import minecraftose.main.item.Items;
 
 public class Cobblestone extends Block{
 
@@ -18,6 +19,8 @@ public class Cobblestone extends Block{
 
     @Override
     public void load(GameResources resources){
+        super.item = Items.COBBLESTONE;
+
         final BlockModel model = new BlockModel(ChunkMeshType.SOLID)
             .allFaces(resources.getBlockRegion("cobblestone"));
 

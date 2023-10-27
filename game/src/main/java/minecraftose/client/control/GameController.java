@@ -12,6 +12,7 @@ import jpize.physic.axisaligned.box.AABox;
 import jpize.physic.axisaligned.box.AABoxBody;
 import minecraftose.client.Minecraft;
 import minecraftose.client.block.Block;
+import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.Blocks;
 import minecraftose.client.block.shape.BlockCollide;
 import minecraftose.client.chat.Chat;
@@ -24,6 +25,9 @@ import minecraftose.client.renderer.infopanel.ChunkInfoRenderer;
 import minecraftose.client.renderer.infopanel.InfoRenderer;
 import minecraftose.main.block.BlockData;
 import minecraftose.main.entity.Entity;
+import minecraftose.main.item.BlockItem;
+import minecraftose.main.item.Item;
+import minecraftose.main.item.ItemStack;
 import minecraftose.main.net.packet.serverbound.SBPacketChunkRequest;
 import minecraftose.main.net.packet.serverbound.SBPacketPing;
 import minecraftose.main.net.packet.serverbound.SBPacketPlayerBlockSet;
@@ -154,10 +158,16 @@ public class GameController{
                     ));
                 }
             }else if(Jpize.mouse().isRightDown() || Key.J.isPressed()){
-                placeBlock();
+                final Item item = player.getInventory().getSelectedItemStack().getItem();
+                if(item instanceof BlockItem blockItem)
+                    placeBlock(blockItem.getBlock());
             }else if(Jpize.mouse().isMiddleDown()){
                 final Vec3i blockPos = blockRayCast.getSelectedBlockPosition();
-                player.holdBlock = level.getBlockProps(blockPos.x, blockPos.y, blockPos.z).getBlock();
+
+                final BlockProps blockProps = level.getBlockProps(blockPos.x, blockPos.y, blockPos.z);
+                final Item item = blockProps.getBlock().getItem();
+                final ItemStack stack = new ItemStack(item, item.maxStack());
+                player.getInventory().setSelectedItemStack(stack);
             }
         }
         
@@ -188,13 +198,12 @@ public class GameController{
             Jpize.exit();
     }
     
-    private void placeBlock(){
+    private void placeBlock(Block block){
         final BlockRayCast blockRayCast = session.getGame().getBlockRayCast();
         final ClientLevel level = session.getGame().getLevel();
         final Vec3i blockPos = blockRayCast.getImaginaryBlockPosition();
         final LocalPlayer player = session.getGame().getPlayer();
-        
-        final Block block = player.holdBlock;
+
         final int blockStates = block.getStates().size();
 
         byte blockState = 0;

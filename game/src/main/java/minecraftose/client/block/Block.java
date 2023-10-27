@@ -2,6 +2,8 @@ package minecraftose.client.block;
 
 import minecraftose.client.resources.GameResources;
 import minecraftose.main.block.BlockData;
+import minecraftose.main.item.Item;
+import minecraftose.main.item.Items;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,11 +14,13 @@ public abstract class Block{
     private final byte ID;
     private final short defaultState;
     protected Map<Byte, BlockProps> states;
+    protected Item item;
 
     public Block(int ID){
         this.ID = (byte) ID;
         this.defaultState = BlockData.getData(ID);
         this.states = new HashMap<>(1);
+        this.item = Items.AIR;
     }
 
     public final byte getID(){
@@ -29,6 +33,11 @@ public abstract class Block{
 
     public short getData(int state){
         return BlockData.getData(ID, state);
+    }
+
+
+    public Item getItem(){
+        return item;
     }
 
 

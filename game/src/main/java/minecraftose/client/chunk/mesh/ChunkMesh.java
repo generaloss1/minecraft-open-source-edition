@@ -27,24 +27,24 @@ public class ChunkMesh implements Disposable{
         this.verticesList = new ArrayList<>();
         this.verticesPackedList = new ArrayList<>();
 
-        Jpize.execSync(() -> {
-            this.vao = new GlVertexArray();
-            this.vbo = new VertexBuffer();
-            this.vbo.enableAttributes(
-                    new GlVertexAttr(3, GlType.FLOAT), // position
-                    new GlVertexAttr(2, GlType.FLOAT), // uv
-                    new GlVertexAttr(4, GlType.FLOAT), // color
-                    new GlVertexAttr(3, GlType.FLOAT)  // ao, skyLight, blockLight
-            );
+        //Jpize.execSync(() -> {
+        //    this.vao = new GlVertexArray();
+        //    this.vbo = new VertexBuffer();
+        //    this.vbo.enableAttributes(
+        //            new GlVertexAttr(3, GlType.FLOAT), // position
+        //            new GlVertexAttr(2, GlType.FLOAT), // uv
+        //            new GlVertexAttr(4, GlType.FLOAT), // color
+        //            new GlVertexAttr(3, GlType.FLOAT)  // ao, skyLight, blockLight
+        //    );
 
-            this.pvao = new GlVertexArray();
-            this.pvbo = new VertexBuffer();
-            this.pvbo.enableAttributes(
-                    new GlVertexAttr(1, GlType.FLOAT), // packed_1
-                    new GlVertexAttr(1, GlType.FLOAT), // packed_2
-                    new GlVertexAttr(1, GlType.FLOAT)  // packed_3
-            );
-        });
+        //    this.pvao = new GlVertexArray();
+        //    this.pvbo = new VertexBuffer();
+        //    this.pvbo.enableAttributes(
+        //            new GlVertexAttr(1, GlType.FLOAT), // packed_1
+        //            new GlVertexAttr(1, GlType.FLOAT), // packed_2
+        //            new GlVertexAttr(1, GlType.FLOAT)  // packed_3
+        //    );
+        //});
     }
 
     
@@ -78,7 +78,7 @@ public class ChunkMesh implements Disposable{
         for(int i = 0; i < verticesList.size(); i++)
             verticesArray[i] = verticesList.get(i);
 
-        Jpize.execSync(() -> vbo.setData(verticesArray, GlBufUsage.DYNAMIC_DRAW));
+        //Jpize.execSync(() -> vbo.setData(verticesArray, GlBufUsage.DYNAMIC_DRAW));
         verticesList.clear();
 
 
@@ -86,7 +86,7 @@ public class ChunkMesh implements Disposable{
         for(int i = 0; i < verticesPackedList.size(); i++)
             verticesPackedArray[i] = verticesPackedList.get(i);
 
-        Jpize.execSync(() -> pvbo.setData(verticesPackedArray, GlBufUsage.DYNAMIC_DRAW));
+        //Jpize.execSync(() -> pvbo.setData(verticesPackedArray, GlBufUsage.DYNAMIC_DRAW));
         verticesPackedList.clear();
 
 

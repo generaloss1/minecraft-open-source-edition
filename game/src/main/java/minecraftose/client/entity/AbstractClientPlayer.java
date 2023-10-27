@@ -55,7 +55,11 @@ public class AbstractClientPlayer extends Player{
     
     
     public void updateInterpolation(){
-        final float lastTickTime = (System.currentTimeMillis() - lastTime) / 1000F / getLevel().getGame().getTps();
+        final ClientLevel level = getLevel();
+        if(level == null)
+            return;
+
+        final float lastTickTime = (System.currentTimeMillis() - lastTime) / 1000F / level.getGame().getTickDt();
         lerpPosition.lerp(lastPosition, getPosition(), lastTickTime);
         lerpRotation.lerp(lastRotation, getRotation(), lastTickTime);
     }
