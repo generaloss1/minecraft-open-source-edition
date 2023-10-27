@@ -158,9 +158,9 @@ public class Minecraft extends JpizeApplication{
 
         // Free resources
         clientRenderer.dispose();
-        gameResources.dispose();
-        soundPlayer.dispose();
-        musicPlayer.dispose();
+        //gameResources.dispose();
+        //soundPlayer.dispose();
+        //musicPlayer.dispose();
     }
     
     public final Options getOptions(){
