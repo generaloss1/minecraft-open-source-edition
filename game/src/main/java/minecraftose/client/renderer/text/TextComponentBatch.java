@@ -1,6 +1,7 @@
 package minecraftose.client.renderer.text;
 
 import jpize.Jpize;
+import jpize.files.Resource;
 import jpize.graphics.font.BitmapFont;
 import jpize.graphics.font.FontLoader;
 import jpize.graphics.font.glyph.Glyph;
@@ -26,8 +27,7 @@ public class TextComponentBatch implements Disposable{
         this.batch = new TextureBatch(1024);
         this.background = new Color();
 
-        this.font = FontLoader.loadFnt("font/minecraft/default.fnt");
-        this.font.setScale(3);
+        this.font = FontLoader.loadFnt(new Resource("font/minecraft/default.fnt"));
         this.font.getOptions().lineGaps = 1;
     }
     

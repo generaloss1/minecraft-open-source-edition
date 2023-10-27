@@ -28,9 +28,6 @@ import minecraftose.client.resources.VanillaMusic;
 import minecraftose.main.SharedConstants;
 import minecraftose.main.Version;
 import minecraftose.main.block.BlockData;
-import minecraftose.main.inventory.Container;
-import minecraftose.main.inventory.Inventory;
-import minecraftose.main.inventory.PlayerInventory;
 import minecraftose.main.modification.loader.ModEntryPointType;
 import minecraftose.main.modification.loader.ModLoader;
 import minecraftose.main.nbt.io.NbtIO;
@@ -71,9 +68,6 @@ public class Minecraft extends JpizeApplication{
 
     @Override
     public void init(){
-        final Inventory inventory = new PlayerInventory();
-        System.out.println(inventory.getItemStack(3));
-
         // Create Instances //
         Thread.currentThread().setName("Render-Thread");
 
@@ -164,11 +158,9 @@ public class Minecraft extends JpizeApplication{
 
         // Free resources
         clientRenderer.dispose();
-
-        // ?????????????????????
-        //gameResources.dispose();
-        //soundPlayer.dispose();
-        //musicPlayer.dispose();
+        gameResources.dispose();
+        soundPlayer.dispose();
+        musicPlayer.dispose();
     }
     
     public final Options getOptions(){
