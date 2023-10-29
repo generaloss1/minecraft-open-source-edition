@@ -1,7 +1,7 @@
 package minecraftose.client.renderer.text;
 
 import jpize.Jpize;
-import jpize.files.Resource;
+import jpize.util.file.Resource;
 import jpize.graphics.font.BitmapFont;
 import jpize.graphics.font.FontLoader;
 import jpize.graphics.font.glyph.Glyph;

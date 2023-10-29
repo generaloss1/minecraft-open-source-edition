@@ -1,7 +1,7 @@
 package minecraftose.client.renderer.level;
 
 import jpize.Jpize;
-import jpize.files.Resource;
+import jpize.util.file.Resource;
 import jpize.gl.Gl;
 import jpize.gl.glenum.GlTarget;
 import jpize.graphics.texture.Texture;

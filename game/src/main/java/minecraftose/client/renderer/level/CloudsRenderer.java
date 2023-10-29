@@ -1,6 +1,6 @@
 package minecraftose.client.renderer.level;
 
-import jpize.files.Resource;
+import jpize.util.file.Resource;
 import jpize.gl.Gl;
 import jpize.gl.texture.GlWrap;
 import jpize.gl.type.GlType;

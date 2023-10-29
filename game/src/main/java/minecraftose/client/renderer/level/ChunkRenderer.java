@@ -1,6 +1,6 @@
 package minecraftose.client.renderer.level;
 
-import jpize.files.Resource;
+import jpize.util.file.Resource;
 import jpize.gl.Gl;
 import jpize.gl.glenum.GlDepthFunc;
 import jpize.gl.glenum.GlTarget;

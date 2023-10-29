@@ -1,7 +1,7 @@
 package minecraftose.client.renderer.particle;
 
 import jpize.util.Disposable;
-import jpize.files.Resource;
+import jpize.util.file.Resource;
 import jpize.graphics.camera.PerspectiveCamera;
 import jpize.gl.buffer.GlBufUsage;
 import jpize.gl.type.GlType;

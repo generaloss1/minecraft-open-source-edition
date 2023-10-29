@@ -1,6 +1,6 @@
 package minecraftose.main.level.structure;
 
-import jpize.files.Resource;
+import jpize.util.file.Resource;
 import jpize.math.Maths;
 import jpize.math.vecmath.vector.Vec2f;
 import jpize.math.vecmath.vector.Vec3i;

@@ -1,7 +1,7 @@
 package minecraftose.client;
 
 import jpize.Jpize;
-import jpize.files.Resource;
+import jpize.util.file.Resource;
 import jpize.gl.Gl;
 import jpize.graphics.texture.Texture;
 import jpize.io.context.JpizeApplication;
@@ -9,7 +9,6 @@ import jpize.math.Mathc;
 import jpize.math.Maths;
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.physic.utils.Velocity3f;
-import jpize.util.io.JpizeOutputStream;
 import jpize.util.time.TickGenerator;
 import minecraftose.Main;
 import minecraftose.client.audio.MusicGroup;
@@ -158,9 +157,9 @@ public class Minecraft extends JpizeApplication{
 
         // Free resources
         clientRenderer.dispose();
-        //gameResources.dispose();
-        //soundPlayer.dispose();
-        //musicPlayer.dispose();
+        gameResources.dispose();
+        soundPlayer.dispose();
+        musicPlayer.dispose();
     }
     
     public final Options getOptions(){

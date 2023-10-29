@@ -1,7 +1,7 @@
 package minecraftose.client.options;
 
 import jpize.Jpize;
-import jpize.files.Resource;
+import jpize.util.file.Resource;
 import jpize.glfw.key.Key;
 import minecraftose.client.Minecraft;
 import minecraftose.client.control.camera.GameCamera;

@@ -1,6 +1,6 @@
 package minecraftose.server.command.vanilla;
 
-import jpize.files.Resource;
+import jpize.util.file.Resource;
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.math.vecmath.vector.Vec3i;
 import minecraftose.main.command.CommandContext;

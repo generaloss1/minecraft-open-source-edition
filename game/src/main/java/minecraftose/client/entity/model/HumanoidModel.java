@@ -1,6 +1,6 @@
 package minecraftose.client.entity.model;
 
-import jpize.files.Resource;
+import jpize.util.file.Resource;
 import jpize.graphics.texture.Texture;
 import jpize.graphics.util.Shader;
 import minecraftose.client.control.camera.GameCamera;

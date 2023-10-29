@@ -1,7 +1,7 @@
 package minecraftose.client.renderer.level;
 
 import jpize.util.Disposable;
-import jpize.files.Resource;
+import jpize.util.file.Resource;
 import jpize.graphics.util.Shader;
 import jpize.math.vecmath.matrix.Matrix4f;
 import jpize.math.vecmath.vector.Vec3f;

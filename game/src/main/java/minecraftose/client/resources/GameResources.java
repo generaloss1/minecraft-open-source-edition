@@ -3,7 +3,7 @@ package minecraftose.client.resources;
 import jpize.util.Disposable;
 import jpize.audio.sound.AudioBuffer;
 import jpize.audio.sound.AudioLoader;
-import jpize.files.Resource;
+import jpize.util.file.Resource;
 import jpize.graphics.texture.pixmap.PixmapRGBA;
 import jpize.graphics.texture.PixmapIO;
 import jpize.graphics.texture.Region;
@@ -23,10 +23,10 @@ public class GameResources implements Disposable{
     private final Map<String, AudioBuffer> audioList;
 
     public GameResources(){
-        blockAtlas = new TextureAtlas<>();
-        blocksToLoadList = new ArrayList<>();
+        this.blockAtlas = new TextureAtlas<>();
+        this.blocksToLoadList = new ArrayList<>();
 
-        audioList = new HashMap<>();
+        this.audioList = new HashMap<>();
     }
 
 
@@ -95,6 +95,7 @@ public class GameResources implements Disposable{
     public void dispose(){
         blocksToLoadList.clear();
         blockAtlas.getTexture().dispose();
+
         for(AudioBuffer audio: audioList.values())
             audio.dispose();
     }

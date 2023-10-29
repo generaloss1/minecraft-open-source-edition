@@ -2,7 +2,7 @@ package minecraftose.client.renderer.level;
 
 import jpize.graphics.mesh.Mesh;
 import jpize.util.Disposable;
-import jpize.files.Resource;
+import jpize.util.file.Resource;
 import jpize.gl.Gl;
 import jpize.gl.vertex.GlVertexAttr;
 import jpize.gl.tesselation.GlFace;

@@ -1,7 +1,7 @@
 package minecraftose.client.renderer.level;
 
 import jpize.util.Disposable;
-import jpize.files.Resource;
+import jpize.util.file.Resource;
 import jpize.gl.tesselation.GlPrimitive;
 import jpize.gl.type.GlType;
 import jpize.graphics.mesh.IndexedMesh;
