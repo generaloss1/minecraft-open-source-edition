@@ -5,7 +5,10 @@ import jpize.net.tcp.TcpConnection;
 import jpize.net.tcp.TcpListener;
 import jpize.net.tcp.packet.PacketDispatcher;
 import jpize.net.tcp.packet.PacketHandler;
-import minecraftose.main.net.packet.serverbound.*;
+import minecraftose.main.network.packet.c2s.game.*;
+import minecraftose.main.network.packet.c2s.login.C2SPacketAuth;
+import minecraftose.main.network.packet.c2s.login.C2SPacketEncryptEnd;
+import minecraftose.main.network.packet.c2s.login.C2SPacketLogin;
 import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
 import minecraftose.server.Server;
@@ -39,16 +42,16 @@ public class ServerConnectionManager implements TcpListener{
 
 
     private void registerPackets(){
-        dispatcher.register(SBPacketAuth           .PACKET_ID, SBPacketAuth           .class);
-        dispatcher.register(SBPacketChatMessage.PACKET_ID, SBPacketChatMessage    .class);
-        dispatcher.register(SBPacketChunkRequest.PACKET_ID, SBPacketChunkRequest   .class);
-        dispatcher.register(SBPacketEncryptEnd.PACKET_ID, SBPacketEncryptEnd     .class);
-        dispatcher.register(SBPacketLogin.PACKET_ID, SBPacketLogin          .class);
-        dispatcher.register(SBPacketMove           .PACKET_ID, SBPacketMove           .class);
-        dispatcher.register(SBPacketPing           .PACKET_ID, SBPacketPing           .class);
-        dispatcher.register(SBPacketPlayerBlockSet .PACKET_ID, SBPacketPlayerBlockSet .class);
-        dispatcher.register(SBPacketPlayerSneaking .PACKET_ID, SBPacketPlayerSneaking .class);
-        dispatcher.register(SBPacketRenderDistance.PACKET_ID, SBPacketRenderDistance .class);
+        dispatcher.register(C2SPacketAuth.PACKET_ID, C2SPacketAuth.class);
+        dispatcher.register(C2SPacketChatMessage.PACKET_ID, C2SPacketChatMessage.class);
+        dispatcher.register(C2SPacketChunkRequest.PACKET_ID, C2SPacketChunkRequest.class);
+        dispatcher.register(C2SPacketEncryptEnd.PACKET_ID, C2SPacketEncryptEnd.class);
+        dispatcher.register(C2SPacketLogin.PACKET_ID, C2SPacketLogin.class);
+        dispatcher.register(C2SPacketMove.PACKET_ID, C2SPacketMove.class);
+        dispatcher.register(C2SPacketPing.PACKET_ID, C2SPacketPing.class);
+        dispatcher.register(C2SPacketPlayerBlockSet.PACKET_ID, C2SPacketPlayerBlockSet.class);
+        dispatcher.register(C2SPacketPlayerSneaking.PACKET_ID, C2SPacketPlayerSneaking.class);
+        dispatcher.register(C2SPacketRenderDistance.PACKET_ID, C2SPacketRenderDistance.class);
     }
     
     

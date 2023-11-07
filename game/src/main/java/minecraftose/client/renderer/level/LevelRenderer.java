@@ -84,8 +84,8 @@ public class LevelRenderer implements Disposable, Resizable{
             screenColor.reset();
         
         // Render world
-        postFramebuffer.begin();
-        {
+        // postFramebuffer.begin();
+        // {
             Gl.enable(GlTarget.DEPTH_TEST);
             
             skyRenderer.render(camera); // Sky
@@ -98,23 +98,23 @@ public class LevelRenderer implements Disposable, Resizable{
             particleBatch.render(camera); // Particles
             
             Gl.disable(GlTarget.DEPTH_TEST);
-        }
-        postFramebuffer.end();
+        // }
+        // postFramebuffer.end();
         
         // Render cursor
-        batchFramebuffer.begin();
-        {
+        // batchFramebuffer.begin();
+        // {
             batch.begin();
             final float cursorSize = Jpize.getHeight() / 48F;
             batch.draw(cursorTexture, Jpize.getWidth() / 2F - cursorSize / 2, Jpize.getHeight() / 2F - cursorSize / 2, cursorSize, cursorSize);
             batch.end();
-        }
-        batchFramebuffer.end();
-        postShader.bind();
-        postShader.setUniform("u_frame", postFramebuffer.getFrameTexture());
-        postShader.setUniform("u_batch", batchFramebuffer.getFrameTexture());
-        postShader.setUniform("u_color", screenColor);
-        ScreenQuad.render();
+        // }
+        // batchFramebuffer.end();
+        // postShader.bind();
+        // postShader.setUniform("u_frame", postFramebuffer.getFrameTexture());
+        // postShader.setUniform("u_batch", batchFramebuffer.getFrameTexture());
+        // postShader.setUniform("u_color", screenColor);
+        // ScreenQuad.render();
         
         // Render Vignette
         vignetteRenderer.render(batch);

@@ -2,13 +2,15 @@ package minecraftose.client.control.camera;
 
 import jpize.Jpize;
 import jpize.graphics.camera.PerspectiveCamera;
+import jpize.math.Mathc;
 import jpize.math.Maths;
 import jpize.math.util.EulerAngles;
+import jpize.math.vecmath.vector.Vec2d;
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.physic.utils.Velocity3f;
 import minecraftose.client.ClientGame;
 import minecraftose.client.block.BlockProps;
-import minecraftose.client.block.Blocks;
+import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.chunk.ClientChunk;
 import minecraftose.client.control.camera.perspective.CameraTarget;
 import minecraftose.client.control.camera.perspective.FirstPersonPlayerCameraTarget;
@@ -92,7 +94,7 @@ public class GameCamera extends PerspectiveCamera{
         
         float fov = options.getFieldOfView() / zoom;
         if(player.isSprinting())
-            fov *= 1.27F;
+            fov *= 1.125F;
         
         setFov(fov);
 
@@ -104,7 +106,10 @@ public class GameCamera extends PerspectiveCamera{
         this.rotation.roll -= hitLocalDirection.z * 1.5F;
 
         // Jumps
-        this.rotation.pitch -= Maths.clamp(player.getVelocity().y / 2, -10, 10);
+        //this.rotation.pitch -= Maths.clamp(player.getVelocity().y / 2, -10, 10);
+
+        // View Bobbing
+        bobView(game.getTime().getTickLerpFactor());
 
         // Interpolate FOV
         final float currentFOV = getFov();
@@ -114,7 +119,24 @@ public class GameCamera extends PerspectiveCamera{
 
         // Update is camera in water
         final BlockProps block = level.getBlockProps(position.xFloor(), position.yFloor(), position.zFloor());
-        inWater = block.getID() == Blocks.WATER.getID();
+        inWater = block.getID() == ClientBlocks.WATER.getID();
+    }
+
+    private void bobView(float t){
+        final float walkDist = player.getWalkDist(t) * Maths.PI;
+        final float bobbing = player.getBobbing();
+
+        final float sin = Mathc.sin(walkDist) * bobbing;
+
+        final Vec2d dx = new Vec2d(sin * 0.5).rotDeg(-rotation.yaw);
+        final double dy = -Math.abs(Mathc.cos(walkDist)) * bobbing      ;
+        position.add(0, dy, 0).add(dx);
+
+        final float rz = sin * 3;
+        final float rx = Math.abs(Mathc.cos(walkDist - 0.2)) * bobbing * 5;
+
+        rotation.roll += rz;
+        rotation.pitch += rx;
     }
     
     

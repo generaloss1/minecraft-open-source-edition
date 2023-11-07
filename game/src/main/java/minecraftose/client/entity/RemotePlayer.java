@@ -1,11 +1,12 @@
 package minecraftose.client.entity;
 
-import minecraftose.main.level.Level;
+import minecraftose.client.ClientGame;
+import minecraftose.client.level.ClientLevel;
 
 public class RemotePlayer extends AbstractClientPlayer{
     
-    public RemotePlayer(Level levelOF, String name){
-        super(levelOF, name);
+    public RemotePlayer(ClientGame game, ClientLevel level, String name){
+        super(game, level, name);
     }
     
 }

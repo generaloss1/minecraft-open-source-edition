@@ -1,9 +1,18 @@
 package minecraftose.main.item;
 
-import minecraftose.client.block.Block;
+import minecraftose.main.block.Block;
 
-public abstract class BlockItem extends Item{
+public class BlockItem extends Item{
 
-    public abstract Block getBlock();
+    private final Block block;
+
+    public BlockItem(Block block, int maxStack, int maxDamage, ItemRarity rarity, String name, String description){
+        super(maxStack, maxDamage, rarity, name, description);
+        this.block = block;
+    }
+
+    public Block getBlock(){
+        return block;
+    }
 
 }

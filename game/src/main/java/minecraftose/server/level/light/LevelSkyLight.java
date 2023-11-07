@@ -8,7 +8,7 @@ import minecraftose.main.chunk.LevelChunk;
 import minecraftose.main.chunk.storage.ChunkPos;
 import minecraftose.main.chunk.storage.Heightmap;
 import minecraftose.main.chunk.storage.HeightmapType;
-import minecraftose.main.net.packet.clientbound.CBPacketLightUpdate;
+import minecraftose.main.network.packet.s2c.game.S2CPacketLightUpdate;
 import minecraftose.server.chunk.ServerChunk;
 import minecraftose.server.level.ServerLevel;
 
@@ -347,21 +347,21 @@ public class LevelSkyLight{
 
     public void sendSections(ServerChunk chunk, int y){
         if(y > SIZE_IDX && chunk.getBlockSection(y - 16) != null){
-            level.getServer().getPlayerList().broadcastPacket(new CBPacketLightUpdate(chunk.getBlockSection(y - 16)));
+            level.getServer().getPlayerList().broadcastPacket(new S2CPacketLightUpdate(chunk.getBlockSection(y - 16)));
             // level.getServer().getPlayerList().broadcastPacket(new CBPacketLightUpdate(chunk.getNeighborChunk(-1, 0).getBlockSection(y - 16)));
             // level.getServer().getPlayerList().broadcastPacket(new CBPacketLightUpdate(chunk.getNeighborChunk(1, 0).getBlockSection(y - 16)));
             // level.getServer().getPlayerList().broadcastPacket(new CBPacketLightUpdate(chunk.getNeighborChunk(0, -1).getBlockSection(y - 16)));
             // level.getServer().getPlayerList().broadcastPacket(new CBPacketLightUpdate(chunk.getNeighborChunk(0, 1).getBlockSection(y - 16)));
         }
 
-        level.getServer().getPlayerList().broadcastPacket(new CBPacketLightUpdate(chunk.getBlockSection(y)));
-        level.getServer().getPlayerList().broadcastPacket(new CBPacketLightUpdate(chunk.getNeighborChunk(-1, 0).getBlockSection(y)));
-        level.getServer().getPlayerList().broadcastPacket(new CBPacketLightUpdate(chunk.getNeighborChunk( 1, 0).getBlockSection(y)));
-        level.getServer().getPlayerList().broadcastPacket(new CBPacketLightUpdate(chunk.getNeighborChunk(0, -1).getBlockSection(y)));
-        level.getServer().getPlayerList().broadcastPacket(new CBPacketLightUpdate(chunk.getNeighborChunk(0,  1).getBlockSection(y)));
+        level.getServer().getPlayerList().broadcastPacket(new S2CPacketLightUpdate(chunk.getBlockSection(y)));
+        level.getServer().getPlayerList().broadcastPacket(new S2CPacketLightUpdate(chunk.getNeighborChunk(-1, 0).getBlockSection(y)));
+        level.getServer().getPlayerList().broadcastPacket(new S2CPacketLightUpdate(chunk.getNeighborChunk( 1, 0).getBlockSection(y)));
+        level.getServer().getPlayerList().broadcastPacket(new S2CPacketLightUpdate(chunk.getNeighborChunk(0, -1).getBlockSection(y)));
+        level.getServer().getPlayerList().broadcastPacket(new S2CPacketLightUpdate(chunk.getNeighborChunk(0,  1).getBlockSection(y)));
 
         if(y < HEIGHT - SIZE && chunk.getBlockSection(y + 16) != null){
-            level.getServer().getPlayerList().broadcastPacket(new CBPacketLightUpdate(chunk.getBlockSection(y + 16)));
+            level.getServer().getPlayerList().broadcastPacket(new S2CPacketLightUpdate(chunk.getBlockSection(y + 16)));
             // level.getServer().getPlayerList().broadcastPacket(new CBPacketLightUpdate(chunk.getNeighborChunk(-1, 0).getBlockSection(y + 16)));
             // level.getServer().getPlayerList().broadcastPacket(new CBPacketLightUpdate(chunk.getNeighborChunk(1, 0).getBlockSection(y + 16)));
             // level.getServer().getPlayerList().broadcastPacket(new CBPacketLightUpdate(chunk.getNeighborChunk(0, -1).getBlockSection(y + 16)));

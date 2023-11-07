@@ -1,16 +1,16 @@
 package minecraftose.client.block.vanilla;
 
-import minecraftose.client.block.Block;
+import minecraftose.client.block.BlockClient;
 import minecraftose.client.block.model.BlockModel;
 import minecraftose.client.block.shape.BlockCollide;
 import minecraftose.client.block.shape.BlockCursor;
 import minecraftose.client.chunk.mesh.ChunkMeshType;
 import minecraftose.client.resources.GameResources;
 import minecraftose.main.Dir;
-import minecraftose.main.audio.BlockSoundPack;
+import minecraftose.main.audio.SoundType;
 import minecraftose.main.chunk.ChunkUtils;
 
-public class Podzol extends Block{
+public class Podzol extends BlockClient{
 
     public Podzol(int id){
         super(id);
@@ -28,7 +28,7 @@ public class Podzol extends Block{
                 .setLightLevel(0)
                 .setOpacity(ChunkUtils.MAX_LIGHT_LEVEL)
                 .setTranslucent(false)
-                .setSoundPack(BlockSoundPack.GRASS)
+                .setSoundPack(SoundType.GRASS)
                 .setFacing(Dir.NONE)
                 .setModel(model)
                 .setCollide(BlockCollide.SOLID)

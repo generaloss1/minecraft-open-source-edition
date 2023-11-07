@@ -6,7 +6,8 @@ import jpize.net.tcp.TcpListener;
 import jpize.net.tcp.packet.IPacket;
 import jpize.net.tcp.packet.PacketDispatcher;
 import minecraftose.client.ClientGame;
-import minecraftose.main.net.packet.clientbound.*;
+import minecraftose.main.network.packet.s2c.game.*;
+import minecraftose.main.network.packet.s2c.login.S2CPacketEncryptStart;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -99,23 +100,23 @@ public class ClientConnectionHandler implements TcpListener{
 
 
     private void registerPackets(){
-        dispatcher.register(CBPacketAbilities      .PACKET_ID, CBPacketAbilities      .class);
-        dispatcher.register(CBPacketBlockUpdate    .PACKET_ID, CBPacketBlockUpdate    .class);
-        dispatcher.register(CBPacketChatMessage    .PACKET_ID, CBPacketChatMessage    .class);
-        dispatcher.register(CBPacketChunk          .PACKET_ID, CBPacketChunk          .class);
-        dispatcher.register(CBPacketDisconnect     .PACKET_ID, CBPacketDisconnect     .class);
-        dispatcher.register(CBPacketEncryptStart   .PACKET_ID, CBPacketEncryptStart   .class);
-        dispatcher.register(CBPacketEntityMove     .PACKET_ID, CBPacketEntityMove     .class);
-        dispatcher.register(CBPacketLightUpdate    .PACKET_ID, CBPacketLightUpdate    .class);
-        dispatcher.register(CBPacketPlayerSneaking .PACKET_ID, CBPacketPlayerSneaking .class);
-        dispatcher.register(CBPacketPlaySound.PACKET_ID, CBPacketPlaySound      .class);
-        dispatcher.register(CBPacketPong.PACKET_ID, CBPacketPong           .class);
-        dispatcher.register(CBPacketRemoveEntity   .PACKET_ID, CBPacketRemoveEntity   .class);
-        dispatcher.register(CBPacketSpawnEntity.PACKET_ID, CBPacketSpawnEntity    .class);
-        dispatcher.register(CBPacketSpawnInfo      .PACKET_ID, CBPacketSpawnInfo      .class);
-        dispatcher.register(CBPacketSpawnPlayer    .PACKET_ID, CBPacketSpawnPlayer    .class);
-        dispatcher.register(CBPacketTeleportPlayer.PACKET_ID, CBPacketTeleportPlayer .class);
-        dispatcher.register(CBPacketTime.PACKET_ID, CBPacketTime           .class);
+        dispatcher.register(S2CPacketAbilities.PACKET_ID, S2CPacketAbilities.class);
+        dispatcher.register(S2CPacketBlockUpdate.PACKET_ID, S2CPacketBlockUpdate.class);
+        dispatcher.register(S2CPacketChatMessage.PACKET_ID, S2CPacketChatMessage.class);
+        dispatcher.register(S2CPacketChunk.PACKET_ID, S2CPacketChunk.class);
+        dispatcher.register(S2CPacketDisconnect.PACKET_ID, S2CPacketDisconnect.class);
+        dispatcher.register(S2CPacketEncryptStart.PACKET_ID, S2CPacketEncryptStart.class);
+        dispatcher.register(S2CPacketEntityMove.PACKET_ID, S2CPacketEntityMove.class);
+        dispatcher.register(S2CPacketLightUpdate.PACKET_ID, S2CPacketLightUpdate.class);
+        dispatcher.register(S2CPacketPlayerSneaking.PACKET_ID, S2CPacketPlayerSneaking.class);
+        dispatcher.register(S2CPacketPlaySound.PACKET_ID, S2CPacketPlaySound.class);
+        dispatcher.register(S2CPacketPong.PACKET_ID, S2CPacketPong.class);
+        dispatcher.register(S2CPacketRemoveEntity.PACKET_ID, S2CPacketRemoveEntity.class);
+        dispatcher.register(S2CPacketSpawnEntity.PACKET_ID, S2CPacketSpawnEntity.class);
+        dispatcher.register(S2CPacketSpawnInfo.PACKET_ID, S2CPacketSpawnInfo.class);
+        dispatcher.register(S2CPacketSpawnPlayer.PACKET_ID, S2CPacketSpawnPlayer.class);
+        dispatcher.register(S2CPacketTeleportPlayer.PACKET_ID, S2CPacketTeleportPlayer.class);
+        dispatcher.register(S2CPacketTime.PACKET_ID, S2CPacketTime.class);
     }
     
 }

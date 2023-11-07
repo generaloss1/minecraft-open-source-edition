@@ -3,7 +3,7 @@ package minecraftose.server.player;
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.net.tcp.TcpConnection;
 import jpize.net.tcp.packet.IPacket;
-import minecraftose.main.net.packet.clientbound.*;
+import minecraftose.main.network.packet.s2c.game.*;
 import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
 import minecraftose.server.Server;
@@ -72,26 +72,26 @@ public class PlayerList{
         // Send packets to player
         final PlayerGameConnection connectionAdapter = serverPlayer.getConnectionAdapter();
         
-        connection.send(new CBPacketSpawnInfo(level.getConfiguration().getName(), spawnPosition, server.getGameTime().getTicks())); // spawn init info
-        connection.send(new CBPacketAbilities(false)); // abilities
+        connection.send(new S2CPacketSpawnInfo(level.getConfiguration().getName(), spawnPosition, server.getGameTime().getTicks())); // spawn init info
+        connection.send(new S2CPacketAbilities(false)); // abilities
         
         for(ServerPlayer anotherPlayer: playerMap.values())
             if(anotherPlayer != serverPlayer)
-                connectionAdapter.sendPacket(new CBPacketSpawnPlayer(anotherPlayer)); // all players info
+                connectionAdapter.sendPacket(new S2CPacketSpawnPlayer(anotherPlayer)); // all players info
         
         // Load chunks for player
         level.addEntity(serverPlayer);
         level.getChunkManager().loadInitChunkForPlayer(serverPlayer);
 
         // Send to all player-connection-event packet
-        broadcastPacketExcept(new CBPacketSpawnPlayer(serverPlayer), serverPlayer);
+        broadcastPacketExcept(new S2CPacketSpawnPlayer(serverPlayer), serverPlayer);
         
         serverPlayer.sendToChat(new Component().color(TextColor.YELLOW).text("Player " + name + " joined the game"));
     }
     
     
     public void disconnectPlayer(ServerPlayer player){
-        broadcastPacketExcept(new CBPacketRemoveEntity(player), player); // Remove player entity on client
+        broadcastPacketExcept(new S2CPacketRemoveEntity(player), player); // Remove player entity on client
         player.getLevel().removeEntity(player); // Remove entity on server
         PlayerIO.save(player);                  // Save
         
@@ -129,12 +129,12 @@ public class PlayerList{
     
     
     public void broadcastServerMessage(Component message){
-        broadcastPacket(new CBPacketChatMessage(message.toFlatList()));
+        broadcastPacket(new S2CPacketChatMessage(message.toFlatList()));
         System.out.println(message);
     }
     
     public void broadcastPlayerMessage(ServerPlayer player, Component message){
-        broadcastPacket(new CBPacketChatMessage(player.getName(), message.toFlatList()));
+        broadcastPacket(new S2CPacketChatMessage(player.getName(), message.toFlatList()));
         System.out.println(message);
     }
     

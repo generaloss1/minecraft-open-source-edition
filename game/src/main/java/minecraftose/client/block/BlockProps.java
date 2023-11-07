@@ -4,7 +4,7 @@ import minecraftose.client.block.model.BlockModel;
 import minecraftose.client.block.shape.BlockCollide;
 import minecraftose.client.block.shape.BlockCursor;
 import minecraftose.main.Dir;
-import minecraftose.main.audio.BlockSoundPack;
+import minecraftose.main.audio.SoundType;
 
 import java.util.Objects;
 
@@ -12,21 +12,21 @@ import static minecraftose.main.chunk.ChunkUtils.MAX_LIGHT_LEVEL;
 
 public class BlockProps{
 
-    private final Block block;
+    private final BlockClient block;
     private final byte state;
 
     private boolean solid;
     private int lightLevel;
     private int opacity;
     private boolean translucent;
-    private BlockSoundPack soundPack;
+    private SoundType soundPack;
 
     private Dir facing;
     private BlockModel model;
     private BlockCollide collide;
     private BlockCursor cursor;
 
-    public BlockProps(Block block, byte state){
+    public BlockProps(BlockClient block, byte state){
         this.block = block;
         this.state = state;
 
@@ -58,7 +58,7 @@ public class BlockProps{
         //         .setCursor(BlockCursor.SOLID);
     }
 
-    public Block getBlock(){
+    public BlockClient getBlock(){
         return block;
     }
 
@@ -100,7 +100,7 @@ public class BlockProps{
         return this;
     }
 
-    public BlockProps setSoundPack(BlockSoundPack soundPack){
+    public BlockProps setSoundPack(SoundType soundPack){
         this.soundPack = soundPack;
         return this;
     }
@@ -165,7 +165,7 @@ public class BlockProps{
     }
 
     /** Возвращает набор звуков для блока */
-    public BlockSoundPack getSoundPack(){
+    public SoundType getSoundPack(){
         return soundPack;
     }
 

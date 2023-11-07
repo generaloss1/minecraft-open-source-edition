@@ -4,7 +4,7 @@ import jpize.util.file.Resource;
 import jpize.math.Maths;
 import jpize.math.vecmath.vector.Vec2f;
 import jpize.math.vecmath.vector.Vec3i;
-import minecraftose.client.block.Block;
+import minecraftose.client.block.BlockClient;
 import minecraftose.server.gen.pool.BlockPool;
 import jpize.util.io.JpizeInputStream;
 
@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class Structure{
 
-    public static void circleFilledXZ(BlockPool pool, int x, int y, int z, float radius, Block block){
+    public static void circleFilledXZ(BlockPool pool, int x, int y, int z, float radius, BlockClient block){
         final int intRadius = Maths.ceil(radius);
         for(int i = 0; i < intRadius; i++){
             for(int j = 0; j < intRadius; j++){
@@ -27,7 +27,7 @@ public class Structure{
         }
     }
 
-    public static void circleXZ(BlockPool pool, int x, int y, int z, float radius, Block block){
+    public static void circleXZ(BlockPool pool, int x, int y, int z, float radius, BlockClient block){
         final int intRadius = Maths.ceil(radius);
         for(int i = 0; i < intRadius; i++){
             for(int j = 0; j < intRadius; j++){

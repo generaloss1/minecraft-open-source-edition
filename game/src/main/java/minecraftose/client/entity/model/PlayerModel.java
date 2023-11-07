@@ -4,14 +4,12 @@ import jpize.Jpize;
 import jpize.math.Mathc;
 import jpize.math.Maths;
 import jpize.math.vecmath.vector.Vec3f;
-import jpize.physic.utils.Velocity3f;
 import minecraftose.client.Minecraft;
 import minecraftose.client.control.camera.GameCamera;
 import minecraftose.client.control.camera.PerspectiveType;
 import minecraftose.client.entity.AbstractClientPlayer;
 import minecraftose.client.level.ClientLevel;
 import minecraftose.client.options.Options;
-import minecraftose.client.time.ClientGameTime;
 
 public class PlayerModel extends HumanoidModel{
     
@@ -96,7 +94,7 @@ public class PlayerModel extends HumanoidModel{
     
     public void render(GameCamera camera){
         super.render(camera);
-        
+
         jacket.render(camera, shader, "u_model");
         hat.render(camera, shader, "u_model");
         leftPants.render(camera, shader, "u_model");
@@ -147,31 +145,15 @@ public class PlayerModel extends HumanoidModel{
             rightLeg.getRotation().pitch = 0;
         }
 
-        final ClientGameTime gameTime = player.getLevel().getGame().getTime();
-        final float animationTime = gameTime.getLerpSeconds() * 8;
-
         // Animation
-        final Velocity3f velocity = this.player.getVelocity();
-        if(velocity.len2() > 10E-5){
-            
-            final double animationSpeed;
-            if(player.isSprinting())
-                animationSpeed = 3;
-            else if(player.isSneaking())
-                animationSpeed = 0.5;
-            else
-                animationSpeed = 2;
+        final float lerpFactor = player.getLevel().getGame().getTime().getTickLerpFactor();
+        final float moveDist = player.getWalkDist(lerpFactor) * 4;
+        final float bobbing = Math.min(1, player.getModelBobbing() * 10);
 
-            rightArm.getRotation().pitch = 60 * Mathc.sin(animationTime);
-            leftArm.getRotation().pitch = -60 * Mathc.sin(animationTime);
-            rightLeg.getRotation().pitch = -60 * Mathc.sin(animationTime);
-            leftLeg.getRotation().pitch = 60 * Mathc.sin(animationTime);
-        }else{
-            rightArm.getRotation().pitch -= rightArm.getRotation().pitch / 10;
-            leftArm.getRotation().pitch  -= leftArm.getRotation().pitch  / 10;
-            rightLeg.getRotation().pitch  -= rightLeg.getRotation().pitch  / 10;
-            leftLeg.getRotation().pitch   -= leftLeg.getRotation().pitch   / 10;
-        }
+        rightArm.getRotation().pitch = -60 * Mathc.sin(moveDist) * bobbing;
+        leftArm.getRotation().pitch = 60 * Mathc.sin(moveDist) * bobbing;
+        rightLeg.getRotation().pitch = 60 * Mathc.sin(moveDist) * bobbing;
+        leftLeg.getRotation().pitch = -60 * Mathc.sin(moveDist) * bobbing;
     }
     
     

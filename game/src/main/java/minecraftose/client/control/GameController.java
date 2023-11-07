@@ -4,16 +4,17 @@ import jpize.Jpize;
 import jpize.gl.tesselation.GlFace;
 import jpize.gl.Gl;
 import jpize.gl.tesselation.GlPolygonMode;
-import jpize.glfw.key.Key;
 import jpize.math.Maths;
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.math.vecmath.vector.Vec3i;
 import jpize.physic.axisaligned.box.AABox;
 import jpize.physic.axisaligned.box.AABoxBody;
+import jpize.sdl.input.Btn;
+import jpize.sdl.input.Key;
 import minecraftose.client.Minecraft;
-import minecraftose.client.block.Block;
+import minecraftose.client.block.BlockClient;
 import minecraftose.client.block.BlockProps;
-import minecraftose.client.block.Blocks;
+import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.block.shape.BlockCollide;
 import minecraftose.client.chat.Chat;
 import minecraftose.client.control.camera.GameCamera;
@@ -23,14 +24,15 @@ import minecraftose.client.options.KeyMapping;
 import minecraftose.client.options.Options;
 import minecraftose.client.renderer.infopanel.ChunkInfoRenderer;
 import minecraftose.client.renderer.infopanel.InfoRenderer;
-import minecraftose.main.block.BlockData;
+import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.entity.Entity;
 import minecraftose.main.item.BlockItem;
 import minecraftose.main.item.Item;
 import minecraftose.main.item.ItemStack;
-import minecraftose.main.net.packet.serverbound.SBPacketChunkRequest;
-import minecraftose.main.net.packet.serverbound.SBPacketPing;
-import minecraftose.main.net.packet.serverbound.SBPacketPlayerBlockSet;
+import minecraftose.main.item.Items;
+import minecraftose.main.network.packet.c2s.game.C2SPacketChunkRequest;
+import minecraftose.main.network.packet.c2s.game.C2SPacketPing;
+import minecraftose.main.network.packet.c2s.game.C2SPacketPlayerBlockSet;
 
 import java.util.Collection;
 
@@ -58,15 +60,14 @@ public class GameController{
         
         // Fullscreen
         if(Key.F11.isDown())
-            Jpize.window().toggleFullscreen();
-        
+            Jpize.window().toggleFullscreenDesktop();
         
         /** Chat **/
         
         final Chat chat = session.getGame().getChat();
         
         if(chat.isOpened()){
-            if(Key.ENTER.isDown()){
+            if(Key.RETURN.isDown()){
                 chat.enter();
                 chat.close();
             }
@@ -76,7 +77,7 @@ public class GameController{
             if(Key.DOWN.isDown())
                 chat.historyDown();
             
-            if(Key.LEFT_CONTROL.isPressed()){
+            if(Key.LCTRL.isPressed()){
                 if(Key.C.isDown())
                     Jpize.setClipboardString(chat.getEnteringText());
                 if(Key.V.isDown())
@@ -117,7 +118,7 @@ public class GameController{
 
             // C - Reload chunks
             if(Key.C.isDown()){
-                getSession().getGame().getConnectionHandler().sendPacket(new SBPacketChunkRequest(camera.chunkX(), camera.chunkZ()));
+                getSession().getGame().getConnectionHandler().sendPacket(new C2SPacketChunkRequest(camera.chunkX(), camera.chunkZ()));
                 f3Plus = true;
                 return;
             }
@@ -132,7 +133,7 @@ public class GameController{
                 info.toggleOpen();
 
                 if(info.isOpen()){
-                    if(Key.LEFT_SHIFT.isPressed())
+                    if(Key.LSHIFT.isPressed())
                         chunkInfo.setOpen(true);
                 }else
                     chunkInfo.setOpen(false);
@@ -145,10 +146,10 @@ public class GameController{
         if(blockRayCast.isSelected()){
             final LocalPlayer player = session.getGame().getPlayer();
             
-            if(Jpize.mouse().isLeftDown() || Key.U.isPressed()){
+            if(Btn.LEFT.isDown() || Key.U.isPressed()){
                 final Vec3i blockPos = blockRayCast.getSelectedBlockPosition();
-                level.setBlock(blockPos.x, blockPos.y, blockPos.z, Blocks.AIR);
-                session.getGame().getConnectionHandler().sendPacket(new SBPacketPlayerBlockSet(blockPos.x, blockPos.y, blockPos.z, Blocks.AIR.getDefaultData()));
+                level.setBlock(blockPos.x, blockPos.y, blockPos.z, ClientBlocks.AIR);
+                session.getGame().getConnectionHandler().sendPacket(new C2SPacketPlayerBlockSet(blockPos.x, blockPos.y, blockPos.z, ClientBlocks.AIR.getDefaultData()));
                 
                 for(int i = 0; i < 100; i++){
                     session.getGame().spawnParticle(session.BREAK_PARTICLE, new Vec3f(
@@ -157,17 +158,20 @@ public class GameController{
                         blockPos.z + Maths.random(1F)
                     ));
                 }
-            }else if(Jpize.mouse().isRightDown() || Key.J.isPressed()){
+            }else if(Btn.RIGHT.isDown() || Key.J.isPressed()){
                 final Item item = player.getInventory().getSelectedItemStack().getItem();
                 if(item instanceof BlockItem blockItem)
-                    placeBlock(blockItem.getBlock());
-            }else if(Jpize.mouse().isMiddleDown()){
+                    placeBlock(ClientBlocks.COBBLESTONE); // blockItem.getBlock()
+            }else if(Btn.MIDDLE.isDown()){
                 final Vec3i blockPos = blockRayCast.getSelectedBlockPosition();
 
                 final BlockProps blockProps = level.getBlockProps(blockPos.x, blockPos.y, blockPos.z);
-                final Item item = blockProps.getBlock().getItem();
-                final ItemStack stack = new ItemStack(item, item.maxStack());
-                player.getInventory().setSelectedItemStack(stack);
+                final Item item = Items.COBBLESTONE; // Registry.block_item.get(blockProps.getBlock())
+
+                if(item != null){
+                    final ItemStack stack = new ItemStack(item, item.maxStack());
+                    player.getInventory().setSelectedItemStack(stack);
+                }
             }
         }
         
@@ -179,13 +183,13 @@ public class GameController{
         if(options.getKey(KeyMapping.ZOOM).isDown())
             camera.setZoom(10);
         else if(options.getKey(KeyMapping.ZOOM).isPressed()){
-            camera.setZoom(camera.getZoom() + Jpize.mouse().getScroll() * (camera.getZoom() / 8));
+            camera.setZoom(camera.getZoom() + Jpize.input().getScroll() * (camera.getZoom() / 8));
         }else if(options.getKey(KeyMapping.ZOOM).isReleased())
             camera.setZoom(1);
         
         // Ping server
         if(Key.P.isDown())
-            session.getGame().getConnectionHandler().sendPacket(new SBPacketPing(System.nanoTime()));
+            session.getGame().getConnectionHandler().sendPacket(new C2SPacketPing(System.nanoTime()));
         
         // Polygon Mode
         if(Key.F9.isDown())
@@ -198,7 +202,7 @@ public class GameController{
             Jpize.exit();
     }
     
-    private void placeBlock(Block block){
+    private void placeBlock(BlockClient block){
         final BlockRayCast blockRayCast = session.getGame().getBlockRayCast();
         final ClientLevel level = session.getGame().getLevel();
         final Vec3i blockPos = blockRayCast.getImaginaryBlockPosition();
@@ -208,7 +212,7 @@ public class GameController{
 
         byte blockState = 0;
 
-        if(block == Blocks.OAK_LOG || block == Blocks.BIRCH_LOG || block == Blocks.SPRUCE_LOG){
+        if(block == ClientBlocks.OAK_LOG || block == ClientBlocks.BIRCH_LOG || block == ClientBlocks.SPRUCE_LOG){
             // F:0  -Y:2  +Y:1
             int pitch = (int) ((player.getRotation().pitch % 360 / 90 % 4 + 4.5F) % 4);
             if(pitch == 3)
@@ -228,7 +232,7 @@ public class GameController{
         else if(blockStates > 1)
             blockState = (byte) Maths.random(0, blockStates - 1);
 
-        final short blockData = BlockData.getData(block, blockState);
+        final short blockData = ChunkBlockData.getData(block, blockState);
         
         final BlockCollide collideShape = block.getState(blockState).getCollide();
         if(collideShape != null){
@@ -251,7 +255,7 @@ public class GameController{
         }
         
         level.setBlockState(blockPos.x, blockPos.y, blockPos.z, blockData);
-        session.getGame().getConnectionHandler().sendPacket(new SBPacketPlayerBlockSet(blockPos.x, blockPos.y, blockPos.z, blockData));
+        session.getGame().getConnectionHandler().sendPacket(new C2SPacketPlayerBlockSet(blockPos.x, blockPos.y, blockPos.z, blockData));
     }
     
 }

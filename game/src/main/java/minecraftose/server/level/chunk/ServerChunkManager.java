@@ -6,7 +6,7 @@ import minecraftose.main.chunk.storage.ChunkPos;
 import minecraftose.main.chunk.storage.HeightmapType;
 import minecraftose.main.entity.Entity;
 import minecraftose.main.level.ChunkManager;
-import minecraftose.main.net.packet.clientbound.CBPacketChunk;
+import minecraftose.main.network.packet.s2c.game.S2CPacketChunk;
 import minecraftose.server.chunk.ServerChunk;
 import minecraftose.server.gen.ChunkGenerator;
 import minecraftose.server.level.ServerLevel;
@@ -80,7 +80,7 @@ public class ServerChunkManager extends ChunkManager{
 
     public void sendChunkIsRequired(ServerChunk chunk){
         if(requestedChunks.containsKey(chunk.getPosition())){
-            requestedChunks.get(chunk.getPosition()).sendPacket(new CBPacketChunk(chunk));
+            requestedChunks.get(chunk.getPosition()).sendPacket(new S2CPacketChunk(chunk));
             requestedChunks.remove(chunk.getPosition());
         }
     }
@@ -89,7 +89,7 @@ public class ServerChunkManager extends ChunkManager{
         final ServerChunk chunk = allChunks.get(chunkPos);
 
         if(chunk != null)
-            player.sendPacket(new CBPacketChunk(chunk));
+            player.sendPacket(new S2CPacketChunk(chunk));
         else
             requestedChunks.put(chunkPos, player);
     }

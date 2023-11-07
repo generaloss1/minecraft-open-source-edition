@@ -18,7 +18,7 @@ public class TextStyle{
     
     
     public void enable(StyleFormatting style){
-        this.style |= (1 << style.styleID);
+        this.style |= (byte) (1 << style.styleID);
     }
     
     public void reset(){

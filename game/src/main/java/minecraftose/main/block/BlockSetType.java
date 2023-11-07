@@ -16,8 +16,8 @@ public enum BlockSetType{
 
     public static BlockSetType from(short oldBlockState, short newBlockState){
         return from(
-            BlockData.getID(oldBlockState) == 0,
-            BlockData.getID(newBlockState) == 0
+            ChunkBlockData.getID(oldBlockState) == 0,
+            ChunkBlockData.getID(newBlockState) == 0
         );
     }
 

@@ -4,8 +4,8 @@ import jpize.math.Mathc;
 import jpize.math.Maths;
 import jpize.math.function.FastNoiseLite;
 import jpize.math.util.Random;
-import minecraftose.client.block.Block;
-import minecraftose.client.block.Blocks;
+import minecraftose.client.block.BlockClient;
+import minecraftose.client.block.ClientBlocks;
 import minecraftose.main.biome.Biome;
 import minecraftose.main.biome.BiomeMap;
 import minecraftose.main.chunk.storage.Heightmap;
@@ -31,38 +31,38 @@ public class DefaultGenerator extends ChunkGenerator{
     
 
     private DefaultGenerator(){
-        continentalnessNoise = new FastNoiseLite();
-        erosionNoise = new FastNoiseLite();
-        peaksValleysNoise = new FastNoiseLite();
-        temperatureNoise = new FastNoiseLite();
-        humidityNoise = new FastNoiseLite();
-        riverNoise = new FastNoiseLite();
+        this.continentalnessNoise = new FastNoiseLite();
+        this.erosionNoise = new FastNoiseLite();
+        this.peaksValleysNoise = new FastNoiseLite();
+        this.temperatureNoise = new FastNoiseLite();
+        this.humidityNoise = new FastNoiseLite();
+        this.riverNoise = new FastNoiseLite();
 
-        continentalnessNoise.setFrequency(0.0002F); // FIX
-        continentalnessNoise.setFractalType(FastNoiseLite.FractalType.FBm);
-        continentalnessNoise.setFractalOctaves(12);
+        this.continentalnessNoise.setFractalType(FastNoiseLite.FractalType.FBm);
+        this.continentalnessNoise.setFrequency(0.001F); // FIX
+        this.continentalnessNoise.setFractalOctaves(7);
 
-        humidityNoise.setFrequency(0.0004F); // FIX
-        humidityNoise.setFractalType(FastNoiseLite.FractalType.FBm);
-        humidityNoise.setFractalOctaves(14);
-        
-        erosionNoise.setFrequency(0.0009F); // FIX
-        erosionNoise.setFractalType(FastNoiseLite.FractalType.FBm);
-        erosionNoise.setFractalOctaves(9);
+        this.humidityNoise.setFractalType(FastNoiseLite.FractalType.FBm);
+        this.humidityNoise.setFrequency(0.0004F); // FIX
+        this.humidityNoise.setFractalOctaves(7);
 
-        peaksValleysNoise.setFrequency(0.02F);
-        peaksValleysNoise.setFractalType(FastNoiseLite.FractalType.FBm);
-        peaksValleysNoise.setFractalOctaves(8);
+        this.erosionNoise.setFractalType(FastNoiseLite.FractalType.FBm);
+        this.erosionNoise.setFrequency(0.004F); // FIX
+        this.erosionNoise.setFractalOctaves(7);
 
-        temperatureNoise.setFractalType(FastNoiseLite.FractalType.FBm);
-        temperatureNoise.setFrequency(0.0008F); // FIX
-        temperatureNoise.setFractalOctaves(14);
+        this.peaksValleysNoise.setFractalType(FastNoiseLite.FractalType.FBm);
+        this.peaksValleysNoise.setFrequency(0.02F);
+        this.peaksValleysNoise.setFractalOctaves(7);
 
-        riverNoise.setFractalType(FastNoiseLite.FractalType.FBm);
-        riverNoise.setFractalOctaves(9);
-        riverNoise.setFrequency(0.0009F); // FIX
+        this.temperatureNoise.setFractalType(FastNoiseLite.FractalType.FBm);
+        this.temperatureNoise.setFrequency(0.0008F); // FIX
+        this.temperatureNoise.setFractalOctaves(7);
 
-        random = new Random();
+        this.riverNoise.setFractalType(FastNoiseLite.FractalType.FBm);
+        this.riverNoise.setFrequency(0.0009F); // FIX
+        this.riverNoise.setFractalOctaves(7);
+
+        this.random = new Random();
     }
 
 
@@ -78,7 +78,7 @@ public class DefaultGenerator extends ChunkGenerator{
         temperatureNoise.setSeed(seed);
         humidityNoise.setSeed(seed);
         riverNoise.setSeed(seed);
-        random.setSeed(Objects.hash(baseX, baseZ));
+        random.setSeed(Objects.hash(seed, baseX, baseZ));
 
         final Heightmap heightmapUnderwaterSurface = chunk.getHeightMap(HeightmapType.UNDERWATER_SURFACE);
         final Heightmap heightmapSurface = chunk.getHeightMap(HeightmapType.SURFACE);
@@ -100,6 +100,13 @@ public class DefaultGenerator extends ChunkGenerator{
                     detail += continentalnessNoise.getNoise(x, height + y, z) / 32;
 
                 height += detail * 32;
+
+                // Detail base height 2
+                detail = 0;
+                for(int y = 0; y < 24; y++)
+                    detail += erosionNoise.getNoise(x, height + y, z) / 32;
+
+                height += detail * 64;
 
                 // Search rivers around and smooth
                 if(height > SEA_LEVEL){
@@ -138,7 +145,7 @@ public class DefaultGenerator extends ChunkGenerator{
 
                 // Fill stone blocks
                 for(int y = 0; y <= height; y++)
-                    chunk.setBlockFast(lx, y, lz, Blocks.STONE);
+                    chunk.setBlockFast(lx, y, lz, ClientBlocks.STONE);
             }
         }
 
@@ -217,24 +224,24 @@ public class DefaultGenerator extends ChunkGenerator{
                 final int height = heightmapSurface.getHeight(lx, lz);
                 final Biome biome = biomes.getBiome(lx, lz);
 
-                if(chunk.getBlock(lx, height, lz) == Blocks.WATER)
+                if(chunk.getBlock(lx, height, lz) == ClientBlocks.WATER)
                     continue;
 
                 // SELECT SURFACE BLOCKS
-                final Block surfaceBlock = switch(biome){
-                    case DESERT, BEACH, SNOWY_BEACH -> Blocks.SAND;
-                    case SNOWY_TAIGA -> Blocks.SNOWY_GRASS_BLOCK;
+                final BlockClient surfaceBlock = switch(biome){
+                    case DESERT, BEACH, SNOWY_BEACH -> ClientBlocks.SAND;
+                    case SNOWY_TAIGA -> ClientBlocks.SNOWY_GRASS_BLOCK;
                     case TAIGA -> {
                         if(peaksValleysNoise.getNoise(x, z) < 0.2)
-                            yield Blocks.PODZOL;
-                        yield Blocks.GRASS_BLOCK;
+                            yield ClientBlocks.PODZOL;
+                        yield ClientBlocks.GRASS_BLOCK;
                     }
-                    case RIVER, ICE_RIVER, SEA, ICE_SEA -> Blocks.DIRT;
-                    default -> Blocks.GRASS_BLOCK;
+                    case RIVER, ICE_RIVER, SEA, ICE_SEA -> ClientBlocks.DIRT;
+                    default -> ClientBlocks.GRASS_BLOCK;
                 };
-                final Block subsurfaceBlock = switch(biome){
-                    case DESERT, BEACH, SNOWY_BEACH -> Blocks.SAND;
-                    default -> Blocks.DIRT;
+                final BlockClient subsurfaceBlock = switch(biome){
+                    case DESERT, BEACH, SNOWY_BEACH -> ClientBlocks.SAND;
+                    default -> ClientBlocks.DIRT;
                 };
 
                 // SET SURFACE BLOCKS
@@ -248,13 +255,13 @@ public class DefaultGenerator extends ChunkGenerator{
                 switch(biome){
                     case RIVER, SEA -> {
                         for(int y = height; y <= SEA_LEVEL; y++)
-                            if(chunk.getBlock(lx, y, lz) == Blocks.AIR)
-                                chunk.setBlockFast(lx, y, lz, Blocks.WATER);
+                            if(chunk.getBlock(lx, y, lz) == ClientBlocks.AIR)
+                                chunk.setBlockFast(lx, y, lz, ClientBlocks.WATER);
                     }
                     case ICE_RIVER, ICE_SEA -> {
                         for(int y = height; y <= SEA_LEVEL; y++)
-                            if(chunk.getBlock(lx, y, lz) == Blocks.AIR)
-                                chunk.setBlockFast(lx, y, lz, Blocks.ICE);
+                            if(chunk.getBlock(lx, y, lz) == ClientBlocks.AIR)
+                                chunk.setBlockFast(lx, y, lz, ClientBlocks.ICE);
                     }
                 }
 
@@ -271,11 +278,11 @@ public class DefaultGenerator extends ChunkGenerator{
                 switch(biome){
                     case FOREST -> {
                         if(random.randomBoolean(0.05))
-                            chunk.setBlockFast(lx, height + 1, lz, Blocks.GRASS);
+                            chunk.setBlockFast(lx, height + 1, lz, ClientBlocks.GRASS);
                     }
                     case TAIGA, SNOWY_TAIGA -> {
                         if(random.randomBoolean(0.005))
-                            chunk.setBlockFast(lx, height + 1, lz, Blocks.GRASS);
+                            chunk.setBlockFast(lx, height + 1, lz, ClientBlocks.GRASS);
                     }
                 }
 
@@ -299,7 +306,7 @@ public class DefaultGenerator extends ChunkGenerator{
         temperatureNoise.setSeed(seed);
         humidityNoise.setSeed(seed);
         riverNoise.setSeed(seed);
-        random.setSeed(Objects.hash(baseX, baseZ));
+        random.setSeed(Objects.hash(seed, baseX, baseZ));
 
         // final Heightmap heightmapUnderwaterSurface = chunk.getHeightMap(HeightmapType.UNDERWATER_SURFACE);
         final Heightmap heightmapSurface = chunk.getHeightMap(HeightmapType.SURFACE);

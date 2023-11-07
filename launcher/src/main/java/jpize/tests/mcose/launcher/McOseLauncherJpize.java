@@ -2,7 +2,7 @@ package jpize.tests.mcose.launcher;
 
 import jpize.Jpize;
 import jpize.gl.Gl;
-import jpize.glfw.key.Key;
+import jpize.sdl.input.Key;
 import jpize.graphics.postprocess.effects.GaussianBlur;
 import jpize.graphics.texture.Texture;
 import jpize.graphics.util.batch.TextureBatch;

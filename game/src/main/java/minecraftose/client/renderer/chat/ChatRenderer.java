@@ -83,8 +83,8 @@ public class ChatRenderer implements Disposable{
         }
         
         // Scroll
-        if(chat.isOpened() && Jpize.mouse().isInBounds(chatX, openedChatY, chatWidth, chatHeight))
-            scrollMotion -= Jpize.mouse().getScroll() * Jpize.getDt() * lineAdvance * 10;
+        if(chat.isOpened() && Jpize.input().isInBounds(chatX, openedChatY, chatWidth, chatHeight))
+            scrollMotion -= Jpize.input().getScroll() * Jpize.getDt() * lineAdvance * 10;
         
         scroll += scrollMotion;
         scrollMotion *= 0.95F;

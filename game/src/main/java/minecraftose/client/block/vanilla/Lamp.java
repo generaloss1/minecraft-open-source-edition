@@ -1,16 +1,16 @@
 package minecraftose.client.block.vanilla;
 
-import minecraftose.client.block.Block;
+import minecraftose.client.block.BlockClient;
 import minecraftose.client.block.model.BlockModel;
 import minecraftose.client.block.shape.BlockCollide;
 import minecraftose.client.block.shape.BlockCursor;
 import minecraftose.client.chunk.mesh.ChunkMeshType;
 import minecraftose.client.resources.GameResources;
 import minecraftose.main.Dir;
-import minecraftose.main.audio.BlockSoundPack;
+import minecraftose.main.audio.SoundType;
 import minecraftose.main.chunk.ChunkUtils;
 
-public class Lamp extends Block{
+public class Lamp extends BlockClient{
 
     public Lamp(int id){
         super(id);
@@ -26,7 +26,7 @@ public class Lamp extends Block{
                 .setLightLevel(ChunkUtils.MAX_LIGHT_LEVEL)
                 .setOpacity(ChunkUtils.MAX_LIGHT_LEVEL)
                 .setTranslucent(false)
-                .setSoundPack(BlockSoundPack.GLASS)
+                .setSoundPack(SoundType.GLASS)
                 .setFacing(Dir.NONE)
                 .setModel(modelOn)
                 .setCollide(BlockCollide.SOLID)
@@ -37,7 +37,7 @@ public class Lamp extends Block{
                 .setLightLevel(0)
                 .setOpacity(ChunkUtils.MAX_LIGHT_LEVEL)
                 .setTranslucent(false)
-                .setSoundPack(BlockSoundPack.GLASS)
+                .setSoundPack(SoundType.GLASS)
                 .setFacing(Dir.NONE)
                 .setModel(modelOff)
                 .setCollide(BlockCollide.SOLID)

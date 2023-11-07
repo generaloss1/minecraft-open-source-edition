@@ -8,8 +8,8 @@ import minecraftose.main.chunk.ChunkUtils;
 import minecraftose.main.chunk.storage.ChunkPos;
 import minecraftose.main.level.ChunkManager;
 import minecraftose.main.level.ChunkManagerUtils;
-import minecraftose.main.net.packet.clientbound.CBPacketChunk;
-import minecraftose.main.net.packet.serverbound.SBPacketChunkRequest;
+import minecraftose.main.network.packet.s2c.game.S2CPacketChunk;
+import minecraftose.main.network.packet.c2s.game.C2SPacketChunkRequest;
 import jpize.util.time.FpsCounter;
 
 import java.util.Collection;
@@ -189,7 +189,7 @@ public class ClientChunkManager extends ChunkManager {
         frontiers.add(frontierPos);
 
         if(!allChunks.containsKey(frontierPos) && !requestedChunks.containsKey(frontierPos) && toBuildQueue.stream().noneMatch(chunk -> chunk.getPosition().equals(frontierPos))){
-            getLevel().getGame().getConnectionHandler().sendPacket(new SBPacketChunkRequest(frontierPos.x, frontierPos.z));
+            getLevel().getGame().getConnectionHandler().sendPacket(new C2SPacketChunkRequest(frontierPos.x, frontierPos.z));
             requestedChunks.put(frontierPos, System.currentTimeMillis());
         }
     }
@@ -219,7 +219,7 @@ public class ClientChunkManager extends ChunkManager {
     }
     
     
-    public void receivedChunk(CBPacketChunk packet){
+    public void receivedChunk(S2CPacketChunk packet){
         final ClientChunk chunk = packet.getChunk(level);
 
         allChunks.put(chunk.getPosition(), chunk);

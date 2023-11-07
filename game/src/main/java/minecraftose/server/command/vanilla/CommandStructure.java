@@ -6,7 +6,7 @@ import jpize.math.vecmath.vector.Vec3i;
 import minecraftose.main.command.CommandContext;
 import minecraftose.main.command.argument.CommandArg;
 import minecraftose.main.command.builder.Commands;
-import minecraftose.main.net.packet.clientbound.CBPacketBlockUpdate;
+import minecraftose.main.network.packet.s2c.game.S2CPacketBlockUpdate;
 import minecraftose.main.registry.Registry;
 import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
@@ -53,9 +53,9 @@ public class CommandStructure{
         mainCycle: for(int i = 0; i < 6; i++)
             for(int j = 0; j < 6; j++){
                 level.setBlockState(i + start.x, start.y, j + start.z, blockID);
-                playerList.broadcastPacket(new CBPacketBlockUpdate(i + start.x, start.y, j + start.z, blockID));
+                playerList.broadcastPacket(new S2CPacketBlockUpdate(i + start.x, start.y, j + start.z, blockID));
                 blockID++;
-                if(blockID == Registry.Block.collection().size() - 1)
+                if(blockID == Registry.block.collection().size() - 1)
                     break mainCycle;
             }
     }
@@ -115,7 +115,7 @@ public class CommandStructure{
                     for(int z = 0; z < size.z; z++){
                         final short block = inStream.readShort();
                         if(level.setBlockState(x + start.x, y + start.y, z + start.z, block))
-                            playerList.broadcastPacket(new CBPacketBlockUpdate(x + start.x, y + start.y, z + start.z, block));
+                            playerList.broadcastPacket(new S2CPacketBlockUpdate(x + start.x, y + start.y, z + start.z, block));
                     }
 
         }catch(IOException e){

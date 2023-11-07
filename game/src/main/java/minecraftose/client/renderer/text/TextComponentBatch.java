@@ -27,7 +27,8 @@ public class TextComponentBatch implements Disposable{
         this.batch = new TextureBatch(1024);
         this.background = new Color();
 
-        this.font = FontLoader.loadFnt(new Resource("font/minecraft/default.fnt"));
+        this.font = FontLoader.loadFnt("font/minecraft/default.fnt");
+        // this.font = FontLoader.loadTrueType("font/faithful/faithful.ttf", 32);
         this.font.getOptions().lineGaps = 1;
     }
     

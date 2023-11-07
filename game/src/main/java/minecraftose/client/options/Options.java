@@ -1,8 +1,8 @@
 package minecraftose.client.options;
 
 import jpize.Jpize;
+import jpize.sdl.input.Key;
 import jpize.util.file.Resource;
-import jpize.glfw.key.Key;
 import minecraftose.client.Minecraft;
 import minecraftose.client.control.camera.GameCamera;
 import minecraftose.main.SharedConstants;
@@ -190,7 +190,7 @@ public class Options{
     public void setFullscreen(boolean fullscreen){
         this.fullscreen = fullscreen;
 
-        Jpize.window().setFullscreen(fullscreen);
+        Jpize.window().setFullscreenDesktop(fullscreen);
     }
 
 
@@ -227,7 +227,7 @@ public class Options{
 
     public void setMouseSensitivity(float mouseSensitivity){
         this.mouseSensitivity = mouseSensitivity;
-        session.getGame().getPlayer().getController().getRotationController().setSensitivity(mouseSensitivity);
+        session.getGame().getPlayer().getController().getRotationController().setSpeed(mouseSensitivity);
     }
     
     

@@ -2,8 +2,8 @@ package minecraftose.client.level;
 
 import jpize.math.Maths;
 import minecraftose.client.ClientGame;
-import minecraftose.client.block.Block;
-import minecraftose.client.block.Blocks;
+import minecraftose.client.block.BlockClient;
+import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.chunk.ClientChunk;
 import minecraftose.main.biome.Biome;
 import minecraftose.main.chunk.ChunkUtils;
@@ -37,16 +37,16 @@ public class ClientLevel extends Level{
         if(targetChunk != null)
             return targetChunk.getBlockState(ChunkUtils.getLocalCoord(x), y, ChunkUtils.getLocalCoord(z));
 
-        return Blocks.VOID_AIR.getDefaultData();
+        return ClientBlocks.VOID_AIR.getDefaultData();
     }
 
     @Override
-    public Block getBlock(int x, int y, int z){
+    public BlockClient getBlock(int x, int y, int z){
         final ClientChunk targetChunk = getBlockChunk(x, z);
         if(targetChunk != null)
             return targetChunk.getBlock(ChunkUtils.getLocalCoord(x), y, ChunkUtils.getLocalCoord(z));
 
-        return Blocks.VOID_AIR;
+        return ClientBlocks.VOID_AIR;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class ClientLevel extends Level{
     }
 
     @Override
-    public boolean setBlock(int x, int y, int z, Block block){
+    public boolean setBlock(int x, int y, int z, BlockClient block){
         final ClientChunk targetChunk = getBlockChunk(x, z);
         if(targetChunk != null)
             return targetChunk.setBlock(ChunkUtils.getLocalCoord(x), y, ChunkUtils.getLocalCoord(z), block);

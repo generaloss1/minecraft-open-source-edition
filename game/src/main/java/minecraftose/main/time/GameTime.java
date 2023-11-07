@@ -18,6 +18,9 @@ public class GameTime implements Tickable{
     public static final int TIME_NIGHT = 13000;
     public static final int TIME_NOON = 6000;
 
+    public static final float MILLIS_IN_SECOND = 1000F;
+    public static final float MILLIS_PER_SECOND = 1000F / TICKS_PER_SECOND * TICKS_IN_SECOND;
+
 
     private long ticks;
     private boolean dayLightCycle;

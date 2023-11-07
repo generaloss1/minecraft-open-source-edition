@@ -1,6 +1,6 @@
 package minecraftose.server.gen.pool;
 
-import minecraftose.client.block.Block;
+import minecraftose.client.block.BlockClient;
 import minecraftose.main.chunk.storage.ChunkPos;
 import minecraftose.server.chunk.ServerChunk;
 import minecraftose.server.level.ServerLevel;
@@ -62,7 +62,7 @@ public class BlockPool{
             chunk.setBlockDataFast(lx, y, lz, blockData);
     }
 
-    public void genBlock(int x, int y, int z, Block block){
+    public void genBlock(int x, int y, int z, BlockClient block){
         this.setBlockData(x, y, z, block.getDefaultData());
     }
 

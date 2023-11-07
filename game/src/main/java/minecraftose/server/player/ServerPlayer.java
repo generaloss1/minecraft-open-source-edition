@@ -9,10 +9,10 @@ import minecraftose.main.entity.Entity;
 import minecraftose.main.entity.Player;
 import minecraftose.main.inventory.PlayerInventory;
 import minecraftose.main.level.Level;
-import minecraftose.main.net.packet.clientbound.CBPacketAbilities;
-import minecraftose.main.net.packet.clientbound.CBPacketChatMessage;
-import minecraftose.main.net.packet.clientbound.CBPacketPlaySound;
-import minecraftose.main.net.packet.clientbound.CBPacketTeleportPlayer;
+import minecraftose.main.network.packet.s2c.game.S2CPacketAbilities;
+import minecraftose.main.network.packet.s2c.game.S2CPacketChatMessage;
+import minecraftose.main.network.packet.s2c.game.S2CPacketPlaySound;
+import minecraftose.main.network.packet.s2c.game.S2CPacketTeleportPlayer;
 import minecraftose.main.text.Component;
 import minecraftose.server.Server;
 import minecraftose.server.level.ServerLevel;
@@ -44,12 +44,12 @@ public class ServerPlayer extends Player{
     }
 
     public void playSound(Sound sound, float volume, float pitch){
-        sendPacket(new CBPacketPlaySound(sound, volume, pitch, this.getPosition()));
+        sendPacket(new S2CPacketPlaySound(sound, volume, pitch, this.getPosition()));
     }
     
     
     public void teleport(Level level, Vec3f position, EulerAngles rotation){
-        sendPacket(new CBPacketTeleportPlayer(level.getConfiguration().getName(), position, rotation));
+        sendPacket(new S2CPacketTeleportPlayer(level.getConfiguration().getName(), position, rotation));
         
         final Level oldLevel = getLevel();
         if(level != oldLevel){
@@ -79,7 +79,7 @@ public class ServerPlayer extends Player{
     
     
     public void setFlyEnabled(boolean flyEnabled){
-        sendPacket(new CBPacketAbilities(flyEnabled));
+        sendPacket(new S2CPacketAbilities(flyEnabled));
         super.setFlyEnabled(flyEnabled);
     }
 
@@ -93,7 +93,7 @@ public class ServerPlayer extends Player{
     }
     
     public void sendMessage(Component message){
-        sendPacket(new CBPacketChatMessage(message.toFlatList()));
+        sendPacket(new S2CPacketChatMessage(message.toFlatList()));
     }
     
     

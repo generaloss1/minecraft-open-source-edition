@@ -1,6 +1,6 @@
 package minecraftose.server.command.vanilla;
 
-import minecraftose.main.net.packet.clientbound.CBPacketDisconnect;
+import minecraftose.main.network.packet.s2c.game.S2CPacketDisconnect;
 import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
 import minecraftose.main.command.CommandContext;
@@ -29,7 +29,7 @@ public class CommandKick{
         // Reason
         final String reason = context.getArg(1).asText().getText();
         // Kick
-        targetPlayer.sendPacket(new CBPacketDisconnect("You been kicked by " + sender.getName() + ", reason: " + reason));
+        targetPlayer.sendPacket(new S2CPacketDisconnect("You been kicked by " + sender.getName() + ", reason: " + reason));
         context.getServer().getPlayerList().broadcastServerMessage(new Component().color(TextColor.DARK_RED).text(targetPlayer.getName() + " was kicked by " + sender.getName() + ", reason: " + reason));
     }
     

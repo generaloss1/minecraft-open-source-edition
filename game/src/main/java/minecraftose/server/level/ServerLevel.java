@@ -2,13 +2,13 @@ package minecraftose.server.level;
 
 import jpize.math.vecmath.vector.Vec2f;
 import jpize.math.vecmath.vector.Vec3f;
-import minecraftose.client.block.Block;
-import minecraftose.client.block.Blocks;
+import minecraftose.client.block.BlockClient;
+import minecraftose.client.block.ClientBlocks;
 import minecraftose.main.audio.Sound;
 import minecraftose.main.chunk.storage.ChunkPos;
 import minecraftose.main.chunk.storage.HeightmapType;
 import minecraftose.main.level.Level;
-import minecraftose.main.net.packet.clientbound.CBPacketPlaySound;
+import minecraftose.main.network.packet.s2c.game.S2CPacketPlaySound;
 import minecraftose.server.Server;
 import minecraftose.server.chunk.ServerChunk;
 import minecraftose.server.gen.pool.BlockPool;
@@ -48,7 +48,7 @@ public class ServerLevel extends Level{
         if(targetChunk != null)
             return targetChunk.getBlockState(getLocalCoord(x), y, getLocalCoord(z));
 
-        return Blocks.VOID_AIR.getDefaultData();
+        return ClientBlocks.VOID_AIR.getDefaultData();
     }
     
     @Override
@@ -71,16 +71,16 @@ public class ServerLevel extends Level{
 
 
     @Override
-    public Block getBlock(int x, int y, int z){
+    public BlockClient getBlock(int x, int y, int z){
         final ServerChunk targetChunk = getBlockChunk(x, z);
         if(targetChunk != null)
             return targetChunk.getBlock(getLocalCoord(x), y, getLocalCoord(z));
 
-        return Blocks.VOID_AIR;
+        return ClientBlocks.VOID_AIR;
     }
 
     @Override
-    public boolean setBlock(int x, int y, int z, Block block){
+    public boolean setBlock(int x, int y, int z, BlockClient block){
         final ChunkPos chunkPos = new ChunkPos(getChunkPos(x), getChunkPos(z));
         ServerChunk targetChunk = chunkManager.getChunk(chunkPos);
 
@@ -97,7 +97,7 @@ public class ServerLevel extends Level{
         return false;
     }
 
-    public void genBlock(int x, int y, int z, Block block){
+    public void genBlock(int x, int y, int z, BlockClient block){
         final ChunkPos chunkPos = new ChunkPos(getChunkPos(x), getChunkPos(z));
         ServerChunk targetChunk = chunkManager.getChunk(chunkPos);
 
@@ -169,20 +169,20 @@ public class ServerLevel extends Level{
 
     public void playSound(Sound sound, float volume, float pitch, float x, float y, float z){
         server.getPlayerList().broadcastPacketLevel(
-            this, new CBPacketPlaySound(sound, volume, pitch, x, y, z)
+            this, new S2CPacketPlaySound(sound, volume, pitch, x, y, z)
         );
     }
 
     public void playSound(Sound sound, float volume, float pitch, Vec3f position){
         server.getPlayerList().broadcastPacketLevel(
-            this, new CBPacketPlaySound(sound, volume, pitch, position)
+            this, new S2CPacketPlaySound(sound, volume, pitch, position)
         );
     }
 
     public void playSoundExcept(ServerPlayer except, Sound sound, float volume, float pitch, float x, float y, float z){
         server.getPlayerList().broadcastPacketLevelExcept(
             this,
-            new CBPacketPlaySound(sound, volume, pitch, x, y, z),
+            new S2CPacketPlaySound(sound, volume, pitch, x, y, z),
             except
         );
     }

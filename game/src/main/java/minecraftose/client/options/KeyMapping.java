@@ -1,6 +1,7 @@
 package minecraftose.client.options;
 
-import jpize.glfw.key.Key;
+
+import jpize.sdl.input.Key;
 
 public enum KeyMapping implements Option<Key>{
 
@@ -9,8 +10,8 @@ public enum KeyMapping implements Option<Key>{
     BACK        (Key.S),
     RIGHT       (Key.D),
     JUMP        (Key.SPACE),
-    SNEAK       (Key.LEFT_SHIFT),
-    SPRINT      (Key.LEFT_CONTROL),
+    SNEAK       (Key.LSHIFT),
+    SPRINT      (Key.LCTRL),
 
     CHAT        (Key.T),
     COMMAND     (Key.SLASH),

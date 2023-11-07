@@ -1,9 +1,9 @@
 package minecraftose.main.level;
 
-import minecraftose.client.block.Block;
+import minecraftose.client.block.BlockClient;
 import minecraftose.client.block.BlockProps;
 import minecraftose.main.Tickable;
-import minecraftose.main.block.BlockData;
+import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.chunk.LevelChunk;
 import minecraftose.main.chunk.storage.HeightmapType;
 import minecraftose.main.entity.Entity;
@@ -53,19 +53,19 @@ public abstract class Level implements Tickable{
     public abstract short getBlockState(int x, int y, int z);
 
     public int getBlockID(int x, int y, int z){
-        return BlockData.getID(getBlockState(x, y, z));
+        return ChunkBlockData.getID(getBlockState(x, y, z));
     }
 
-    public abstract Block getBlock(int x, int y, int z);
+    public abstract BlockClient getBlock(int x, int y, int z);
 
     public BlockProps getBlockProps(int x, int y, int z){
-        return BlockData.getProps(getBlockState(x, y, z));
+        return ChunkBlockData.getProps(getBlockState(x, y, z));
     }
 
 
     public abstract boolean setBlockState(int x, int y, int z, short block);
 
-    public abstract boolean setBlock(int x, int y, int z, Block block);
+    public abstract boolean setBlock(int x, int y, int z, BlockClient block);
 
     
     public abstract int getHeight(HeightmapType heightmapType, int x, int z);

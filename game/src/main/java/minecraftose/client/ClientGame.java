@@ -3,8 +3,6 @@ package minecraftose.client;
 import jpize.Jpize;
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.net.tcp.TcpClient;
-import jpize.util.time.DeltaTimeCounter;
-import jpize.util.time.FpsCounter;
 import minecraftose.client.chat.Chat;
 import minecraftose.client.control.BlockRayCast;
 import minecraftose.client.control.camera.GameCamera;
@@ -15,8 +13,8 @@ import minecraftose.client.renderer.particle.Particle;
 import minecraftose.client.renderer.particle.ParticleBatch;
 import minecraftose.client.time.ClientGameTime;
 import minecraftose.main.Tickable;
-import minecraftose.main.net.packet.serverbound.SBPacketLogin;
-import minecraftose.main.net.packet.serverbound.SBPacketMove;
+import minecraftose.main.network.packet.c2s.login.C2SPacketLogin;
+import minecraftose.main.network.packet.c2s.game.C2SPacketMove;
 import minecraftose.main.time.GameTime;
 
 public class ClientGame implements Tickable{
@@ -31,8 +29,6 @@ public class ClientGame implements Tickable{
     private final LocalPlayer player;
     private final GameCamera camera;
 
-    private final DeltaTimeCounter tickDtCounter;
-
 
     private ClientLevel level;
     
@@ -42,16 +38,14 @@ public class ClientGame implements Tickable{
         this.connectionHandler = new ClientConnectionHandler(this);
         this.client = new TcpClient(connectionHandler);
         
-        this.blockRayCast = new BlockRayCast(session, 10);
+        this.blockRayCast = new BlockRayCast(session, 16);
         this.chat = new Chat(this);
         this.time = new ClientGameTime(this);
 
-        this.player = new LocalPlayer(null, session.getProfile().getUsername());
+        this.player = new LocalPlayer(this, null, session.getProfile().getUsername());
 
         this.camera = new GameCamera(this, 0.1, 5000, session.getOptions().getFieldOfView());
         this.camera.setDistance(session.getOptions().getRenderDistance());
-
-        this.tickDtCounter = new DeltaTimeCounter();
     }
     
     public Minecraft getSession(){
@@ -63,13 +57,11 @@ public class ClientGame implements Tickable{
         System.out.println("[Client]: Connect to " + address + ":" + port);
         client.connect(address, port);
         client.getConnection().setTcpNoDelay(true);
-        connectionHandler.sendPacket( new SBPacketLogin(session.getVersion().getID(), session.getProfile().getUsername()) );
+        connectionHandler.sendPacket( new C2SPacketLogin(session.getVersion().getID(), session.getProfile().getUsername()) );
     }
 
     @Override
     public void tick(){
-        tickDtCounter.count();
-
         if(level == null)
             return;
 
@@ -79,7 +71,7 @@ public class ClientGame implements Tickable{
 
         // Send player position
         if(player.isPositionChanged() || player.isRotationChanged())
-            connectionHandler.sendPacket(new SBPacketMove(player));
+            connectionHandler.sendPacket(new C2SPacketMove(player));
 
         if(time.getTicks() % GameTime.TICKS_IN_SECOND == 0)
             connectionHandler.countTxRx();
@@ -119,7 +111,6 @@ public class ClientGame implements Tickable{
         }
     }
     
-    
     public void spawnParticle(Particle particle, Vec3f position){
         final ParticleBatch particleBatch = session.getRenderer().getWorldRenderer().getParticleBatch();
         particleBatch.spawnParticle(particle, position);
@@ -151,10 +142,6 @@ public class ClientGame implements Tickable{
 
     public final ClientConnectionHandler getConnectionHandler(){
         return connectionHandler;
-    }
-
-    public float getTickDt(){
-        return tickDtCounter.get();
     }
 
 }

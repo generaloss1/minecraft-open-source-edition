@@ -1,9 +1,9 @@
 package minecraftose.client.block.air;
 
-import minecraftose.client.block.Block;
+import minecraftose.client.block.BlockClient;
 import minecraftose.client.resources.GameResources;
 
-public class Air extends Block{
+public class Air extends BlockClient{
 
     public Air(int id){
         super(id);

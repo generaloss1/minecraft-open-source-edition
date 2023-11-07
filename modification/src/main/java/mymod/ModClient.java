@@ -2,7 +2,7 @@ package mymod;
 
 import jpize.Jpize;
 import jpize.util.file.Resource;
-import jpize.glfw.key.Key;
+import jpize.sdl.input.Key;
 import jpize.graphics.font.BitmapFont;
 import jpize.graphics.texture.Texture;
 import jpize.graphics.util.batch.TextureBatch;

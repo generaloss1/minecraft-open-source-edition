@@ -1,12 +1,12 @@
 package minecraftose.client.chunk;
 
 import jpize.math.vecmath.matrix.Matrix4f;
-import minecraftose.client.block.Block;
-import minecraftose.client.block.Blocks;
+import minecraftose.client.block.BlockClient;
+import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.chunk.mesh.ChunkMeshStack;
 import minecraftose.client.control.camera.GameCamera;
 import minecraftose.client.level.ClientLevel;
-import minecraftose.main.block.BlockData;
+import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.chunk.ChunkUtils;
 import minecraftose.main.chunk.LevelChunk;
 import minecraftose.main.chunk.storage.ChunkPos;
@@ -48,7 +48,7 @@ public class ClientChunk extends LevelChunk{
         if(!super.setBlockData(lx, y, lz, blockData) || ChunkUtils.isOutOfBounds(lx, lz))
             return false;
 
-        final boolean blockPlaced = BlockData.getID(blockData) != Blocks.AIR.getID();
+        final boolean blockPlaced = ChunkBlockData.getID(blockData) != ClientBlocks.AIR.getID();
         for(Heightmap heightmap: heightmaps.values())
             heightmap.update(lx, y, lz, blockPlaced);
         updateMaxY();
@@ -60,11 +60,11 @@ public class ClientChunk extends LevelChunk{
     }
 
     @Override
-    public boolean setBlock(int lx, int y, int lz, Block block){
+    public boolean setBlock(int lx, int y, int lz, BlockClient block){
         if(!super.setBlock(lx, y, lz, block) || ChunkUtils.isOutOfBounds(lx, lz))
             return false;
 
-        final boolean blockPlaced = block != Blocks.AIR;
+        final boolean blockPlaced = block != ClientBlocks.AIR;
         for(Heightmap heightmap: heightmaps.values())
             heightmap.update(lx, y, lz, blockPlaced);
         updateMaxY();

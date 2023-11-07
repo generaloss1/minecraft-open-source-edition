@@ -1,7 +1,7 @@
 package minecraftose.main.command.argument;
 
 import minecraftose.server.player.ServerPlayer;
-import minecraftose.main.net.PlayerProfile;
+import minecraftose.main.network.PlayerProfile;
 import minecraftose.server.Server;
 import minecraftose.main.command.source.CommandSource;
 

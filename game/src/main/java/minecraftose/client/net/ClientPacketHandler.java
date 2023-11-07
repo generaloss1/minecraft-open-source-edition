@@ -11,10 +11,11 @@ import minecraftose.client.entity.LocalPlayer;
 import minecraftose.client.entity.RemotePlayer;
 import minecraftose.main.chat.MessageSourceServer;
 import minecraftose.main.entity.Entity;
-import minecraftose.main.net.packet.clientbound.*;
-import minecraftose.main.net.packet.serverbound.SBPacketAuth;
-import minecraftose.main.net.packet.serverbound.SBPacketEncryptEnd;
-import minecraftose.main.net.packet.serverbound.SBPacketRenderDistance;
+import minecraftose.main.network.packet.c2s.login.C2SPacketAuth;
+import minecraftose.main.network.packet.c2s.login.C2SPacketEncryptEnd;
+import minecraftose.main.network.packet.c2s.game.C2SPacketRenderDistance;
+import minecraftose.main.network.packet.s2c.game.*;
+import minecraftose.main.network.packet.s2c.login.S2CPacketEncryptStart;
 import minecraftose.main.text.Component;
 
 public class ClientPacketHandler implements PacketHandler{
@@ -34,11 +35,11 @@ public class ClientPacketHandler implements PacketHandler{
     }
 
 
-    public void time(CBPacketTime packet){
+    public void time(S2CPacketTime packet){
         game.getTime().setTicks(packet.gameTimeTicks);
     }
 
-    public void teleportPlayer(CBPacketTeleportPlayer packet){
+    public void teleportPlayer(S2CPacketTeleportPlayer packet){
         final LocalPlayer localPlayer = game.getPlayer();
         if(localPlayer == null)
             return;
@@ -54,8 +55,8 @@ public class ClientPacketHandler implements PacketHandler{
         localPlayer.getRotation().set(packet.rotation);
     }
 
-    public void spawnPlayer(CBPacketSpawnPlayer packet){
-        final RemotePlayer remotePlayer = new RemotePlayer(game.getLevel(), packet.playerName);
+    public void spawnPlayer(S2CPacketSpawnPlayer packet){
+        final RemotePlayer remotePlayer = new RemotePlayer(game, game.getLevel(), packet.playerName);
         remotePlayer.getPosition().set(packet.position);
         remotePlayer.getRotation().set(packet.rotation);
         remotePlayer.setUUID(packet.uuid);
@@ -63,17 +64,17 @@ public class ClientPacketHandler implements PacketHandler{
         game.getLevel().addEntity(remotePlayer);
     }
 
-    public void spawnInfo(CBPacketSpawnInfo packet){
+    public void spawnInfo(S2CPacketSpawnInfo packet){
         game.createClientLevel(packet.levelName);
         game.getTime().setTicks(packet.gameTime);
         game.getPlayer().setLevel(game.getLevel());
         game.getPlayer().getPosition().set(packet.position);
         game.getLevel().getChunkManager().startLoadChunks();
 
-        connectionHandler.sendPacket(new SBPacketRenderDistance(game.getSession().getOptions().getRenderDistance()));
+        connectionHandler.sendPacket(new C2SPacketRenderDistance(game.getSession().getOptions().getRenderDistance()));
     }
 
-    public void spawnEntity(CBPacketSpawnEntity packet){
+    public void spawnEntity(S2CPacketSpawnEntity packet){
         final Entity entity = packet.type.createEntity(game.getLevel());
         entity.getPosition().set(packet.position);
         entity.getRotation().set(packet.rotation);
@@ -82,17 +83,17 @@ public class ClientPacketHandler implements PacketHandler{
         game.getLevel().addEntity(entity);
     }
 
-    public void removeEntity(CBPacketRemoveEntity packet){
+    public void removeEntity(S2CPacketRemoveEntity packet){
         game.getLevel().removeEntity(packet.uuid);
     }
 
-    public void pong(CBPacketPong packet){
+    public void pong(S2CPacketPong packet){
         final String message = "Ping - " + String.format("%.5f", (System.nanoTime() - packet.timeNanos) / Maths.NanosInSecond) + " ms";
         game.getChat().putMessage(new MessageSourceServer(), new Component().text(message));
         System.out.println("[Client]: " + message);
     }
 
-    public void playSound(CBPacketPlaySound packet){
+    public void playSound(S2CPacketPlaySound packet){
         final Vec3f camPosition = game.getCamera().getPosition();
 
         Jpize.execSync(() ->
@@ -106,13 +107,13 @@ public class ClientPacketHandler implements PacketHandler{
         );
     }
 
-    public void playerSneaking(CBPacketPlayerSneaking packet){
+    public void playerSneaking(S2CPacketPlayerSneaking packet){
         final Entity targetEntity = game.getLevel().getEntity(packet.playerUUID);
         if(targetEntity instanceof RemotePlayer player)
             player.setSneaking(packet.sneaking);
     }
 
-    public void lightUpdate(CBPacketLightUpdate packet){
+    public void lightUpdate(S2CPacketLightUpdate packet){
         final ClientChunk chunk = game.getLevel().getChunkManager().getChunk(packet.position.x, packet.position.z);
         if(chunk == null)
             return;
@@ -123,7 +124,7 @@ public class ClientPacketHandler implements PacketHandler{
         chunk.rebuild(true);
     }
 
-    public void entityMove(CBPacketEntityMove packet){
+    public void entityMove(S2CPacketEntityMove packet){
         Entity targetEntity = game.getLevel().getEntity(packet.uuid);
         if(targetEntity == null && game.getPlayer().getUUID() == packet.uuid)
             targetEntity = game.getPlayer();
@@ -135,28 +136,28 @@ public class ClientPacketHandler implements PacketHandler{
         }
     }
 
-    public void encryptStart(CBPacketEncryptStart packet){
+    public void encryptStart(S2CPacketEncryptStart packet){
         final byte[] encryptedClientKey = packet.publicServerKey.encrypt(encryptKey.getKey().getEncoded());
 
-        connectionHandler.sendPacket( new SBPacketEncryptEnd(encryptedClientKey) );
+        connectionHandler.sendPacket( new C2SPacketEncryptEnd(encryptedClientKey) );
         connectionHandler.getConnection().encode(encryptKey);// * шифрование *
-        connectionHandler.sendPacket(new SBPacketAuth(game.getSession().getSessionToken()));
+        connectionHandler.sendPacket(new C2SPacketAuth(game.getSession().getSessionToken()));
     }
 
-    public void disconnect(CBPacketDisconnect packet){
+    public void disconnect(S2CPacketDisconnect packet){
         game.disconnect();
         System.out.println("[Client]: Connection closed: " + packet.reasonComponent);
     }
 
-    public void chunk(CBPacketChunk packet){
+    public void chunk(S2CPacketChunk packet){
         game.getLevel().getChunkManager().receivedChunk(packet);
     }
 
-    public void chatMessage(CBPacketChatMessage packet){
+    public void chatMessage(S2CPacketChatMessage packet){
         game.getChat().putMessage(packet);
     }
 
-    public void blockUpdate(CBPacketBlockUpdate packet){
+    public void blockUpdate(S2CPacketBlockUpdate packet){
         game.getLevel().setBlockState(packet.x, packet.y, packet.z, packet.blockData);
 
 
@@ -169,7 +170,7 @@ public class ClientPacketHandler implements PacketHandler{
                 ));
     }
 
-    public void abilities(CBPacketAbilities packet){
+    public void abilities(S2CPacketAbilities packet){
         game.getPlayer().setFlyEnabled(packet.flyEnabled);
     }
 

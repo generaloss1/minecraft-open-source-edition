@@ -1,7 +1,7 @@
 package minecraftose.client.block.vanilla;
 
 import jpize.graphics.util.color.Color;
-import minecraftose.client.block.Block;
+import minecraftose.client.block.BlockClient;
 import minecraftose.client.block.model.BlockModel;
 import minecraftose.client.block.model.Face;
 import minecraftose.client.block.model.Quad;
@@ -10,9 +10,9 @@ import minecraftose.client.block.shape.BlockCursor;
 import minecraftose.client.chunk.mesh.ChunkMeshType;
 import minecraftose.client.resources.GameResources;
 import minecraftose.main.Dir;
-import minecraftose.main.audio.BlockSoundPack;
+import minecraftose.main.audio.SoundType;
 
-public class Cactus extends Block{
+public class Cactus extends BlockClient{
 
     public Cactus(int id){
         super(id);
@@ -35,7 +35,7 @@ public class Cactus extends Block{
                 .setLightLevel(0)
                 .setOpacity(0)
                 .setTranslucent(false)
-                .setSoundPack(BlockSoundPack.WOOD)
+                .setSoundPack(SoundType.WOOD)
                 .setFacing(Dir.NONE)
                 .setModel(model)
                 .setCollide(BlockCollide.CACTUS)

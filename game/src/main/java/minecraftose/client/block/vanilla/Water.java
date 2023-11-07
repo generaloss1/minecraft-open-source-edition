@@ -1,12 +1,12 @@
 package minecraftose.client.block.vanilla;
 
-import minecraftose.client.block.Block;
+import minecraftose.client.block.BlockClient;
 import minecraftose.client.block.model.BlockModel;
 import minecraftose.client.chunk.mesh.ChunkMeshType;
 import minecraftose.client.resources.GameResources;
 import minecraftose.main.Dir;
 
-public class Water extends Block{
+public class Water extends BlockClient{
 
     public Water(int id){
         super(id);
@@ -20,7 +20,7 @@ public class Water extends Block{
         newState()
                 .setSolid(true)
                 .setLightLevel(0)
-                .setOpacity(1)
+                .setOpacity(2)
                 .setTranslucent(false)
                 .setSoundPack(null)
                 .setFacing(Dir.NONE)

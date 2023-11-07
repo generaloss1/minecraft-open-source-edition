@@ -1,14 +1,14 @@
 package minecraftose.client.chunk.builder;
 
 import minecraftose.client.block.BlockProps;
-import minecraftose.client.block.Blocks;
+import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.block.model.BlockModel;
 import minecraftose.client.chunk.ClientChunk;
 import minecraftose.client.chunk.mesh.ChunkMesh;
 import minecraftose.client.chunk.mesh.ChunkMeshStack;
 import minecraftose.client.level.ClientChunkManager;
 import minecraftose.main.biome.Biome;
-import minecraftose.main.block.BlockData;
+import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.chunk.LevelChunkSection;
 import minecraftose.main.chunk.storage.Heightmap;
 import minecraftose.main.chunk.storage.HeightmapType;
@@ -85,7 +85,7 @@ public class ChunkBuilder{
                             y += SIZE;
 
                         final short blockData = chunk.getBlockState(lx, y, lz);
-                        final BlockProps block = BlockData.getProps(blockData);
+                        final BlockProps block = ChunkBlockData.getProps(blockData);
                         if(block.isEmpty())
                             continue;
                         
@@ -114,7 +114,7 @@ public class ChunkBuilder{
 
         final BlockProps neighbor = getBlockProps(lx + normalX, y + normalY, lz + normalZ);
 
-        if(neighbor.getID() == Blocks.VOID_AIR.getID())
+        if(neighbor.getID() == ClientBlocks.VOID_AIR.getID())
             return false;
         
         return (neighbor.isSolid() && neighbor.getModel().isFaceTransparentForNeighbors(-normalX, -normalY, -normalZ)) || neighbor.isEmpty() || (neighbor.isLightTranslucent() && !block.isLightTranslucent());
@@ -149,11 +149,11 @@ public class ChunkBuilder{
 
 
     public BlockProps getBlockProps(int lx, int y, int lz){
-        return BlockData.getProps(getBlock(lx, y, lz));
+        return ChunkBlockData.getProps(getBlock(lx, y, lz));
     }
 
     public short getBlock(int lx, int y, int lz){
-        final AtomicInteger block = new AtomicInteger(Blocks.VOID_AIR.getDefaultData());
+        final AtomicInteger block = new AtomicInteger(ClientBlocks.VOID_AIR.getDefaultData());
         getChunk(lx, lz, (chunk, clx, clz) -> block.set(chunk.getBlockState(clx, y, clz)));
         return (short) block.get();
     }

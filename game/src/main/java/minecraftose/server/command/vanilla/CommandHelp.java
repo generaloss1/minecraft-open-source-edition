@@ -18,9 +18,11 @@ public class CommandHelp{
     private static void sendHelp(CommandContext context){
         final CommandSource source = context.getSource();
         
-        for(CommandNodeLiteral command: context.getServer().getCommandDispatcher().getCommands()){
+        for(CommandNodeLiteral command: context.getServer().getCommandDispatcher().getCommands())
             source.sendMessage(new Component().text("/" + command.getLiteral()));
-        }
+
+        source.sendMessage(new Component());
+        source.sendMessage(new Component().text("page 1 of 1"));
     }
     
 }

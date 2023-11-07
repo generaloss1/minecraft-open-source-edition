@@ -14,7 +14,7 @@ import minecraftose.Main;
 import minecraftose.client.audio.MusicGroup;
 import minecraftose.client.audio.MusicPlayer;
 import minecraftose.client.audio.SoundPlayer;
-import minecraftose.client.block.Blocks;
+import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.control.GameController;
 import minecraftose.client.level.ClientLevel;
 import minecraftose.client.options.Options;
@@ -26,25 +26,14 @@ import minecraftose.client.resources.VanillaBlocks;
 import minecraftose.client.resources.VanillaMusic;
 import minecraftose.main.SharedConstants;
 import minecraftose.main.Version;
-import minecraftose.main.block.BlockData;
+import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.modification.loader.ModEntryPointType;
 import minecraftose.main.modification.loader.ModLoader;
-import minecraftose.main.nbt.io.NbtIO;
-import minecraftose.main.nbt.tag.list.NbtCompound;
-import minecraftose.main.nbt.tag.type.NbtByte;
-import minecraftose.main.nbt.tag.type.NbtInt;
-import minecraftose.main.nbt.tag.list.NbtList;
-import minecraftose.main.nbt.tag.NbtTag;
-import minecraftose.main.nbt.tag.type.NbtString;
-import minecraftose.main.net.PlayerProfile;
-import minecraftose.main.registry.Registry;
+import minecraftose.main.network.PlayerProfile;
 import minecraftose.main.time.GameTime;
 import minecraftose.server.IntegratedServer;
 import jpize.util.Utils;
 import jpize.util.time.Sync;
-
-import java.util.Comparator;
-import java.util.Map;
 
 public class Minecraft extends JpizeApplication{
 
@@ -112,8 +101,8 @@ public class Minecraft extends JpizeApplication{
         modLoader.initializeMods(ModEntryPointType.MAIN);
 
         // Load blocks
-        Blocks.register();
-        Registry.Block.loadBlocks(this);
+        ClientBlocks.register();
+        ClientBlocks.loadBlocks(this);
 
         // Connect to server //
         Utils.delayElapsed(1000);
@@ -235,7 +224,7 @@ public class Minecraft extends JpizeApplication{
 
         double x = velocity.x;
         double y = velocity.y;
-        if(BlockData.getID(level.getBlockState(position.xFloor(), position.yFloor() + Mathc.signum(x), position.zFloor())) != 0){
+        if(ChunkBlockData.getID(level.getBlockState(position.xFloor(), position.yFloor() + Mathc.signum(x), position.zFloor())) != 0){
             double ny = Maths.frac(position.y) + y;
             if(ny < 0)
                 y = 0;

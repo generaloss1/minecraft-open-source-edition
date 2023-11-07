@@ -4,9 +4,10 @@ import jpize.Jpize;
 import jpize.math.Mathc;
 import jpize.math.Maths;
 import jpize.math.vecmath.vector.Vec3f;
-import minecraftose.client.block.Block;
-import minecraftose.client.block.Blocks;
+import minecraftose.client.ClientGame;
+import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.control.PlayerController;
+import minecraftose.client.level.ClientLevel;
 import minecraftose.main.audio.SoundGroup;
 import minecraftose.main.inventory.PlayerInventory;
 import minecraftose.main.item.ItemStack;
@@ -19,8 +20,8 @@ public class LocalPlayer extends AbstractClientPlayer{
     private float jumpDownY, lastVelocityY, fallHeight;
     private final PlayerInventory inventory;
     
-    public LocalPlayer(Level levelOF, String name){
-        super(levelOF, name);
+    public LocalPlayer(ClientGame game, ClientLevel level, String name){
+        super(game, level, name);
 
         this.controller = new PlayerController(this);
         this.inventory = new PlayerInventory();
@@ -67,7 +68,7 @@ public class LocalPlayer extends AbstractClientPlayer{
 
         // In Water
         final Vec3f position = getPosition();
-        if(getLevel().getBlockState(position.xFloor(), position.yFloor(), position.zFloor()) == Blocks.WATER.getID()){
+        if(getLevel().getBlockState(position.xFloor(), position.yFloor(), position.zFloor()) == ClientBlocks.WATER.getID()){
             Vec3f push = new Vec3f(
                 Maths.random(0, 2) * Maths.cosDeg(getRotation().yaw),
                 1F,
@@ -142,17 +143,6 @@ public class LocalPlayer extends AbstractClientPlayer{
         }
         
         lastVelocityY = getVelocity().y;
-        
-        // Move entity
-        final Vec3f collidedMotion = moveEntity(getVelocity());
-        if(collidedMotion == null)
-            return;
-
-        getVelocity().collidedAxesToZero(collidedMotion);
-        
-        // Disable sprinting
-        if(collidedMotion.x == 0 || collidedMotion.z == 0)
-            setSprinting(false);
     }
     
     public float getFallHeight(){

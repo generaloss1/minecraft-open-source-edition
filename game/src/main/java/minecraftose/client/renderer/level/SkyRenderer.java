@@ -112,11 +112,11 @@ public class SkyRenderer implements Disposable{
     }
     
     public Color getFogColor(){
-        return new Color(0.6, 0.75, 0.9, 0.95).mul3(skyBrightness);
+        return new Color(0.8, 0.85, 0.9, 1F).mul3(skyBrightness);
     }
     
     public Color getSkyColor(){
-        return new Color(0.35, 0.6, 1, 1).mul3(skyBrightness);
+        return new Color(0.47, 0.65, 1, 1F).mul3(skyBrightness);
     }
 
     public float getFogStart(){

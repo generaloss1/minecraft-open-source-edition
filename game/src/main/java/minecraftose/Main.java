@@ -3,7 +3,7 @@ package minecraftose;
 import jpize.Jpize;
 import jpize.io.context.ContextBuilder;
 import minecraftose.client.Minecraft;
-import minecraftose.main.net.PlayerProfile;
+import minecraftose.main.network.PlayerProfile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +18,7 @@ public class Main{
         // Parse arguments
         final Map<String, String> argsMap = mapArgs(args);
 
-        profile = new PlayerProfile(argsMap.getOrDefault("username", PlayerProfile.genFunnyName()));
+        profile = new PlayerProfile(argsMap.getOrDefault("username", "GeneralPashon"));
         sessionToken = argsMap.getOrDefault("sessionToken", "54_54-iWantPizza-54_54");
         gameDir = argsMap.get("gameDir");
 
@@ -27,6 +27,7 @@ public class Main{
 
         // Run app
         ContextBuilder.newContext("Minecraft Open Source Edition")
+            .ssaaSamples(4)
             .size(width, height)
             .register()
             .setAdapter(Minecraft.instance);

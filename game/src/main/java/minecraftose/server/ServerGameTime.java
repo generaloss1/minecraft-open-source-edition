@@ -1,7 +1,7 @@
 package minecraftose.server;
 
 import minecraftose.main.time.GameTime;
-import minecraftose.main.net.packet.clientbound.CBPacketTime;
+import minecraftose.main.network.packet.s2c.game.S2CPacketTime;
 
 public class ServerGameTime extends GameTime{
     
@@ -19,7 +19,7 @@ public class ServerGameTime extends GameTime{
     @Override
     public void setTicks(long ticks){
         super.setTicks(ticks);
-        server.getPlayerList().broadcastPacket(new CBPacketTime(ticks));
+        server.getPlayerList().broadcastPacket(new S2CPacketTime(ticks));
     }
     
 }

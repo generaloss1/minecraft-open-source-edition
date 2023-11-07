@@ -2,7 +2,7 @@ package minecraftose.server.gen;
 
 import jpize.math.Maths;
 import jpize.math.function.FastNoiseLite;
-import minecraftose.client.block.Blocks;
+import minecraftose.client.block.ClientBlocks;
 import minecraftose.main.chunk.storage.HeightmapType;
 import minecraftose.server.chunk.ServerChunk;
 
@@ -62,7 +62,7 @@ public class IslandsGenerator extends ChunkGenerator{
                     
                     float continentalness3D = (continentalnessNoise.getNoise(x, y, z) + 1) * 0.5F;
                     if(continentalness3D < ((float) y / (HEIGHT - height)) * density)
-                        chunk.setBlockFast(lx, y, lz, Blocks.STONE);
+                        chunk.setBlockFast(lx, y, lz, ClientBlocks.STONE);
                 }
             }
         }
@@ -74,7 +74,7 @@ public class IslandsGenerator extends ChunkGenerator{
                 
                 int height = chunk.getHeightMap(HeightmapType.SURFACE).getHeight(lx, lz);
                 if(height > 60)
-                    chunk.setBlockFast(lx, height, lz, Blocks.GRASS_BLOCK);
+                    chunk.setBlockFast(lx, height, lz, ClientBlocks.GRASS_BLOCK);
             }
         }
 

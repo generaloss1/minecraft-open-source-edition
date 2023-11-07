@@ -4,19 +4,19 @@ import jpize.net.tcp.TcpConnection;
 import jpize.net.tcp.packet.IPacket;
 import jpize.net.tcp.packet.PacketHandler;
 import minecraftose.client.block.BlockProps;
-import minecraftose.client.block.Blocks;
-import minecraftose.main.audio.BlockSoundPack;
-import minecraftose.main.block.BlockData;
+import minecraftose.client.block.ClientBlocks;
+import minecraftose.main.audio.SoundType;
+import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.block.BlockSetType;
 import minecraftose.main.chunk.ChunkUtils;
 import minecraftose.main.chunk.storage.ChunkPos;
 import minecraftose.main.chunk.storage.HeightmapType;
 import minecraftose.main.command.source.CommandSourcePlayer;
-import minecraftose.main.net.packet.clientbound.CBPacketBlockUpdate;
-import minecraftose.main.net.packet.clientbound.CBPacketEntityMove;
-import minecraftose.main.net.packet.clientbound.CBPacketPlayerSneaking;
-import minecraftose.main.net.packet.clientbound.CBPacketPong;
-import minecraftose.main.net.packet.serverbound.*;
+import minecraftose.main.network.packet.c2s.game.*;
+import minecraftose.main.network.packet.s2c.game.S2CPacketBlockUpdate;
+import minecraftose.main.network.packet.s2c.game.S2CPacketEntityMove;
+import minecraftose.main.network.packet.s2c.game.S2CPacketPlayerSneaking;
+import minecraftose.main.network.packet.s2c.game.S2CPacketPong;
 import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
 import minecraftose.server.Server;
@@ -52,7 +52,7 @@ public class PlayerGameConnection implements PacketHandler{
     }
     
     
-    public void chunkRequest(SBPacketChunkRequest packet){
+    public void chunkRequest(C2SPacketChunkRequest packet){
         final ServerLevel level = player.getLevel();
         
         level.getChunkManager().requestedChunk(
@@ -61,7 +61,7 @@ public class PlayerGameConnection implements PacketHandler{
         );
     }
     
-    public void playerBlockSet(SBPacketPlayerBlockSet packet){
+    public void playerBlockSet(C2SPacketPlayerBlockSet packet){
         final ServerLevel level = player.getLevel();
         final BlockProps oldBlock = level.getBlockProps(packet.x, packet.y, packet.z);
         final int oldHeightLight = level.getHeight(HeightmapType.LIGHT_SURFACE, packet.x, packet.z);
@@ -71,15 +71,15 @@ public class PlayerGameConnection implements PacketHandler{
         if(!result)
             return;
         
-        final BlockProps block = BlockData.getProps(packet.blockData);
+        final BlockProps block = ChunkBlockData.getProps(packet.blockData);
         final int heightLight = level.getHeight(HeightmapType.LIGHT_SURFACE, packet.x, packet.z);
         final BlockSetType setType = BlockSetType.from(oldBlock.isEmpty(), block.isEmpty());
 
         // Send Set Block packet //
-        server.getPlayerList().broadcastPacketExcept(new CBPacketBlockUpdate(packet.x, packet.y, packet.z, packet.blockData), player);
+        server.getPlayerList().broadcastPacketExcept(new S2CPacketBlockUpdate(packet.x, packet.y, packet.z, packet.blockData), player);
 
         // Sound //
-        final BlockSoundPack soundPack;
+        final SoundType soundPack;
         if(setType.ordinal() > 0)
             soundPack = block.getSoundPack();
         else
@@ -89,10 +89,10 @@ public class PlayerGameConnection implements PacketHandler{
             level.playSound(soundPack.randomSound(setType), 1, 1, packet.x + 0.5F, packet.y + 0.5F, packet.z + 0.5F);
 
         // Process grass
-        if(setType == BlockSetType.DESTROY && level.getBlockProps(packet.x, packet.y + 1, packet.z).getID() == Blocks.GRASS.getID()){
-            level.setBlock(packet.x, packet.y + 1, packet.z, Blocks.AIR);
-            player.sendPacket(new CBPacketBlockUpdate(packet.x, packet.y + 1, packet.z, Blocks.AIR.getDefaultData()));
-            level.playSound(BlockSoundPack.GRASS.randomDestroySound(), 1, 1, packet.x + 0.5F, packet.y + 1.5F, packet.z + 0.5F);
+        if(setType == BlockSetType.DESTROY && level.getBlockProps(packet.x, packet.y + 1, packet.z).getID() == ClientBlocks.GRASS.getID()){
+            level.setBlock(packet.x, packet.y + 1, packet.z, ClientBlocks.AIR);
+            player.sendPacket(new S2CPacketBlockUpdate(packet.x, packet.y + 1, packet.z, ClientBlocks.AIR.getDefaultData()));
+            level.playSound(SoundType.GRASS.randomDestroySound(), 1, 1, packet.x + 0.5F, packet.y + 1.5F, packet.z + 0.5F);
         }
 
         // Process light
@@ -113,25 +113,25 @@ public class PlayerGameConnection implements PacketHandler{
         level.getSkyLight().sendSections(chunk, packet.y);
     }
     
-    public void move(SBPacketMove packet){
+    public void move(C2SPacketMove packet){
         player.getPosition().set(packet.position);
         player.getRotation().set(packet.rotation);
         player.getVelocity().set(packet.velocity);
         
-        server.getPlayerList().broadcastPacketLevelExcept(player.getLevel(), new CBPacketEntityMove(player), player);
+        server.getPlayerList().broadcastPacketLevelExcept(player.getLevel(), new S2CPacketEntityMove(player), player);
     }
     
-    public void renderDistance(SBPacketRenderDistance packet){
+    public void renderDistance(C2SPacketRenderDistance packet){
         player.setRenderDistance(packet.renderDistance);
     }
     
-    public void sneaking(SBPacketPlayerSneaking packet){
+    public void sneaking(C2SPacketPlayerSneaking packet){
         player.setSneaking(packet.sneaking);
         
-        server.getPlayerList().broadcastPacketExcept(new CBPacketPlayerSneaking(player), player);
+        server.getPlayerList().broadcastPacketExcept(new S2CPacketPlayerSneaking(player), player);
     }
     
-    public void chatMessage(SBPacketChatMessage packet){
+    public void chatMessage(C2SPacketChatMessage packet){
         String message = packet.message;
         
         if(message.startsWith("/"))
@@ -140,8 +140,8 @@ public class PlayerGameConnection implements PacketHandler{
             player.sendToChat(new Component().color(TextColor.DARK_GREEN).text("<" + player.getName() + "> ").reset().text(packet.message));
     }
 
-    public void ping(SBPacketPing packet){
-        sendPacket(new CBPacketPong(packet.timeNanos));
+    public void ping(C2SPacketPing packet){
+        sendPacket(new S2CPacketPong(packet.timeNanos));
     }
     
 }

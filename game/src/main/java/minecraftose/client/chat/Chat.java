@@ -3,8 +3,8 @@ package minecraftose.client.chat;
 import minecraftose.client.ClientGame;
 import minecraftose.main.chat.MessageSource;
 import minecraftose.main.chat.MessageSourceOther;
-import minecraftose.main.net.packet.clientbound.CBPacketChatMessage;
-import minecraftose.main.net.packet.serverbound.SBPacketChatMessage;
+import minecraftose.main.network.packet.s2c.game.S2CPacketChatMessage;
+import minecraftose.main.network.packet.c2s.game.C2SPacketChatMessage;
 import minecraftose.main.text.Component;
 import jpize.util.io.TextProcessor;
 
@@ -38,7 +38,7 @@ public class Chat{
         return messageList;
     }
     
-    public void putMessage(CBPacketChatMessage messagePacket){
+    public void putMessage(S2CPacketChatMessage messagePacket){
         messageList.add(new ChatMessage(messagePacket.source, messagePacket.components));
     }
     
@@ -58,7 +58,7 @@ public class Chat{
     
     public void enter(){
         final String message = textProcessor.getString();
-        game.getConnectionHandler().sendPacket(new SBPacketChatMessage(message));
+        game.getConnectionHandler().sendPacket(new C2SPacketChatMessage(message));
         textProcessor.clear();
         
         if(!history.isEmpty() && history.get(history.size() - 1).equals(message))
@@ -106,7 +106,7 @@ public class Chat{
     private void setOpened(boolean opened){
         this.opened = opened;
         textProcessor.setActive(opened);
-        game.getSession().getGame().getPlayer().getController().getRotationController().showMouse(opened);
+        game.getSession().getGame().getPlayer().getController().getRotationController().setEnabled(!opened);
     }
     
     public void close(){

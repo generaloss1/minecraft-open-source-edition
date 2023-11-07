@@ -1,12 +1,13 @@
 package minecraftose.main.entity;
 
+import jpize.math.Mathc;
+import jpize.math.Maths;
 import minecraftose.main.level.Level;
 
 public class Player extends Entity{
     
     private final String name;
     private boolean sprinting, sneaking, flyEnabled, flying, jumping;
-    
     
     public Player(Level level, String name){
         super(EntityType.PLAYER, level);

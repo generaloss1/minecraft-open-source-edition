@@ -67,6 +67,7 @@ public class ChunkRenderer implements Disposable{
         // Atlas
         final Texture blockAtlas = levelRenderer.getGameRenderer().getSession().getResources().getBlocks();
 
+
         // Update translation matrix
         for(ClientChunk chunk: chunks)
             chunk.updateTranslationMatrix(camera);

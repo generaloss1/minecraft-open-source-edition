@@ -1,7 +1,7 @@
 package minecraftose.client.block.vanilla;
 
 import jpize.graphics.texture.Region;
-import minecraftose.client.block.Block;
+import minecraftose.client.block.BlockClient;
 import minecraftose.client.block.model.BlockModel;
 import minecraftose.client.block.model.Face;
 import minecraftose.client.block.model.Quad;
@@ -10,10 +10,10 @@ import minecraftose.client.block.shape.BlockCursor;
 import minecraftose.client.chunk.mesh.ChunkMeshType;
 import minecraftose.client.resources.GameResources;
 import minecraftose.main.Dir;
-import minecraftose.main.audio.BlockSoundPack;
+import minecraftose.main.audio.SoundType;
 import minecraftose.main.chunk.ChunkUtils;
 
-public class OakPlanksStairs extends Block{
+public class OakPlanksStairs extends BlockClient{
 
     public OakPlanksStairs(int id){
         super(id);
@@ -40,7 +40,7 @@ public class OakPlanksStairs extends Block{
             .setLightLevel(0)
             .setOpacity(ChunkUtils.MAX_LIGHT_LEVEL)
             .setTranslucent(false)
-            .setSoundPack(BlockSoundPack.WOOD)
+            .setSoundPack(SoundType.WOOD)
             .setFacing(Dir.NEGATIVE_Z)
             .setModel(model)
             .setCollide(BlockCollide.SOLID)

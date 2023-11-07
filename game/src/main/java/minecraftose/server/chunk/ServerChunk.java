@@ -1,9 +1,9 @@
 package minecraftose.server.chunk;
 
-import minecraftose.client.block.Block;
+import minecraftose.client.block.BlockClient;
 import minecraftose.client.block.BlockProps;
-import minecraftose.client.block.Blocks;
-import minecraftose.main.block.BlockData;
+import minecraftose.client.block.ClientBlocks;
+import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.chunk.LevelChunk;
 import minecraftose.main.chunk.storage.ChunkPos;
 import minecraftose.main.chunk.storage.Heightmap;
@@ -26,7 +26,7 @@ public class ServerChunk extends LevelChunk{
     public boolean setBlockData(int lx, int y, int lz, short blockData){
         final boolean result = super.setBlockData(lx, y, lz, blockData);
         if(result){
-            final boolean blockPlaced = BlockData.getID(blockData) != Blocks.AIR.getID();
+            final boolean blockPlaced = ChunkBlockData.getID(blockData) != ClientBlocks.AIR.getID();
             for(Heightmap heightmap: heightmaps.values())
                 heightmap.update(lx, y, lz, blockPlaced);
 
@@ -37,7 +37,7 @@ public class ServerChunk extends LevelChunk{
     }
 
 
-    public void setBlockFast(int lx, int y, int lz, Block block){
+    public void setBlockFast(int lx, int y, int lz, BlockClient block){
         super.setBlock(lx, y, lz, block);
     }
 
@@ -47,12 +47,12 @@ public class ServerChunk extends LevelChunk{
 
 
     @Override
-    public boolean setBlock(int lx, int y, int lz, Block block){
+    public boolean setBlock(int lx, int y, int lz, BlockClient block){
         final BlockProps oldBlock = super.getBlockProps(lx, y, lz);
 
         final boolean result = super.setBlock(lx, y, lz, block);
         if(result){
-            final boolean blockPlaced = block != Blocks.AIR;
+            final boolean blockPlaced = block != ClientBlocks.AIR;
             for(Heightmap heightmap: heightmaps.values())
                 heightmap.update(lx, y, lz, blockPlaced);
 

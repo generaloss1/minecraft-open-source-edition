@@ -1,7 +1,7 @@
 package minecraftose.client.control;
 
-import jpize.glfw.key.Key;
 import jpize.graphics.camera.controller.Rotation3DController;
+import jpize.sdl.input.Key;
 import minecraftose.client.Minecraft;
 import minecraftose.client.control.camera.GameCamera;
 import minecraftose.client.control.camera.HorizontalMoveController;
@@ -11,7 +11,7 @@ import minecraftose.client.level.ClientLevel;
 import minecraftose.client.options.KeyMapping;
 import minecraftose.client.options.Options;
 import minecraftose.main.Tickable;
-import minecraftose.main.net.packet.serverbound.SBPacketPlayerSneaking;
+import minecraftose.main.network.packet.c2s.game.C2SPacketPlayerSneaking;
 import jpize.util.time.Stopwatch;
 
 public class PlayerController implements Tickable{
@@ -61,10 +61,10 @@ public class PlayerController implements Tickable{
 
         if(options.getKey(KeyMapping.SNEAK).isDown()){
             player.setSneaking(true);
-            session.getGame().getConnectionHandler().sendPacket(new SBPacketPlayerSneaking(player));
+            session.getGame().getConnectionHandler().sendPacket(new C2SPacketPlayerSneaking(player));
         }else if(options.getKey(KeyMapping.SNEAK).isReleased()){
             player.setSneaking(false);
-            session.getGame().getConnectionHandler().sendPacket(new SBPacketPlayerSneaking(player));
+            session.getGame().getConnectionHandler().sendPacket(new C2SPacketPlayerSneaking(player));
         }
 
         // Jump, Sprint, Sneak

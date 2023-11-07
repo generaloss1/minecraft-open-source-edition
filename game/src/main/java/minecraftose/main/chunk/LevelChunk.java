@@ -1,10 +1,10 @@
 package minecraftose.main.chunk;
 
-import minecraftose.client.block.Block;
+import minecraftose.client.block.BlockClient;
 import minecraftose.client.block.BlockProps;
-import minecraftose.client.block.Blocks;
+import minecraftose.client.block.ClientBlocks;
 import minecraftose.main.biome.BiomeMap;
-import minecraftose.main.block.BlockData;
+import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.chunk.neighbors.LevelChunkNeighbors;
 import minecraftose.main.chunk.storage.ChunkPos;
 import minecraftose.main.chunk.storage.Heightmap;
@@ -57,13 +57,13 @@ public class LevelChunk{
     
     public short getBlockState(int lx, int y, int lz){
         if(ChunkUtils.isOutOfBounds(lx, y, lz))
-            return Blocks.AIR.getDefaultData();
+            return ClientBlocks.AIR.getDefaultData();
         
         // Находим по Y нужную секцию
         final int sectionIndex = ChunkUtils.getSectionIndex(y);
         final LevelChunkSection section = getSection(sectionIndex);
         if(section == null)
-            return Blocks.AIR.getDefaultData();
+            return ClientBlocks.AIR.getDefaultData();
         
         // Возвращаем блок
         return section.getBlockState(lx, ChunkUtils.getLocalCoord(y), lz);
@@ -74,8 +74,8 @@ public class LevelChunk{
             return false;
         
         // Проверяем является ли устанавливаемый блок воздухом
-        final int airID = Blocks.AIR.getID();
-        final int blockID = BlockData.getID(blockData);
+        final int airID = ClientBlocks.AIR.getID();
+        final int blockID = ChunkBlockData.getID(blockData);
         final boolean isBlockAir = (blockID == airID);
         
         // Находим по Y нужную секцию
@@ -102,7 +102,7 @@ public class LevelChunk{
         
         // Проверка на равенство устанавливаемого блока и текущего
         final int ly = ChunkUtils.getLocalCoord(y);
-        final int oldBlockID = BlockData.getID(section.getBlockState(lx, ly, lz));
+        final int oldBlockID = ChunkBlockData.getID(section.getBlockState(lx, ly, lz));
         if(blockID == oldBlockID)
             return false;
         
@@ -159,15 +159,15 @@ public class LevelChunk{
     }
 
 
-    public Block getBlock(int lx, int y, int lz){
-        return BlockData.getBlock(getBlockState(lx, y, lz));
+    public BlockClient getBlock(int lx, int y, int lz){
+        return ChunkBlockData.getBlock(getBlockState(lx, y, lz));
     }
 
     public BlockProps getBlockProps(int lx, int y, int lz){
-        return BlockData.getProps(getBlockState(lx, y, lz));
+        return ChunkBlockData.getProps(getBlockState(lx, y, lz));
     }
 
-    public boolean setBlock(int lx, int y, int lz, Block block){
+    public boolean setBlock(int lx, int y, int lz, BlockClient block){
         return setBlockData(lx, y, lz, block.getDefaultData());
     }
 

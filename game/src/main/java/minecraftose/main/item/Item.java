@@ -1,15 +1,44 @@
 package minecraftose.main.item;
 
-import minecraftose.client.block.Block;
+public class Item{
 
-public abstract class Item{
+    private final int maxStack;
+    private final int maxDamage;
+    private final ItemRarity rarity;
+    private final String name;
+    private final String description;
 
-    public abstract int maxStack();
+    public Item(int maxStack, int maxDamage, ItemRarity rarity, String name, String description){
+        this.maxStack = maxStack;
+        this.maxDamage = maxDamage;
+        this.rarity = rarity;
+        this.name = name;
+        this.description = description;
+    }
 
-    public abstract int getID();
 
-    public abstract String getName();
+    public int maxStack(){
+        return maxStack;
+    }
 
-    public abstract String getDescription();
+    public int maxDamage(){
+        return maxDamage;
+    }
+
+    public ItemRarity getRarity(){
+        return rarity;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public String getDescription(){
+        return description;
+    }
+
+    public BlockItem asBlockItem(){
+        return (BlockItem) this;
+    }
 
 }

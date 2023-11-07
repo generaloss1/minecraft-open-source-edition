@@ -1,17 +1,16 @@
 package minecraftose.client.block.vanilla;
 
-import minecraftose.client.block.Block;
+import minecraftose.client.block.BlockClient;
 import minecraftose.client.block.model.BlockModel;
 import minecraftose.client.block.shape.BlockCollide;
 import minecraftose.client.block.shape.BlockCursor;
 import minecraftose.client.chunk.mesh.ChunkMeshType;
 import minecraftose.client.resources.GameResources;
 import minecraftose.main.Dir;
-import minecraftose.main.audio.BlockSoundPack;
+import minecraftose.main.audio.SoundType;
 import minecraftose.main.chunk.ChunkUtils;
-import minecraftose.main.item.Items;
 
-public class Cobblestone extends Block{
+public class Cobblestone extends BlockClient{
 
     public Cobblestone(int id){
         super(id);
@@ -19,8 +18,6 @@ public class Cobblestone extends Block{
 
     @Override
     public void load(GameResources resources){
-        super.item = Items.COBBLESTONE;
-
         final BlockModel model = new BlockModel(ChunkMeshType.SOLID)
             .allFaces(resources.getBlockRegion("cobblestone"));
 
@@ -29,7 +26,7 @@ public class Cobblestone extends Block{
             .setLightLevel(0)
             .setOpacity(ChunkUtils.MAX_LIGHT_LEVEL)
             .setTranslucent(false)
-            .setSoundPack(BlockSoundPack.STONE)
+            .setSoundPack(SoundType.STONE)
             .setFacing(Dir.NONE)
             .setModel(model)
             .setCollide(BlockCollide.SOLID)

@@ -1,15 +1,15 @@
 package minecraftose.client.block.vanilla;
 
-import minecraftose.client.block.Block;
+import minecraftose.client.block.BlockClient;
 import minecraftose.client.block.model.BlockModel;
 import minecraftose.client.block.shape.BlockCollide;
 import minecraftose.client.block.shape.BlockCursor;
 import minecraftose.client.chunk.mesh.ChunkMeshType;
 import minecraftose.client.resources.GameResources;
 import minecraftose.main.Dir;
-import minecraftose.main.audio.BlockSoundPack;
+import minecraftose.main.audio.SoundType;
 
-public class Glass extends Block{
+public class Glass extends BlockClient{
 
     public Glass(int id){
         super(id);
@@ -25,7 +25,7 @@ public class Glass extends Block{
                 .setLightLevel(0)
                 .setOpacity(4)
                 .setTranslucent(false)
-                .setSoundPack(BlockSoundPack.GLASS)
+                .setSoundPack(SoundType.GLASS)
                 .setFacing(Dir.NONE)
                 .setModel(model)
                 .setCollide(BlockCollide.SOLID)

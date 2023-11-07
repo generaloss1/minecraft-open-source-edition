@@ -1,13 +1,13 @@
 package minecraftose.server.command.vanilla;
 
 import jpize.math.vecmath.vector.Vec3f;
-import minecraftose.client.block.Block;
+import minecraftose.client.block.BlockClient;
+import minecraftose.client.block.ClientBlocks;
 import minecraftose.main.command.CommandContext;
 import minecraftose.main.command.argument.CommandArg;
 import minecraftose.main.command.builder.Commands;
 import minecraftose.main.command.source.CommandSource;
-import minecraftose.main.net.packet.clientbound.CBPacketBlockUpdate;
-import minecraftose.main.registry.Registry;
+import minecraftose.main.network.packet.s2c.game.S2CPacketBlockUpdate;
 import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
 import minecraftose.server.command.CommandDispatcher;
@@ -33,7 +33,7 @@ public class CommandSetBlock{
         final int z = position.zFloor();
 
         final byte blockID = (byte) context.getArg(1).asNumInt().getInt();
-        final Block block = Registry.Block.get(blockID);
+        final BlockClient block = ClientBlocks.get(blockID);
         if(block == null){
             context.getSource().sendMessage(new Component().color(TextColor.RED).text("Block ID is invalid."));
             return;
@@ -44,7 +44,7 @@ public class CommandSetBlock{
         final ServerLevel level = source.getLevel();
         level.setBlock(x, y, z, block);
 
-        context.getServer().getPlayerList().broadcastPacket(new CBPacketBlockUpdate(x, y, z, block.getDefaultData()));
+        context.getServer().getPlayerList().broadcastPacket(new S2CPacketBlockUpdate(x, y, z, block.getDefaultData()));
         source.sendMessage(new Component().text("Block " + block.getID() + " set in: " + x + ", " + y + ", " + z));
     }
 

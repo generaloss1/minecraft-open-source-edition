@@ -7,12 +7,12 @@ import jpize.math.vecmath.vector.Vec3i;
 import jpize.physic.Ray3f;
 import minecraftose.client.Minecraft;
 import minecraftose.client.block.BlockProps;
-import minecraftose.client.block.Blocks;
+import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.block.shape.BlockCursor;
 import minecraftose.client.entity.LocalPlayer;
 import minecraftose.client.level.ClientLevel;
 import minecraftose.main.Dir;
-import minecraftose.main.block.BlockData;
+import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.chunk.ChunkUtils;
 
 public class BlockRayCast{
@@ -109,9 +109,9 @@ public class BlockRayCast{
                 break;
             
             final short blockData = level.getBlockState(selectedBlock.x, selectedBlock.y, selectedBlock.z);
-            final BlockProps block = BlockData.getProps(blockData);
+            final BlockProps block = ChunkBlockData.getProps(blockData);
 
-            if(!block.isEmpty() && block.getID() != Blocks.VOID_AIR.getID() && block.getCursor() != null){
+            if(!block.isEmpty() && block.getID() != ClientBlocks.VOID_AIR.getID() && block.getCursor() != null){
                 if(block.isSolid()){
                     selectedFace = Dir.fromNormal(faceNormal.x, faceNormal.y, faceNormal.z);
                     selectedBlockProps = block;

@@ -1,11 +1,11 @@
 package minecraftose.client.resources;
 
+import jpize.graphics.texture.pixmap.PixmapIO;
 import jpize.util.Disposable;
 import jpize.audio.sound.AudioBuffer;
 import jpize.audio.sound.AudioLoader;
 import jpize.util.file.Resource;
 import jpize.graphics.texture.pixmap.PixmapRGBA;
-import jpize.graphics.texture.PixmapIO;
 import jpize.graphics.texture.Region;
 import jpize.graphics.texture.Texture;
 import jpize.graphics.texture.atlas.TextureAtlas;
