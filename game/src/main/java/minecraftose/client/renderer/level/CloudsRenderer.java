@@ -39,8 +39,8 @@ public class CloudsRenderer implements Disposable{
         renderDistance = options.getRenderDistance() + 1;
 
         this.shader = new Shader(
-                new Resource("shader/level/sky/clouds.vert"),
-                new Resource("shader/level/sky/clouds.frag")
+                Resource.internal("shader/level/sky/clouds.vert"),
+                Resource.internal("shader/level/sky/clouds.frag")
         );
 
         final int size = (renderDistance * 2 + 1) * ChunkUtils.SIZE;
@@ -78,7 +78,7 @@ public class CloudsRenderer implements Disposable{
 
         shader.setUniform("u_renderDistanceBlocks", (renderDistance - 1) * SIZE);
         shader.setUniform("u_fogEnabled", options.isFogEnabled());
-        shader.setUniform("u_fogColor", skyRenderer.getFogColor());
+        shader.setUniform("u_fogColor", skyRenderer.getFogColor(camera));
         shader.setUniform("u_fogStart", skyRenderer.getFogStart());
         shader.setUniform("u_skyBrightness", skyRenderer.getSkyBrightness());
 

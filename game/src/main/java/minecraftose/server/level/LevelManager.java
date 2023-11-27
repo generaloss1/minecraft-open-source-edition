@@ -1,7 +1,7 @@
 package minecraftose.server.level;
 
 import minecraftose.server.Server;
-import minecraftose.server.gen.ChunkGenerator;
+import minecraftose.server.worldgen.ChunkGenerator;
 
 import java.util.Collection;
 import java.util.HashMap;

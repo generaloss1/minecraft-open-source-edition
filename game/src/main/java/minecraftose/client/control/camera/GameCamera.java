@@ -34,6 +34,7 @@ public class GameCamera extends PerspectiveCamera{
     private float zoom = 1;
     private boolean inWater;
     private final Velocity3f hitDirection;
+    private float eyeHeight;
 
     public GameCamera(ClientGame game, double near, double far, double fieldOfView){
         super(near, far, fieldOfView);
@@ -48,6 +49,7 @@ public class GameCamera extends PerspectiveCamera{
         this.perspective = PerspectiveType.FIRST_PERSON;
         this.target = firstPerson;
         this.hitDirection = new Velocity3f().setMax(3);
+        this.eyeHeight = player.getEyeHeight();
         
         setImaginaryOrigins(true, false, true);
     }
@@ -84,11 +86,15 @@ public class GameCamera extends PerspectiveCamera{
         // final Vec2f shakingShift = new Vec2f(0, shakingHorizontal);
         // shakingShift.rotDeg(rotation.yaw);
         // position.add(shakingShift.x, shakingVertical, shakingShift.y);
-        
+
+        // Eye Height
+        eyeHeight += (player.getEyeHeight() - eyeHeight) * deltaTime * 12;
+        position.y += eyeHeight;
+
         // Follow to target
         getPosition().set(position);
         getRotation().set(rotation);
-        
+
         // Player
         final Options options = game.getSession().getOptions();
         

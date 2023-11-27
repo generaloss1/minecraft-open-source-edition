@@ -25,7 +25,7 @@ public class ChunkBorderRenderer implements Disposable{
     public ChunkBorderRenderer(LevelRenderer levelRenderer){
         this.levelRenderer = levelRenderer;
         
-        this.shader = new Shader(new Resource("shader/line.vert"), new Resource("shader/line.frag"));
+        this.shader = new Shader(Resource.internal("shader/line.vert"), Resource.internal("shader/line.frag"));
         
         this.mesh = new IndexedMesh(new GlVertexAttr(3, GlType.FLOAT));
         this.mesh.setMode(GlPrimitive.LINES);

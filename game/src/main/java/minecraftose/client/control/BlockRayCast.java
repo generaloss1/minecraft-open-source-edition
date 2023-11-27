@@ -2,9 +2,11 @@ package minecraftose.client.control;
 
 import jpize.math.Mathc;
 import jpize.math.Maths;
+import jpize.math.vecmath.matrix.Matrix4f;
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.math.vecmath.vector.Vec3i;
 import jpize.physic.Ray3f;
+import jpize.physic.utils.Intersector;
 import minecraftose.client.Minecraft;
 import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.ClientBlocks;
@@ -53,12 +55,12 @@ public class BlockRayCast{
         
         // Update ray
         final LocalPlayer player = session.getGame().getPlayer();
-        ray.getDirection().set(player.getRotation().getDirection());
-        ray.getOrigin().set(player.getLerpPosition().copy().add(0, player.getEyeHeight(), 0));
+        ray.dir().set(player.getRotation().getDirection());
+        ray.origin().set(player.getLerpPosition().copy().add(0, player.getEyeHeight(), 0));
         
         // Get pos, dir, len
-        final Vec3f pos = ray.getOrigin();
-        final Vec3f dir = ray.getDirection();
+        final Vec3f pos = ray.origin();
+        final Vec3f dir = ray.dir();
         
         // ...
         final Vec3i step = new Vec3i(
@@ -121,16 +123,17 @@ public class BlockRayCast{
                     break;
                 }else{
                     final BlockCursor shape = block.getCursor();
-                    // final float[] vertices = shape.getMesh().getIndexedVertices();
-                    // if(ray.intersects(vertices)){
-                    //     selectedFace = Direction.fromNormal(faceNormal.x, faceNormal.y, faceNormal.z);
-                    //     selectedBlockProperties = block;
-                    //     selectedBlockState = blockState;
-                    //     imaginarySelectedBlock.set(selectedBlock).add(selectedFace.getNormal());
-                    //     selected = true;
-                    //
-                    //     break;
-                    // }
+                    final Matrix4f mat = new Matrix4f().translate(selectedBlock);
+                    final float intersect = Intersector.getRayIntersectionQuadMesh(ray, mat, shape.getVertices(), shape.getQuadIndices());
+                    System.out.println(intersect);
+                    if(intersect != -1){
+                        selectedFace = Dir.fromNormal(faceNormal.x, faceNormal.y, faceNormal.z);
+                        selectedBlockProps = block;
+                        imaginarySelectedBlock.set(selectedBlock).add(selectedFace.getNormal());
+                        selected = true;
+
+                        break;
+                    }
                 }
             }
         }

@@ -1,6 +1,6 @@
 package minecraftose.client.block.vanilla;
 
-import minecraftose.client.block.BlockClient;
+import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.model.BlockModel;
 import minecraftose.client.block.model.Face;
 import minecraftose.client.block.model.Quad;
@@ -10,7 +10,7 @@ import minecraftose.client.resources.GameResources;
 import minecraftose.main.Dir;
 import minecraftose.main.audio.SoundType;
 
-public class Grass extends BlockClient{
+public class Grass extends ClientBlock{
 
     public Grass(int id){
         super(id);
@@ -31,7 +31,7 @@ public class Grass extends BlockClient{
                 .setFacing(Dir.NONE)
                 .setModel(model)
                 .setCollide(null)
-                .setCursor(BlockCursor.SOLID);
+                .setCursor(BlockCursor.GRASS);
     }
     
 }

@@ -282,12 +282,12 @@ public class Face extends Quad{
     }
 
     public Face rotated(BlockRotation rotation){
-        final Vec3f rp1 = pos[0].copy().sub(0.5).mul(rotation.getMatrix()).add(0.5);
-        final Vec3f rp2 = pos[1].copy().sub(0.5).mul(rotation.getMatrix()).add(0.5);
-        final Vec3f rp3 = pos[2].copy().sub(0.5).mul(rotation.getMatrix()).add(0.5);
-        final Vec3f rp4 = pos[3].copy().sub(0.5).mul(rotation.getMatrix()).add(0.5);
+        final Vec3f rp1 = pos[0].copy().sub(0.5).mulMat4(rotation.getMatrix()).add(0.5);
+        final Vec3f rp2 = pos[1].copy().sub(0.5).mulMat4(rotation.getMatrix()).add(0.5);
+        final Vec3f rp3 = pos[2].copy().sub(0.5).mulMat4(rotation.getMatrix()).add(0.5);
+        final Vec3f rp4 = pos[3].copy().sub(0.5).mulMat4(rotation.getMatrix()).add(0.5);
 
-        final Face face = new Face(rp1, rp2, rp3, rp4, t1.copy(), t2.copy(), t3.copy(), t4.copy(), color);;
+        final Face face = new Face(rp1, rp2, rp3, rp4, t1.copy(), t2.copy(), t3.copy(), t4.copy(), color);
 
         return face;
     }

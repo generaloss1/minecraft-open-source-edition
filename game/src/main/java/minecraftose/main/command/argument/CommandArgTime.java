@@ -1,7 +1,6 @@
 package minecraftose.main.command.argument;
 
 import minecraftose.main.time.TimeUnit;
-import minecraftose.server.Server;
 import minecraftose.main.command.source.CommandSource;
 
 public class CommandArgTime extends CommandArg{
@@ -11,7 +10,7 @@ public class CommandArgTime extends CommandArg{
     private float time;
     
     @Override
-    public int parse(String remainingChars, CommandSource source, Server server){
+    public int parse(String remainingChars, CommandSource source){
         // Разделяем оставшуюся часть команды на части
         final String[] args = remainingChars.split(" ");
         

@@ -3,7 +3,7 @@ package minecraftose.main.network.packet.s2c.game;
 import jpize.net.tcp.packet.IPacket;
 import minecraftose.client.chunk.ClientChunk;
 import minecraftose.client.level.ClientLevel;
-import minecraftose.client.net.ClientPacketHandler;
+import minecraftose.client.network.ClientPacketHandler;
 import minecraftose.main.biome.Biome;
 import minecraftose.main.chunk.ChunkUtils;
 import minecraftose.main.chunk.LevelChunk;
@@ -14,6 +14,7 @@ import minecraftose.main.chunk.storage.HeightmapType;
 import minecraftose.main.chunk.storage.SectionPos;
 import jpize.util.io.JpizeInputStream;
 import jpize.util.io.JpizeOutputStream;
+import minecraftose.main.registry.Registry;
 
 import java.io.IOException;
 import java.util.*;
@@ -83,7 +84,7 @@ public class S2CPacketChunk extends IPacket<ClientPacketHandler>{
 
         // Biomes
         for(Biome biome: biomes)
-            stream.writeByte(biome.ordinal());
+            stream.writeByte(biome.ID);
     }
     
     private void writeSection(JpizeOutputStream stream, int sectionIndex) throws IOException{
@@ -130,7 +131,7 @@ public class S2CPacketChunk extends IPacket<ClientPacketHandler>{
         // Biomes
         biomes = new Biome[AREA];
         for(int i = 0; i < biomes.length; i++)
-            biomes[i] = Biome.values()[stream.readByte()];
+            biomes[i] = Registry.biome.get(stream.readByte());
     }
     
     private void readSection(JpizeInputStream stream) throws IOException{

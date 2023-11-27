@@ -3,7 +3,7 @@ package minecraftose.main.network.packet.s2c.game;
 import jpize.math.util.EulerAngles;
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.net.tcp.packet.IPacket;
-import minecraftose.client.net.ClientPacketHandler;
+import minecraftose.client.network.ClientPacketHandler;
 import minecraftose.main.entity.Entity;
 import minecraftose.main.entity.EntityType;
 import jpize.util.io.JpizeInputStream;

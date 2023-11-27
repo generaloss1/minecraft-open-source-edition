@@ -1,7 +1,7 @@
 package minecraftose.client.block.vanilla;
 
 import jpize.graphics.util.color.ImmutableColor;
-import minecraftose.client.block.BlockClient;
+import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.model.BlockModel;
 import minecraftose.client.block.shape.BlockCollide;
 import minecraftose.client.block.shape.BlockCursor;
@@ -11,7 +11,7 @@ import minecraftose.main.Dir;
 import minecraftose.main.audio.SoundType;
 import minecraftose.main.chunk.ChunkUtils;
 
-public class OakLeaves extends BlockClient{
+public class OakLeaves extends ClientBlock{
 
     public static final ImmutableColor COLOR = new ImmutableColor(0.35, 0.75, 0.3);
 

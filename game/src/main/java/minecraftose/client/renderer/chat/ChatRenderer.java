@@ -70,16 +70,16 @@ public class ChatRenderer implements Disposable{
         // Enter
         if(chat.isOpened()){
             final String enteringText = chat.getEnteringText();
-            final float lineWidth = font.getLineWidth(enteringText);
+            final float lineWidth = font.getTextWidth(enteringText);
             
-            batch.drawQuad(0.4, chatX, chatY + font.getDescentScaled(), Math.max(lineWidth, chatWidth), lineAdvance);
+            batch.drawRect(0.4, chatX, chatY + font.getDescentScaled(), Math.max(lineWidth, chatWidth), lineAdvance);
             
-            final float cursorLineWidth = font.getLineWidth(enteringText.substring(0, chat.getCursorX()));
+            final float cursorLineWidth = font.getTextWidth(enteringText.substring(0, chat.getCursorX()));
             
             textBatch.drawComponent(new Component().text(enteringText), chatX, chatY);
 
             if(chat.getTextProcessor().isCursorRender())
-                batch.drawQuad(1, 1, 1, 1, chatX + cursorLineWidth, chatY + font.getDescentScaled(), scale, lineAdvance);
+                batch.drawRect(1, 1, 1, 1, chatX + cursorLineWidth, chatY + font.getDescentScaled(), scale, lineAdvance);
         }
         
         // Scroll
@@ -96,7 +96,7 @@ public class ChatRenderer implements Disposable{
         scroll = Math.max(Math.min(0, chatHeight - chatMessagesHeight), scroll);
         
         // Chat
-        final float headSize = lineAdvance;
+        final float headSize = lineAdvance + 0;
         final float headAdvance = headSize * 1.5F;
         final float headDrawX = (headAdvance - headSize) / 2;
         final float headDrawY = (lineAdvance - headSize) / 2;
@@ -123,7 +123,7 @@ public class ChatRenderer implements Disposable{
             final boolean isPlayer = message.getSource().isPlayer();
 
             // Render background
-            batch.drawQuad(0.4 * alpha, chatX, renderChatY + font.getDescentScaled(), chatWidth + headAdvance, textHeight);
+            batch.drawRect(0.4 * alpha, chatX, renderChatY + font.getDescentScaled(), chatWidth + headAdvance, textHeight);
             
             // Render head
             if(isPlayer){

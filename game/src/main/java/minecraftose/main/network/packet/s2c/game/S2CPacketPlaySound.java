@@ -2,10 +2,11 @@ package minecraftose.main.network.packet.s2c.game;
 
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.net.tcp.packet.IPacket;
-import minecraftose.client.net.ClientPacketHandler;
+import minecraftose.client.network.ClientPacketHandler;
 import minecraftose.main.audio.Sound;
 import jpize.util.io.JpizeInputStream;
 import jpize.util.io.JpizeOutputStream;
+import minecraftose.main.registry.Registry;
 
 import java.io.IOException;
 
@@ -38,7 +39,7 @@ public class S2CPacketPlaySound extends IPacket<ClientPacketHandler>{
 
     @Override
     public void write(JpizeOutputStream stream) throws IOException{
-        stream.writeByte(sound.ordinal());
+        stream.writeByte(sound.getID());
         stream.writeFloat(volume);
         stream.writeFloat(pitch);
         stream.writeFloat(x);
@@ -48,7 +49,7 @@ public class S2CPacketPlaySound extends IPacket<ClientPacketHandler>{
 
     @Override
     public void read(JpizeInputStream stream) throws IOException{
-        sound = Sound.values()[stream.readByte()];
+        sound = Registry.sound.get(stream.readByte());
         volume = stream.readFloat();
         pitch = stream.readFloat();
         x = stream.readFloat();

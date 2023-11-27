@@ -1,6 +1,6 @@
 package minecraftose.client.block.vanilla;
 
-import minecraftose.client.block.BlockClient;
+import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.model.BlockModel;
 import minecraftose.client.block.shape.BlockCollide;
 import minecraftose.client.block.shape.BlockCursor;
@@ -10,7 +10,7 @@ import minecraftose.main.Dir;
 import minecraftose.main.audio.SoundType;
 import minecraftose.main.chunk.ChunkUtils;
 
-public class Sand extends BlockClient{
+public class Sand extends ClientBlock{
 
     public Sand(int id){
         super(id);

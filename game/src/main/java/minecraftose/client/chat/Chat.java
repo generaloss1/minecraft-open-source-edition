@@ -1,8 +1,9 @@
 package minecraftose.client.chat;
 
 import minecraftose.client.ClientGame;
-import minecraftose.main.chat.MessageSource;
-import minecraftose.main.chat.MessageSourceOther;
+import minecraftose.client.command.ClientCommandDispatcher;
+import minecraftose.main.chat.source.MessageSource;
+import minecraftose.main.chat.source.MessageSourceOther;
 import minecraftose.main.network.packet.s2c.game.S2CPacketChatMessage;
 import minecraftose.main.network.packet.c2s.game.C2SPacketChatMessage;
 import minecraftose.main.text.Component;
@@ -55,10 +56,24 @@ public class Chat{
     public String getEnteringText(){
         return textProcessor.getString();
     }
-    
+
+    private void processMessage(String message){
+        if(message.startsWith("/")){
+            final ClientCommandDispatcher dispatcher = game.getCommandDispatcher();
+            final String command = message.substring(1);
+
+            if(dispatcher.hasCommand(command.split(" ")[0])){
+                dispatcher.executeCommand(command);
+                return;
+            }
+        }
+
+        game.getConnection().sendPacket(new C2SPacketChatMessage(message));
+    }
+
     public void enter(){
         final String message = textProcessor.getString();
-        game.getConnectionHandler().sendPacket(new C2SPacketChatMessage(message));
+        processMessage(message);
         textProcessor.clear();
         
         if(!history.isEmpty() && history.get(history.size() - 1).equals(message))

@@ -21,7 +21,7 @@ import minecraftose.client.options.Options;
 import minecraftose.client.renderer.GameRenderer;
 import minecraftose.client.renderer.particle.Particle;
 import minecraftose.client.resources.GameResources;
-import minecraftose.client.resources.VanillaAudio;
+import minecraftose.client.resources.VanillaSound;
 import minecraftose.client.resources.VanillaBlocks;
 import minecraftose.client.resources.VanillaMusic;
 import minecraftose.main.SharedConstants;
@@ -37,7 +37,7 @@ import jpize.util.time.Sync;
 
 public class Minecraft extends JpizeApplication{
 
-    public static final Minecraft instance = new Minecraft();
+    public static final Minecraft INSTANCE = new Minecraft();
 
 
     private GameResources gameResources;
@@ -53,6 +53,7 @@ public class Minecraft extends JpizeApplication{
     private MusicPlayer musicPlayer;
 
     private ModLoader modLoader;
+    private TickGenerator ticks;
 
     @Override
     public void init(){
@@ -62,7 +63,7 @@ public class Minecraft extends JpizeApplication{
         // Resources //
         gameResources = new GameResources();
         VanillaBlocks.register(gameResources);
-        VanillaAudio.register(gameResources);
+        VanillaSound.register(gameResources);
         VanillaMusic.register(gameResources);
         gameResources.load();
 
@@ -80,8 +81,8 @@ public class Minecraft extends JpizeApplication{
         musicPlayer = new MusicPlayer(this);
 
         clientRenderer.init();
-        new Resource(SharedConstants.GAME_DIR_PATH, true).mkDirs();
-        new Resource(SharedConstants.MODS_PATH, true).mkDirs();
+        Resource.external(SharedConstants.GAME_DIR_PATH).mkDirs();
+        Resource.external(SharedConstants.MODS_PATH).mkDirs();
 
         options.load();
 
@@ -111,7 +112,7 @@ public class Minecraft extends JpizeApplication{
         // Music
         musicPlayer.setGroup(MusicGroup.GAME);
 
-        final TickGenerator ticks = new TickGenerator(GameTime.TICKS_PER_SECOND);
+        ticks = new TickGenerator(GameTime.TICKS_PER_SECOND);
         ticks.startAsync(clientGame::tick);
     }
     
@@ -135,6 +136,8 @@ public class Minecraft extends JpizeApplication{
 
     @Override
     public void dispose(){
+        ticks.stop();
+
         // Save options
         options.save();
 

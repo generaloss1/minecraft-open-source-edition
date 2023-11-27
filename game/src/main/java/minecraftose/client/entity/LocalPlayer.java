@@ -4,28 +4,45 @@ import jpize.Jpize;
 import jpize.math.Mathc;
 import jpize.math.Maths;
 import jpize.math.vecmath.vector.Vec3f;
+import jpize.util.time.Stopwatch;
 import minecraftose.client.ClientGame;
+import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.control.PlayerController;
 import minecraftose.client.level.ClientLevel;
+import minecraftose.main.audio.Sound;
 import minecraftose.main.audio.SoundGroup;
+import minecraftose.main.audio.SoundType;
 import minecraftose.main.inventory.PlayerInventory;
 import minecraftose.main.item.ItemStack;
 import minecraftose.main.item.Items;
-import minecraftose.main.level.Level;
 
 public class LocalPlayer extends AbstractClientPlayer{
     
-    private final PlayerController controller;
-    private float jumpDownY, lastVelocityY, fallHeight;
-    private final PlayerInventory inventory;
-    
+    protected final PlayerController controller;
+    protected float jumpDownY, lastVelocityY, fallHeight;
+    protected final PlayerInventory inventory;
+    protected float walkSpeed;
+    protected float jumpHeight;
+    protected Stopwatch stepTimer;
+
     public LocalPlayer(ClientGame game, ClientLevel level, String name){
         super(game, level, name);
 
         this.controller = new PlayerController(this);
         this.inventory = new PlayerInventory();
         this.inventory.setItemStack(0, new ItemStack(Items.AIR));
+        this.walkSpeed = 1;
+        this.jumpHeight = 1;
+        this.stepTimer = new Stopwatch().start();
+    }
+
+    public void setWalkSpeedFactor(float walkSpeed){
+        this.walkSpeed = walkSpeed;
+    }
+
+    public void setJumpHeightFactor(float jumpHeight){
+        this.jumpHeight = jumpHeight;
     }
 
     @Override
@@ -33,87 +50,88 @@ public class LocalPlayer extends AbstractClientPlayer{
         super.tick();
         controller.tick();
 
-        /** -------- Vertical Move -------- */
-        
+        final float t = game.getTime().getTickLerpFactor();
+
+        /* -------- Vertical Move -------- */
+
         // Jumping
         if(isJumping()){
             if(isOnGround()){
                 // Jump
-                getVelocity().y = 0.42F;
+                velocity.y = 0.42F * jumpHeight;
                 
                 // Jump-boost
                 if(isSprinting()){
-                    final float yaw = getRotation().yaw * Maths.ToRad;
+                    final float yaw = rotation.yaw * Maths.ToRad;
                     final float jumpBoost = 0.2F;
-                    getVelocity().x += jumpBoost * Mathc.cos(yaw);
-                    getVelocity().z += jumpBoost * Mathc.sin(yaw);
+                    velocity.x += jumpBoost * Mathc.cos(yaw);
+                    velocity.z += jumpBoost * Mathc.sin(yaw);
                 }
             }
         }
 
         // Interrupt Flying
-        if(isOnGround() && isFlying())
+        if(isOnGround(t) && isFlying())
             setFlying(false);
 
         if(isFlying()){
             if(isSneaking())
-                getVelocity().y -= 0.2F;
+                velocity.y -= 0.2F;
             
             if(isJumping())
-                getVelocity().y += 0.2F;
+                velocity.y += 0.2F;
             
             if(!isFlyEnabled())
                 setFlying(false);
         }
 
         // In Water
-        final Vec3f position = getPosition();
-        if(getLevel().getBlockState(position.xFloor(), position.yFloor(), position.zFloor()) == ClientBlocks.WATER.getID()){
+        if(level.getBlockState(position.xFloor(), position.yFloor(), position.zFloor()) == ClientBlocks.WATER.getID()){
             Vec3f push = new Vec3f(
-                Maths.random(0, 2) * Maths.cosDeg(getRotation().yaw),
-                1F,
-                Maths.random(0, 2) * Maths.sinDeg(getRotation().yaw)
+                Maths.random(2, 10) * Maths.cosDeg(rotation.yaw),
+                5F,
+                Maths.random(2, 10) * Maths.sinDeg(rotation.yaw)
             );
-            getVelocity().add(push);
-            getLevel().getGame().getCamera().push(push);
-            Jpize.execSync(() -> getLevel().getGame().getSession().getSoundPlayer().play(SoundGroup.HIT.random(), 0.3F, 1, 0, 0, 0) );
+            velocity.add(push);
+            game.getCamera().push(push);
+            Jpize.execSync(() -> game.getSession().getSoundPlayer().play(SoundGroup.EXPLODE.random(), 1, 1, position.x, position.y, position.z) );
         }
 
         // Gravity
         if(!isOnGround() && !isFlying())
-            getVelocity().y -= 0.08F;
+            velocity.y -= 0.08F * Mathc.sqrt(jumpHeight);
         
         // Reduce Vertical Motion
         if(isFlying())
-            getVelocity().y *= 0.6F;
+            velocity.y *= 0.6F;
         else
-            getVelocity().y *= 0.98F;
+            velocity.y *= 0.98F;
         
         
-        /** -------- Horizontal Move -------- */
+        /* -------- Horizontal Move -------- */
         
         // Movement multiplier
-        float movementMul = 0.98F; // Default
-        if(isFlying()){
+        float movementMul = 0.98F * walkSpeed; // Default
+        if(flying){
             movementMul *= 3;
-            if(isSprinting())
+            if(sprinting)
                 movementMul *= 4F; // Sprinting
         }else{
-            if(isSneaking())
+            if(sneaking)
                 movementMul *= 0.3F; // Sneaking
-            if(isSprinting())
+            else if(sprinting)
                 movementMul *= 1.3F; // Sprinting
         }
         
         
         // Slipperiness multiplier
         float slipperinessMul = 1; // Air
-        if(isOnGround())
+        if(super.isOnGround(t))
             slipperinessMul *= 0.6F; // Ground
         
         // Reduce Last Motion
         final float reduceHorizontal = slipperinessMul * 0.91F;
-        getVelocity().mul(reduceHorizontal, 1, reduceHorizontal);
+        velocity.mul(reduceHorizontal, 1, reduceHorizontal);
         
         // Move
         final Vec3f moveControl = controller.getHorizontalMoveController().getMotion();
@@ -121,29 +139,71 @@ public class LocalPlayer extends AbstractClientPlayer{
         if(moveControlLen > 0){
             final Vec3f acceleration = new Vec3f(moveControl.x, 0, moveControl.z);
             
-            if(isOnGround()){
+            if(super.isOnGround(t)){
                 final float slipperiness = 0.6F / slipperinessMul;
                 acceleration.mul(0.1 * movementMul * slipperiness * slipperiness * slipperiness);
             }else
                 acceleration.mul(0.02 * movementMul);
-            
-            getVelocity().add(acceleration);
+
+            velocity.add(acceleration);
         }
         
         
-        /** -------- Other -------- */
+        /* -------- Other -------- */
         
         // Fall height
-        if(getVelocity().y < 0 && lastVelocityY >= 0)
-            jumpDownY = getPosition().y;
+        if(velocity.y < 0 && lastVelocityY >= 0)
+            jumpDownY = position.y;
         
-        if(isOnGround() && jumpDownY != 0){
-            fallHeight = jumpDownY - getPosition().y;
+        if(super.isOnGround(t) && jumpDownY != 0){
+            fallHeight = jumpDownY - position.y;
             jumpDownY = 0;
+
+            // Play fall sound
+            if(fallHeight > 7)
+                game.getSession().getSoundPlayer().play(Sound.FALL_BIG, 1, 1, position.x + 0.4F, position.y, position.z + 0.4F);
+            else if(fallHeight > 3)
+                game.getSession().getSoundPlayer().play(Sound.FALL_SMALL, 0.5F, 1, position.x + 0.4F, position.y, position.z + 0.4F);
+
+            if(fallHeight > 3){
+                final SoundType sounds = getFloorBlockSounds();
+                if(sounds != null)
+                    game.getSession().getSoundPlayer().play(sounds.getStepSounds().random(), 0.5F, 1, position.x + 0.4F, position.y, position.z + 0.4F);
+            }
         }
         
-        lastVelocityY = getVelocity().y;
+        lastVelocityY = velocity.y;
+
+        // Sneaking
+        if(sneaking && super.isOnGround()){ //: жоские костыли
+            final Vec3f movement = velocity.copy();
+            movement.y = -1E-5F;
+            if(!isOverlapsAt(movement)){
+                velocity.x = 0;
+                velocity.z = 0;
+            }
+        }
+
+        // Step sounds
+        if((super.isOnGround() || jumping) && !sneaking){
+            if(stepTimer.getMillis() > 80 / velocity.len()){
+                stepTimer.reset();
+
+                final SoundType sounds = getFloorBlockSounds();
+                if(sounds != null)
+                    game.getSession().getSoundPlayer().play(sounds.getStepSounds().random(), 0.5F, 1, position.x + 0.4F, position.y, position.z + 0.4F);
+            }
+        }
     }
+
+    private SoundType getFloorBlockSounds(){
+        final BlockProps block = level.getBlockProps(position.xFloor(), position.yFloor() - 1, position.zFloor());
+        if(block == null)
+            return null;
+
+        return block.getSoundPack();
+    }
+
     
     public float getFallHeight(){
         return fallHeight;

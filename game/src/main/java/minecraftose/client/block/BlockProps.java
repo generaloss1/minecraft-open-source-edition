@@ -12,7 +12,7 @@ import static minecraftose.main.chunk.ChunkUtils.MAX_LIGHT_LEVEL;
 
 public class BlockProps{
 
-    private final BlockClient block;
+    private final ClientBlock block;
     private final byte state;
 
     private boolean solid;
@@ -26,7 +26,7 @@ public class BlockProps{
     private BlockCollide collide;
     private BlockCursor cursor;
 
-    public BlockProps(BlockClient block, byte state){
+    public BlockProps(ClientBlock block, byte state){
         this.block = block;
         this.state = state;
 
@@ -58,7 +58,7 @@ public class BlockProps{
         //         .setCursor(BlockCursor.SOLID);
     }
 
-    public BlockClient getBlock(){
+    public ClientBlock getBlock(){
         return block;
     }
 

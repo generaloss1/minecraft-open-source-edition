@@ -1,6 +1,5 @@
 package minecraftose.main.command.argument;
 
-import minecraftose.server.Server;
 import minecraftose.main.command.source.CommandSource;
 
 public class CommandArgFloat extends CommandArg{
@@ -9,7 +8,7 @@ public class CommandArgFloat extends CommandArg{
     private float number;
     
     @Override
-    public int parse(String remainingChars, CommandSource source, Server server){
+    public int parse(String remainingChars, CommandSource source){
         // Разделяем оставшуюся часть команды на части
         final String[] args = remainingChars.split(" ");
         
@@ -18,8 +17,12 @@ public class CommandArgFloat extends CommandArg{
             return 0;
         
         // устанавливаем число
-        number = Float.parseFloat(args[0]);
-        return args[0].length();
+        try{
+            number = Float.parseFloat(args[0]);
+            return args[0].length();
+        }catch(Exception e){
+            return 0;
+        }
     }
     
     public float getFloat(){

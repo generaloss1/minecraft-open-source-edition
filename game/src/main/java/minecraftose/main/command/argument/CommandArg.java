@@ -1,12 +1,11 @@
 package minecraftose.main.command.argument;
 
-import minecraftose.server.Server;
 import minecraftose.main.command.source.CommandSource;
 
 public abstract class CommandArg{
     
     // Должно возвращать длину строки, которую удалось разобрать, если не удалось - 0
-    public abstract int parse(String remainingChars, CommandSource source, Server server);
+    public abstract int parse(String remainingChars, CommandSource source);
     
     
     public static CommandArgPosition position(){

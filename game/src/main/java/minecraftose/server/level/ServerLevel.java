@@ -2,7 +2,7 @@ package minecraftose.server.level;
 
 import jpize.math.vecmath.vector.Vec2f;
 import jpize.math.vecmath.vector.Vec3f;
-import minecraftose.client.block.BlockClient;
+import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.main.audio.Sound;
 import minecraftose.main.chunk.storage.ChunkPos;
@@ -11,7 +11,7 @@ import minecraftose.main.level.Level;
 import minecraftose.main.network.packet.s2c.game.S2CPacketPlaySound;
 import minecraftose.server.Server;
 import minecraftose.server.chunk.ServerChunk;
-import minecraftose.server.gen.pool.BlockPool;
+import minecraftose.server.worldgen.pool.BlockPool;
 import minecraftose.server.level.chunk.ServerChunkManager;
 import minecraftose.server.level.light.LevelBlockLight;
 import minecraftose.server.level.light.LevelSkyLight;
@@ -71,7 +71,7 @@ public class ServerLevel extends Level{
 
 
     @Override
-    public BlockClient getBlock(int x, int y, int z){
+    public ClientBlock getBlock(int x, int y, int z){
         final ServerChunk targetChunk = getBlockChunk(x, z);
         if(targetChunk != null)
             return targetChunk.getBlock(getLocalCoord(x), y, getLocalCoord(z));
@@ -80,7 +80,7 @@ public class ServerLevel extends Level{
     }
 
     @Override
-    public boolean setBlock(int x, int y, int z, BlockClient block){
+    public boolean setBlock(int x, int y, int z, ClientBlock block){
         final ChunkPos chunkPos = new ChunkPos(getChunkPos(x), getChunkPos(z));
         ServerChunk targetChunk = chunkManager.getChunk(chunkPos);
 
@@ -97,7 +97,7 @@ public class ServerLevel extends Level{
         return false;
     }
 
-    public void genBlock(int x, int y, int z, BlockClient block){
+    public void genBlock(int x, int y, int z, ClientBlock block){
         final ChunkPos chunkPos = new ChunkPos(getChunkPos(x), getChunkPos(z));
         ServerChunk targetChunk = chunkManager.getChunk(chunkPos);
 

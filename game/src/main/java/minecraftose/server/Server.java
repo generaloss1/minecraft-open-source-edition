@@ -3,12 +3,12 @@ package minecraftose.server;
 import jpize.net.tcp.TcpServer;
 import minecraftose.main.text.Component;
 import minecraftose.main.time.GameTime;
-import minecraftose.server.command.CommandDispatcher;
-import minecraftose.server.gen.DefaultGenerator;
-import minecraftose.server.gen.FlatGenerator;
+import minecraftose.server.command.ServerCommandDispatcher;
+import minecraftose.server.worldgen.generator.ChunkGeneratorDefault;
+import minecraftose.server.worldgen.generator.ChunkGeneratorFlat;
 import minecraftose.server.level.LevelManager;
 import minecraftose.server.level.ServerLevel;
-import minecraftose.server.net.ServerConnectionManager;
+import minecraftose.server.network.ServerConnectionManager;
 import minecraftose.server.player.PlayerList;
 import minecraftose.server.player.ServerPlayer;
 import jpize.util.time.TickGenerator;
@@ -23,7 +23,7 @@ public abstract class Server implements Tickable{
     private final ServerConnectionManager connectionManager;
     private final PlayerList playerList;
     private final LevelManager levelManager;
-    private final CommandDispatcher commandDispatcher;
+    private final ServerCommandDispatcher commandDispatcher;
     private final ServerGameTime gameTime;
     
     public Server(){
@@ -34,15 +34,15 @@ public abstract class Server implements Tickable{
         
         this.playerList = new PlayerList(this);
         this.levelManager = new LevelManager(this);
-        this.commandDispatcher = new CommandDispatcher(this);
+        this.commandDispatcher = new ServerCommandDispatcher(this);
         this.gameTime = new ServerGameTime(this);
     }
     
     
     public void run(){
         final long seed = 61128216; // Maths.randomSeed(8);
-        getLevelManager().createLevel(getConfiguration().getDefaultLevelName(), String.valueOf(seed), DefaultGenerator.getInstance()); // Create overworld level
-        getLevelManager().createLevel("flat-world", "FLAT", FlatGenerator.getInstance()); // Create flat-world level
+        getLevelManager().createLevel(getConfiguration().getDefaultLevelName(), String.valueOf(seed), ChunkGeneratorDefault.INSTANCE); // Create overworld level
+        getLevelManager().createLevel("flat-world", "FLAT", ChunkGeneratorFlat.INSTANCE); // Create flat-world level
 
         tcpServer.run(getConfiguration().getAddress(), getConfiguration().getPort()); // Run TCP server
         
@@ -86,7 +86,7 @@ public abstract class Server implements Tickable{
         return connectionManager;
     }
     
-    public CommandDispatcher getCommandDispatcher(){
+    public ServerCommandDispatcher getCommandDispatcher(){
         return commandDispatcher;
     }
     

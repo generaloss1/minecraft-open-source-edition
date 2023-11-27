@@ -118,7 +118,7 @@ public class InfoRenderer implements Disposable{
         batch.begin();
         textBatch.setBackgroundColor(0, 0, 0, 0.2);
         
-        /** -------- INFO -------- */
+        /* -------- INFO -------- */
         
         // Game Version
         final Collection<Modification> loadedMods = session.getModLoader().getLoadedMods();
@@ -133,8 +133,8 @@ public class InfoRenderer implements Disposable{
         
         // Packets
         infoNextLine();
-        info(TextColor.GRAY, "Packets sent", TextColor.YELLOW, game.getConnectionHandler().getTX());
-        info(TextColor.GRAY, "Packets received", TextColor.YELLOW, game.getConnectionHandler().getRX());
+        info(TextColor.GRAY, "Packets sent", TextColor.YELLOW, game.getConnection().getTX());
+        info(TextColor.GRAY, "Packets received", TextColor.YELLOW, game.getConnection().getRX());
         
         // Position
         infoNextLine();
@@ -177,7 +177,7 @@ public class InfoRenderer implements Disposable{
         info(TextColor.DARK_GREEN, "Level", TextColor.AQUA, level.getConfiguration().getName());
 
         // Biome
-        info(TextColor.DARK_GREEN, "Biome", TextColor.AQUA, level.getBiome(playerPos.xFloor(), playerPos.zFloor()));
+        info(TextColor.DARK_GREEN, "Biome", TextColor.AQUA, level.getBiome(playerPos.xFloor(), playerPos.zFloor()).name);
 
         // Rotation
         info(TextColor.DARK_GREEN, "Rotation", TextColor.AQUA,
@@ -300,7 +300,7 @@ public class InfoRenderer implements Disposable{
         final BitmapFont font = textBatch.getFont();
 
         hintLineNum++;
-        final float x = Jpize.getWidth() - 5 - textBatch.getFont().getLineWidth(text.toString()) - panelOffsetX;
+        final float x = Jpize.getWidth() - 5 - textBatch.getFont().getTextWidth(text.toString()) - panelOffsetX;
         final float y = Jpize.getHeight() - 5 - font.getOptions().getAdvanceScaled() * hintLineNum;
         textBatch.drawComponent(text, x, y);
     }

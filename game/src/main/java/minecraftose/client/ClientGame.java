@@ -1,27 +1,30 @@
 package minecraftose.client;
 
 import jpize.Jpize;
+import jpize.al.listener.AlListener;
 import jpize.math.vecmath.vector.Vec3f;
-import jpize.net.tcp.TcpClient;
 import minecraftose.client.chat.Chat;
+import minecraftose.client.command.ClientCommandDispatcher;
 import minecraftose.client.control.BlockRayCast;
 import minecraftose.client.control.camera.GameCamera;
 import minecraftose.client.entity.LocalPlayer;
 import minecraftose.client.level.ClientLevel;
-import minecraftose.client.net.ClientConnectionHandler;
+import minecraftose.client.network.ClientConnection;
 import minecraftose.client.renderer.particle.Particle;
 import minecraftose.client.renderer.particle.ParticleBatch;
 import minecraftose.client.time.ClientGameTime;
 import minecraftose.main.Tickable;
+import minecraftose.main.network.packet.c2s.game.move.C2SPacketMoveAndRot;
+import minecraftose.main.network.packet.c2s.game.move.C2SPacketRot;
 import minecraftose.main.network.packet.c2s.login.C2SPacketLogin;
-import minecraftose.main.network.packet.c2s.game.C2SPacketMove;
+import minecraftose.main.network.packet.c2s.game.move.C2SPacketMove;
 import minecraftose.main.time.GameTime;
 
 public class ClientGame implements Tickable{
     
     private final Minecraft session;
-    private final TcpClient client;
-    private final ClientConnectionHandler connectionHandler;
+    private final ClientConnection connection;
+    private final ClientCommandDispatcher commandDispatcher;
     private final Chat chat;
 
     private final BlockRayCast blockRayCast;
@@ -35,14 +38,14 @@ public class ClientGame implements Tickable{
     public ClientGame(Minecraft session){
         this.session = session;
 
-        this.connectionHandler = new ClientConnectionHandler(this);
-        this.client = new TcpClient(connectionHandler);
+        this.connection = new ClientConnection(this);
         
         this.blockRayCast = new BlockRayCast(session, 16);
         this.chat = new Chat(this);
-        this.time = new ClientGameTime(this);
+        this.time = new ClientGameTime();
 
         this.player = new LocalPlayer(this, null, session.getProfile().getUsername());
+        this.commandDispatcher = new ClientCommandDispatcher(this);
 
         this.camera = new GameCamera(this, 0.1, 5000, session.getOptions().getFieldOfView());
         this.camera.setDistance(session.getOptions().getRenderDistance());
@@ -55,9 +58,8 @@ public class ClientGame implements Tickable{
     
     public void connect(String address, int port){
         System.out.println("[Client]: Connect to " + address + ":" + port);
-        client.connect(address, port);
-        client.getConnection().setTcpNoDelay(true);
-        connectionHandler.sendPacket( new C2SPacketLogin(session.getVersion().getID(), session.getProfile().getUsername()) );
+        connection.connect(address, port);
+        connection.sendPacket( new C2SPacketLogin(session.getVersion().getID(), session.getProfile().getUsername()) );
     }
 
     @Override
@@ -65,16 +67,28 @@ public class ClientGame implements Tickable{
         if(level == null)
             return;
 
+        // Send player position & rotation
+        if(player.isPositionChanged() && player.isRotationChanged())
+            connection.sendPacket(new C2SPacketMoveAndRot(player));
+        else if(player.isPositionChanged())
+            connection.sendPacket(new C2SPacketMove(player));
+        else if(player.isRotationChanged())
+            connection.sendPacket(new C2SPacketRot(player));
+
         time.tick();
         player.tick();
         level.tick();
 
-        // Send player position
-        if(player.isPositionChanged() || player.isRotationChanged())
-            connectionHandler.sendPacket(new C2SPacketMove(player));
+        // Update audio listener
+        if(player.isRotationChanged())
+            AlListener.setOrientation(player.getRotation().getDirection().rotY(180));
+        if(player.isPositionChanged()){
+            AlListener.setPosition(player.getLerpPosition().copy().add(0, player.getEyeHeight(), 0));
+            AlListener.setVelocity(player.getVelocity());
+        }
 
         if(time.getTicks() % GameTime.TICKS_IN_SECOND == 0)
-            connectionHandler.countTxRx();
+            connection.countTxRx();
     }
     
     public void update(){
@@ -101,7 +115,7 @@ public class ClientGame implements Tickable{
     }
     
     public void disconnect(){
-        client.disconnect();
+        connection.disconnect();
         
         if(level != null){
             Jpize.execSync(() -> {
@@ -135,13 +149,17 @@ public class ClientGame implements Tickable{
     public final Chat getChat(){
         return chat;
     }
-    
+
+    public final ClientCommandDispatcher getCommandDispatcher(){
+        return commandDispatcher;
+    }
+
     public final ClientGameTime getTime(){
         return time;
     }
 
-    public final ClientConnectionHandler getConnectionHandler(){
-        return connectionHandler;
+    public final ClientConnection getConnection(){
+        return connection;
     }
 
 }

@@ -18,7 +18,7 @@ public class BlockSelectorRenderer implements Disposable{
     public BlockSelectorRenderer(LevelRenderer levelRenderer){
         this.levelRenderer = levelRenderer;
         
-        this.shader = new Shader(new Resource("shader/line.vert"), new Resource("shader/line.frag"));
+        this.shader = new Shader(Resource.internal("shader/line.vert"), Resource.internal("shader/line.frag"));
         
         this.translationMatrix = new Matrix4f();
     }

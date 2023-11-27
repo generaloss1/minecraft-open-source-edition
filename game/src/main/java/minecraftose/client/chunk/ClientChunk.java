@@ -1,7 +1,7 @@
 package minecraftose.client.chunk;
 
 import jpize.math.vecmath.matrix.Matrix4f;
-import minecraftose.client.block.BlockClient;
+import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.chunk.mesh.ChunkMeshStack;
 import minecraftose.client.control.camera.GameCamera;
@@ -60,7 +60,7 @@ public class ClientChunk extends LevelChunk{
     }
 
     @Override
-    public boolean setBlock(int lx, int y, int lz, BlockClient block){
+    public boolean setBlock(int lx, int y, int lz, ClientBlock block){
         if(!super.setBlock(lx, y, lz, block) || ChunkUtils.isOutOfBounds(lx, lz))
             return false;
 

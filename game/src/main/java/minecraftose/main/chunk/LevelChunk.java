@@ -1,9 +1,9 @@
 package minecraftose.main.chunk;
 
-import minecraftose.client.block.BlockClient;
+import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.ClientBlocks;
-import minecraftose.main.biome.BiomeMap;
+import minecraftose.main.biome.chunk.BiomeMap;
 import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.chunk.neighbors.LevelChunkNeighbors;
 import minecraftose.main.chunk.storage.ChunkPos;
@@ -20,7 +20,7 @@ public class LevelChunk{
 
     protected final Level level;
     protected final ChunkPos position;
-    protected final LevelChunkNeighbors neighbors1, neighbors2;
+    protected final LevelChunkNeighbors neighbors;
     protected final LevelChunkSection[] sections;
     protected int highestSectionIndex;
     protected final Map<HeightmapType, Heightmap> heightmaps;
@@ -32,8 +32,7 @@ public class LevelChunk{
         this.position = position;
 
         this.spawnTimeMillis = System.currentTimeMillis();
-        this.neighbors1 = new LevelChunkNeighbors(this, 1); // Decorate chunks
-        this.neighbors2 = new LevelChunkNeighbors(this, 2); // Illuminate chunks
+        this.neighbors = new LevelChunkNeighbors(this, 1);
         this.sections = new LevelChunkSection[16];
         this.highestSectionIndex = -1;
         
@@ -159,7 +158,7 @@ public class LevelChunk{
     }
 
 
-    public BlockClient getBlock(int lx, int y, int lz){
+    public ClientBlock getBlock(int lx, int y, int lz){
         return ChunkBlockData.getBlock(getBlockState(lx, y, lz));
     }
 
@@ -167,7 +166,7 @@ public class LevelChunk{
         return ChunkBlockData.getProps(getBlockState(lx, y, lz));
     }
 
-    public boolean setBlock(int lx, int y, int lz, BlockClient block){
+    public boolean setBlock(int lx, int y, int lz, ClientBlock block){
         return setBlockData(lx, y, lz, block.getDefaultData());
     }
 
@@ -263,20 +262,16 @@ public class LevelChunk{
     }
 
 
-    public ChunkPos[] getNeighbors1(){
-        return neighbors1.array();
-    }
-
-    public ChunkPos[] getNeighbors2(){
-        return neighbors2.array();
+    public ChunkPos[] getNeighbors(){
+        return neighbors.array();
     }
 
     public ChunkPos getNeighborPos(int neighborX, int neighborZ){
-        return neighbors1.getNeighborPos(neighborX, neighborZ);
+        return neighbors.getNeighborPos(neighborX, neighborZ);
     }
 
     public LevelChunk getNeighborChunk(int neighborX, int neighborZ){
-        return neighbors1.getNeighborChunk(neighborX, neighborZ);
+        return neighbors.getNeighborChunk(neighborX, neighborZ);
     }
     
     

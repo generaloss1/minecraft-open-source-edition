@@ -47,4 +47,9 @@ public class ChunkPos{
         return x + ", " + z;
     }
 
+
+    public static ChunkPos fromGlobalCoords(int x, int z){
+        return new ChunkPos(ChunkUtils.getChunkPos(x), ChunkUtils.getChunkPos(z));
+    }
+
 }

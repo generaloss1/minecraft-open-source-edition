@@ -8,10 +8,10 @@ import minecraftose.main.command.source.CommandSource;
 public class CommandArgPlayer extends CommandArg{
     
     // Результат парсинга
-    private ServerPlayer player;
+    private String playerName;
     
     @Override
-    public int parse(String remainingChars, CommandSource source, Server server){
+    public int parse(String remainingChars, CommandSource source){
         // Разделяем оставшуюся часть команды на части
         final String[] args = remainingChars.split(" ");
         
@@ -24,15 +24,13 @@ public class CommandArgPlayer extends CommandArg{
         if(PlayerProfile.isNameInvalid(playerName))
             return 0;
         
-        player = server.getPlayerList().getPlayer(playerName);
-        if(player == null)
-            return 0;
+        this.playerName = playerName;
         
         return playerName.length();
     }
     
-    public ServerPlayer getPlayer(){
-        return player;
+    public ServerPlayer getPlayer(Server server){
+        return server.getPlayerList().getPlayer(playerName);
     }
     
 }

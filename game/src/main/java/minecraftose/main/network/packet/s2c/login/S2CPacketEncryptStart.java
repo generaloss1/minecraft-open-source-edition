@@ -2,7 +2,7 @@ package minecraftose.main.network.packet.s2c.login;
 
 import jpize.net.security.PublicRSA;
 import jpize.net.tcp.packet.IPacket;
-import minecraftose.client.net.ClientPacketHandler;
+import minecraftose.client.network.ClientPacketHandler;
 import jpize.util.io.JpizeInputStream;
 import jpize.util.io.JpizeOutputStream;
 

@@ -11,13 +11,9 @@ uniform int u_renderDistanceBlocks;
 uniform bool u_fogEnabled;
 uniform vec4 u_fogColor;
 uniform float u_fogStart;
-// Options.brightness
-uniform float u_brightness;
 uniform float u_skyBrightness;
 
 void main(){
-    // float brightness = u_brightness * 0.1;
-
     // Sampling
     vec4 fragColor = color * texture(u_atlas, uv);
     if(fragColor.a <= 0)

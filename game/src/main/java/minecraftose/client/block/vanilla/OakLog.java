@@ -1,6 +1,6 @@
 package minecraftose.client.block.vanilla;
 
-import minecraftose.client.block.BlockClient;
+import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.BlockRotation;
 import minecraftose.client.block.model.BlockModel;
 import minecraftose.client.block.shape.BlockCollide;
@@ -11,7 +11,7 @@ import minecraftose.main.Dir;
 import minecraftose.main.audio.SoundType;
 import minecraftose.main.chunk.ChunkUtils;
 
-public class OakLog extends BlockClient{
+public class OakLog extends ClientBlock{
     
     public OakLog(int id){
         super(id);

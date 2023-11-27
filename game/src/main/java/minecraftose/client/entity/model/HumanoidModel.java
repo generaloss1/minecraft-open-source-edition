@@ -21,7 +21,7 @@ public class HumanoidModel{
     public HumanoidModel(AbstractClientPlayer player){
         this.player = player;
         
-        shader = new Shader(new Resource("shader/level/entity/model.vert"), new Resource("shader/level/entity/model.frag"));
+        shader = new Shader(Resource.internal("shader/level/entity/model.vert"), Resource.internal("shader/level/entity/model.frag"));
         final int skinID = (Math.abs(player.getName().hashCode()) % 20 + 1);
         skinTexture = new Texture("texture/skin/skin" + skinID + ".png");
         
@@ -103,13 +103,19 @@ public class HumanoidModel{
         shader.setUniform("u_projection", camera.getProjection());
         shader.setUniform("u_view", camera.getView());
         shader.setUniform("u_texture", skinTexture);
-        
+        shader.setUniform("u_skyBrightness", camera.getGame().getSession().getRenderer().getWorldRenderer().getSkyRenderer().getSkyBrightness());
+
         torso.render(camera, shader, "u_model");
         head.render(camera, shader, "u_model");
         leftLeg.render(camera, shader, "u_model");
         rightLeg.render(camera, shader, "u_model");
         leftArm.render(camera, shader, "u_model");
         rightArm.render(camera, shader, "u_model");
+    }
+
+
+    public ModelPart getRightArm(){
+        return rightArm;
     }
     
     

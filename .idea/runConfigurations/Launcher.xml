@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Launcher" type="Application" factoryName="Application" singleton="false">
+    <option name="MAIN_CLASS_NAME" value="jpize.tests.mcose.launcher.Main" />
+    <module name="launcher" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/launcher/minecraftose" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+      <option name="BuildArtifacts" enabled="true">
+        <artifact name="mc-for-launcher" />
+        <artifact name="mod" />
+      </option>
+    </method>
+  </configuration>
+</component>

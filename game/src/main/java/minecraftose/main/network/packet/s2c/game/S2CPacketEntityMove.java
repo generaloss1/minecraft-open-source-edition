@@ -4,7 +4,7 @@ import jpize.math.util.EulerAngles;
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.net.tcp.packet.IPacket;
 import jpize.physic.utils.Velocity3f;
-import minecraftose.client.net.ClientPacketHandler;
+import minecraftose.client.network.ClientPacketHandler;
 import minecraftose.server.player.ServerPlayer;
 import jpize.util.io.JpizeInputStream;
 import jpize.util.io.JpizeOutputStream;

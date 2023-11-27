@@ -2,7 +2,6 @@ package minecraftose.main.command.argument;
 
 import jpize.math.vecmath.vector.Vec3f;
 import minecraftose.main.command.source.CommandSource;
-import minecraftose.server.Server;
 
 public class CommandArgPosition extends CommandArg{
     
@@ -10,7 +9,7 @@ public class CommandArgPosition extends CommandArg{
     private Vec3f position;
 
     @Override
-    public int parse(String remainingChars, CommandSource source, Server server){
+    public int parse(String remainingChars, CommandSource source){
         // Разделяем оставшуюся часть команды на части
         final String[] args = remainingChars.split(" ");
         // Если количество частей меньше трех (X Y Z), завершить парсинг

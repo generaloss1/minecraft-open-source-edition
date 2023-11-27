@@ -27,7 +27,7 @@ public class ModClient implements ClientModInitializer{
         
         batch = new TextureBatch();
         //font = FontLoader.getDefault();
-        texture = new Texture(new Resource("icon.png", ModClient.class));
+        texture = new Texture(Resource.internal("icon.png", ModClient.class));
     }
     
     
@@ -38,7 +38,7 @@ public class ModClient implements ClientModInitializer{
         batch.end();
         
         if(Key.F10.isDown()){
-            Collection<ServerPlayer> players = Minecraft.instance.getIntegratedServer().getPlayerList().getPlayers();
+            Collection<ServerPlayer> players = Minecraft.INSTANCE.getIntegratedServer().getPlayerList().getPlayers();
             for(ServerPlayer player: players)
                 player.sendMessage(new Component()
                         .color(TextColor.DARK_RED)

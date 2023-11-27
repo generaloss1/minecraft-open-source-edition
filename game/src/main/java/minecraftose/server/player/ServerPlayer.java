@@ -16,7 +16,7 @@ import minecraftose.main.network.packet.s2c.game.S2CPacketTeleportPlayer;
 import minecraftose.main.text.Component;
 import minecraftose.server.Server;
 import minecraftose.server.level.ServerLevel;
-import minecraftose.server.net.PlayerGameConnection;
+import minecraftose.server.network.PlayerGameConnection;
 
 public class ServerPlayer extends Player{
     

@@ -11,8 +11,6 @@ uniform int u_renderDistanceBlocks;
 uniform bool u_fogEnabled;
 uniform vec4 u_fogColor;
 uniform float u_fogStart;
-// Options.brightness
-uniform float u_brightness;
 uniform float u_skyBrightness;
 
 void main(){

@@ -18,7 +18,7 @@ public class FirstPersonPlayerCameraTarget implements CameraTarget{
     
     @Override
     public Vec3f getPosition(){
-        position.set(targetPlayer.getLerpPosition()).add(0, targetPlayer.getEyeHeight(), 0);
+        position.set(targetPlayer.getLerpPosition());
         return position;
     }
     

@@ -26,6 +26,8 @@ public class PlayerController implements Tickable{
         this.player = player;
 
         this.rotationController = new Rotation3DController();
+        this.rotationController.setSmoothness(0);
+
         this.horizontalMoveController = new HorizontalMoveController(this);
         this.prevJumpTime = new Stopwatch();
     }
@@ -53,6 +55,14 @@ public class PlayerController implements Tickable{
         // Horizontal motion
         horizontalMoveController.update();
 
+        if(Key.X.isDown()){
+            player.setWalkSpeedFactor(10);
+            player.setJumpHeightFactor(10);
+        }else if(Key.X.isReleased()){
+            player.setWalkSpeedFactor(1);
+            player.setJumpHeightFactor(1);
+        }
+
         if(options.getKey(KeyMapping.SPRINT).isPressed() && options.getKey(KeyMapping.FORWARD).isPressed() ||
             options.getKey(KeyMapping.SPRINT).isPressed() && options.getKey(KeyMapping.FORWARD).isDown())
             player.setSprinting(true);
@@ -61,10 +71,10 @@ public class PlayerController implements Tickable{
 
         if(options.getKey(KeyMapping.SNEAK).isDown()){
             player.setSneaking(true);
-            session.getGame().getConnectionHandler().sendPacket(new C2SPacketPlayerSneaking(player));
+            session.getGame().getConnection().sendPacket(new C2SPacketPlayerSneaking(player));
         }else if(options.getKey(KeyMapping.SNEAK).isReleased()){
             player.setSneaking(false);
-            session.getGame().getConnectionHandler().sendPacket(new C2SPacketPlayerSneaking(player));
+            session.getGame().getConnection().sendPacket(new C2SPacketPlayerSneaking(player));
         }
 
         // Jump, Sprint, Sneak

@@ -4,15 +4,15 @@ import jpize.util.file.Resource;
 import jpize.math.Maths;
 import jpize.math.vecmath.vector.Vec2f;
 import jpize.math.vecmath.vector.Vec3i;
-import minecraftose.client.block.BlockClient;
-import minecraftose.server.gen.pool.BlockPool;
+import minecraftose.client.block.ClientBlock;
+import minecraftose.server.worldgen.pool.BlockPool;
 import jpize.util.io.JpizeInputStream;
 
 import java.io.IOException;
 
 public class Structure{
 
-    public static void circleFilledXZ(BlockPool pool, int x, int y, int z, float radius, BlockClient block){
+    public static void circleFilledXZ(BlockPool pool, int x, int y, int z, float radius, ClientBlock block){
         final int intRadius = Maths.ceil(radius);
         for(int i = 0; i < intRadius; i++){
             for(int j = 0; j < intRadius; j++){
@@ -27,7 +27,7 @@ public class Structure{
         }
     }
 
-    public static void circleXZ(BlockPool pool, int x, int y, int z, float radius, BlockClient block){
+    public static void circleXZ(BlockPool pool, int x, int y, int z, float radius, ClientBlock block){
         final int intRadius = Maths.ceil(radius);
         for(int i = 0; i < intRadius; i++){
             for(int j = 0; j < intRadius; j++){
@@ -45,10 +45,8 @@ public class Structure{
 
     public static void loadTo(BlockPool pool, String name, int x, int y, int z){
         // File
-        try{
-            final Resource file = new Resource("struct/" + name + ".struct");
-            final JpizeInputStream inStream = file.getJpizeIn();
-
+        final Resource file = Resource.internal("struct/" + name + ".struct");
+        try(final JpizeInputStream inStream = file.jpizeIn()){
             // Read
             final Vec3i size = inStream.readVec3i();
 

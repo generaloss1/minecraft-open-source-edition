@@ -1,7 +1,6 @@
 package minecraftose.client.renderer.text;
 
 import jpize.Jpize;
-import jpize.util.file.Resource;
 import jpize.graphics.font.BitmapFont;
 import jpize.graphics.font.FontLoader;
 import jpize.graphics.font.glyph.Glyph;
@@ -57,7 +56,7 @@ public class TextComponentBatch implements Disposable{
                 text.append(component.toString());
             
             final Vec2f bounds = font.getBounds(text.toString());
-            batch.drawQuad(background, x, y, bounds.x, bounds.y);
+            batch.drawRect(background, x, y, bounds.x, bounds.y);
         }
         
         // Пройдемся по каждому компоненту дерева, разложенному в плоский список

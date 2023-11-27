@@ -1,6 +1,6 @@
 package minecraftose.client.chat;
 
-import minecraftose.main.chat.MessageSource;
+import minecraftose.main.chat.source.MessageSource;
 import minecraftose.main.text.ComponentText;
 import jpize.util.time.Stopwatch;
 

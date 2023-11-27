@@ -11,7 +11,7 @@ import java.util.List;
 public class McOseClient{
 
     public String jarUrl = "https://m119.syncusercontent.com/mfs-60:8c80592a794664aabb0a87399d14e2d4=============================/p/minecraft-osp-release-1.0.jar?allowdd=0&datakey=bfC/3rsbzQDM5c35Cdu0jD+9HrpnBB1KExFGmJifHlpAG+1D3dYI6tIy8EmNJMQQwRFgPTVlGx/uWlor5pe6qPzf5+ThAFGSNGwMkAV8RksHOjKbzjsTboFL4pp/bDTbXzkW0rBfH4iW7OLCApAXXT0f2PeGhuBaYGT8/NKLg/mjJrR/4zvgI5VEhU8rlYmbu0PiyIovvDFACkD8OgRby21sCAp+2AjRHFOmJ3NHxJGL2C0wd1LamQV7qpOM6Hm1G2MV6HL4mcpgX/w2H2EenWieRUYRh6cZXE2mNe0PhYMnbRSzSKTqPLUBTselUbz+M//728DTvZh8nv9BKt/9gA&engine=ln-3.1.38&errurl=FfHYCTnXTuStPcXxSgOV/9KX/w1lXcxzMAq3OTjdEJKTTy3vbBChL2bE7Vu3jnIrRvgzdYET0GP1ZZ5dyS4olk127dshuxE1h0pPItdXBTk+Sw1FckiXM09IC1h2gIS0ALtzXh0vDbnwA879aZah+MsD6tNjIYH3snsomzSh1erHRVbCSMP0ciSYuDl+qN78N/4qvcUmYYPWmajIyfZZvR1lQm37w42EEjMxr2c1F5+A/Dce6jKvcDGUB2hNeIL9nJOkoo8VLskRF0uoaz9WBmmGLePebeiGhXBxmNeLEGEov3fFOazqvKZr4sURFEvZ6Mvziw0Kg3H53yavDB5uXQ==&header1=Q29udGVudC1UeXBlOiB1bmRlZmluZWQ&header2=Q29udGVudC1EaXNwb3NpdGlvbjogYXR0YWNobWVudDsgZmlsZW5hbWU9Im1pbmVjcmFmdC1vc3AtcmVsZWFzZS0xLjAuamFyIjtmaWxlbmFtZSo9VVRGLTgnJ21pbmVjcmFmdC1vc3AtcmVsZWFzZS0xLjAuamFyOw&ipaddress=3118840829&linkcachekey=08456c5d0&linkoid=2139720011&mode=101&sharelink_id=14115101730011&timestamp=1695305981253&uagent=e48b8411abf8d2b6800305a39746cf60361c2aee&signature=8b30203f1c8bc78b91dfcb01887fb6731c9e780c&cachekey=60:8c80592a794664aabb0a87399d14e2d4=============================";
-    public String jarName = "alpha-1.0.0.jar";
+    public String jarName = "minecraft-open-source-edition.jar";
     public String classPath = "minecraftose.Main";
     public String gameDir = new File(".").getAbsolutePath();
     public int memoryMb = 512;
@@ -35,12 +35,12 @@ public class McOseClient{
 
             // Print input
             try{
-                final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                while(!Thread.interrupted() && process.isAlive()){
-                    final String line = reader.readLine();
-                    if(line != null)
-                        System.out.println(line);
-                }
+                //final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                //while(!Thread.interrupted() && process.isAlive()){
+                //    final String line = reader.readLine();
+                //    if(line != null)
+                //        System.out.println(line);
+                //}
 
                 final BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                 while(!Thread.interrupted() && process.isAlive()){

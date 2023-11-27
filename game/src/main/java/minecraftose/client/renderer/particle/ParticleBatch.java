@@ -13,6 +13,7 @@ import jpize.graphics.util.Shader;
 import jpize.graphics.util.color.Color;
 import jpize.math.vecmath.matrix.Matrix4f;
 import jpize.math.vecmath.vector.Vec3f;
+import minecraftose.client.control.camera.GameCamera;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -34,7 +35,7 @@ public class ParticleBatch implements Disposable{
     public ParticleBatch(int size){
         this.size = size;
         this.instances = new CopyOnWriteArrayList<>();
-        this.shader = new Shader(new Resource("shader/level/particle/particle-batch.vert"), new Resource("shader/level/particle/particle-batch.frag"));
+        this.shader = new Shader(Resource.internal("shader/level/particle/particle-batch.vert"), Resource.internal("shader/level/particle/particle-batch.frag"));
         // Matrices
         this.rotateMatrix = new Matrix4f();
         // Buffer
@@ -57,7 +58,7 @@ public class ParticleBatch implements Disposable{
     }
     
     
-    public void render(PerspectiveCamera camera){
+    public void render(GameCamera camera){
         setup(camera); // Setup shader
         
         for(ParticleInstance instance: instances){
@@ -94,10 +95,10 @@ public class ParticleBatch implements Disposable{
         rotateMatrix.toRotatedZ(instance.rotation).mul(new Matrix4f().toLookAt(camera.getRotation().getDirection()));
         
         // Setup vertices
-        final Vec3f v0 = new Vec3f(-0.5,  0.5, 0) .mul(rotateMatrix) .mul(instance.size) .add(instance.position);
-        final Vec3f v1 = new Vec3f(-0.5, -0.5, 0) .mul(rotateMatrix) .mul(instance.size) .add(instance.position);
-        final Vec3f v2 = new Vec3f( 0.5, -0.5, 0) .mul(rotateMatrix) .mul(instance.size) .add(instance.position);
-        final Vec3f v3 = new Vec3f( 0.5,  0.5, 0) .mul(rotateMatrix) .mul(instance.size) .add(instance.position);
+        final Vec3f v0 = new Vec3f(0, -0.5,  0.5) .mulMat4(rotateMatrix) .mul(instance.size) .add(instance.position);
+        final Vec3f v1 = new Vec3f(0, -0.5, -0.5) .mulMat4(rotateMatrix) .mul(instance.size) .add(instance.position);
+        final Vec3f v2 = new Vec3f(0,  0.5, -0.5) .mulMat4(rotateMatrix) .mul(instance.size) .add(instance.position);
+        final Vec3f v3 = new Vec3f(0,  0.5,  0.5) .mulMat4(rotateMatrix) .mul(instance.size) .add(instance.position);
         
         // Add vertices
         addVertex(v0.x, v0.y, v0.z, region.u1(), region.v1());
@@ -127,9 +128,10 @@ public class ParticleBatch implements Disposable{
         vertexIndex++;
     }
     
-    private void setup(PerspectiveCamera camera){
+    private void setup(GameCamera camera){
         shader.bind();
         shader.setUniform("u_projection", camera.getProjection());
+        shader.setUniform("u_skyBrightness", camera.getGame().getSession().getRenderer().getWorldRenderer().getSkyRenderer().getSkyBrightness());
         shader.setUniform("u_view", camera.getImaginaryView());
     }
     

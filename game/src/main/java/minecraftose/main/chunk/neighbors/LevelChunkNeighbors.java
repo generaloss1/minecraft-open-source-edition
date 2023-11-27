@@ -9,7 +9,7 @@ import minecraftose.main.level.ChunkManager;
  *   │ [3] 4 [5]
  *   ↓ [6][7][8]
  *   Z
- */
+ *  *  *  *  *  **/
 public class LevelChunkNeighbors{
 
     private final ChunkManager chunkManager;

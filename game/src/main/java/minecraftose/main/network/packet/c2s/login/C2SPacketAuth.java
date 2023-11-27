@@ -1,7 +1,7 @@
 package minecraftose.main.network.packet.c2s.login;
 
 import jpize.net.tcp.packet.IPacket;
-import minecraftose.server.net.PlayerLoginConnection;
+import minecraftose.server.network.PlayerLoginConnection;
 import jpize.util.io.JpizeInputStream;
 import jpize.util.io.JpizeOutputStream;
 

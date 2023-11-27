@@ -7,7 +7,6 @@ import jpize.gl.glenum.GlTarget;
 import jpize.graphics.texture.Texture;
 import jpize.graphics.util.Framebuffer2D;
 import jpize.graphics.util.Framebuffer3D;
-import jpize.graphics.util.ScreenQuad;
 import jpize.graphics.util.Shader;
 import jpize.graphics.util.batch.TextureBatch;
 import jpize.graphics.util.color.Color;
@@ -58,7 +57,7 @@ public class LevelRenderer implements Disposable, Resizable{
         this.batch = new TextureBatch();
         this.batchFramebuffer = new Framebuffer2D();
         this.cursorTexture = new Texture("texture/gui/cursor.png");
-        this.postShader = new Shader(new Resource("shader/post.vert"), new Resource("shader/post.frag"));
+        this.postShader = new Shader(Resource.internal("shader/post.vert"), Resource.internal("shader/post.frag"));
         this.postFramebuffer = new Framebuffer3D();
         this.screenColor = new Color();
 

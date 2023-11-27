@@ -43,7 +43,7 @@ public class SkyRenderer implements Disposable{
         );
         
         this.skyViewMat = new Matrix4f();
-        this.shader = new Shader(new Resource("shader/level/sky/sky.vert"), new Resource("shader/level/sky/sky.frag"));
+        this.shader = new Shader(Resource.internal("shader/level/sky/sky.vert"), Resource.internal("shader/level/sky/sky.frag"));
 
         this.mesh = new Mesh(new GlVertexAttr(3, GlType.FLOAT)); // pos3
         this.mesh.setMode(GlPrimitive.TRIANGLE_FAN);
@@ -83,10 +83,10 @@ public class SkyRenderer implements Disposable{
 
         // Color
         final Color skyColor = getSkyColor();
-        final Color fogColor = getFogColor();
-        
-        Gl.depthMask(false);
+        final Color fogColor = getFogColor(camera);
+
         Gl.clearColor(fogColor);
+        Gl.depthMask(false);
         Gl.cullFace(GlFace.FRONT);
         
         shader.bind();
@@ -111,12 +111,15 @@ public class SkyRenderer implements Disposable{
         return skyBrightness;
     }
     
-    public Color getFogColor(){
-        return new Color(0.8, 0.85, 0.9, 1F).mul3(skyBrightness);
+    public Color getFogColor(GameCamera camera){
+        final float playerY = camera.getPlayer().getLerpPosition().y;
+        final float voidFactor = Maths.clamp(playerY + 10, 0, 10) / 10F;
+        final float brightness = camera.getPlayer().getGame().getSession().getOptions().getBrightness() * 0.1F + 0.9F;
+        return new Color(0.6, 0.75, 0.9, 1).mul3(skyBrightness * voidFactor * brightness);
     }
     
     public Color getSkyColor(){
-        return new Color(0.47, 0.65, 1, 1F).mul3(skyBrightness);
+        return new Color(0.1, 0.4, 0.9, 1F).mul3(skyBrightness);
     }
 
     public float getFogStart(){

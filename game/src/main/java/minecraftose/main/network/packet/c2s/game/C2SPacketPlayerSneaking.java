@@ -2,7 +2,7 @@ package minecraftose.main.network.packet.c2s.game;
 
 import jpize.net.tcp.packet.IPacket;
 import minecraftose.main.entity.Player;
-import minecraftose.server.net.PlayerGameConnection;
+import minecraftose.server.network.PlayerGameConnection;
 import jpize.util.io.JpizeInputStream;
 import jpize.util.io.JpizeOutputStream;
 

@@ -2,7 +2,7 @@ package minecraftose.server.level;
 
 import jpize.math.vecmath.vector.Vec2f;
 import minecraftose.main.level.LevelConfiguration;
-import minecraftose.server.gen.ChunkGenerator;
+import minecraftose.server.worldgen.ChunkGenerator;
 
 public class ServerLevelConfiguration extends LevelConfiguration{
     

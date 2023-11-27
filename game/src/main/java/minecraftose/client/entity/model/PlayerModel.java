@@ -122,12 +122,15 @@ public class PlayerModel extends HumanoidModel{
             head.setShow(false);
         }else
             head.setShow(true);
-        
+
+        if(Float.isNaN(player.getLerpRotation().yaw) || Float.isNaN(torso.getRotation().yaw))
+            return;
+
         torso.getRotation().yaw += (-player.getLerpRotation().yaw - torso.getRotation().yaw) * Jpize.getDt() * 4;
-        
+
         head.getRotation().yaw = -player.getLerpRotation().yaw;
         head.getRotation().pitch = player.getLerpRotation().pitch;
-        
+
         // Sneaking
         if(player.isSneaking()){
             leftLeg.getRotation().pitch = 45;
@@ -154,6 +157,11 @@ public class PlayerModel extends HumanoidModel{
         leftArm.getRotation().pitch = 60 * Mathc.sin(moveDist) * bobbing;
         rightLeg.getRotation().pitch = 60 * Mathc.sin(moveDist) * bobbing;
         leftLeg.getRotation().pitch = -60 * Mathc.sin(moveDist) * bobbing;
+    }
+
+
+    public ModelPart getRightSleeve(){
+        return rightSleeve;
     }
     
     

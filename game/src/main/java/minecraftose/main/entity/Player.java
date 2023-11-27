@@ -1,13 +1,11 @@
 package minecraftose.main.entity;
 
-import jpize.math.Mathc;
-import jpize.math.Maths;
 import minecraftose.main.level.Level;
 
 public class Player extends Entity{
     
-    private final String name;
-    private boolean sprinting, sneaking, flyEnabled, flying, jumping;
+    protected final String name;
+    protected boolean sprinting, sneaking, flyEnabled, flying, jumping;
     
     public Player(Level level, String name){
         super(EntityType.PLAYER, level);
@@ -37,7 +35,7 @@ public class Player extends Entity{
     
     public void setSneaking(boolean sneaking){
         this.sneaking = sneaking;
-        getBoundingBox().getMax().y = sneaking ? 1.5F : 1.8F;
+        aabb.getBoundingBox().getMax().y = sneaking ? 1.5F : 1.8F;
     }
     
     public boolean isFlyEnabled(){

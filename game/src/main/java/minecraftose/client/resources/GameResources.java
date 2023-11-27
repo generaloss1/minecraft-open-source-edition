@@ -3,7 +3,7 @@ package minecraftose.client.resources;
 import jpize.graphics.texture.pixmap.PixmapIO;
 import jpize.util.Disposable;
 import jpize.audio.sound.AudioBuffer;
-import jpize.audio.sound.AudioLoader;
+import jpize.audio.io.AudioLoader;
 import jpize.util.file.Resource;
 import jpize.graphics.texture.pixmap.PixmapRGBA;
 import jpize.graphics.texture.Region;
@@ -20,13 +20,13 @@ public class GameResources implements Disposable{
     private final TextureAtlas<String> blockAtlas;
     private final List<Resource> blocksToLoadList;
 
-    private final Map<String, AudioBuffer> audioList;
+    private final Map<Integer, AudioBuffer> soundList;
 
     public GameResources(){
         this.blockAtlas = new TextureAtlas<>();
         this.blocksToLoadList = new ArrayList<>();
 
-        this.audioList = new HashMap<>();
+        this.soundList = new HashMap<>();
     }
 
 
@@ -34,7 +34,7 @@ public class GameResources implements Disposable{
         System.out.println("[Client]: Build blocks atlas");
 
         for(Resource resource: blocksToLoadList){
-            final String name = resource.getSimpleName();
+            final String name = resource.simpleName();
             final PixmapRGBA pixmap = PixmapIO.load(resource);
             blockAtlas.put(name, pixmap);
         }
@@ -48,7 +48,7 @@ public class GameResources implements Disposable{
     }
 
     public void registerBlockRegion(String path, String name){
-        registerBlockRegion(new Resource(path + name + ".png"));
+        registerBlockRegion(Resource.internal(path + name + ".png"));
     }
 
     public Region getBlockRegion(String name){
@@ -60,34 +60,27 @@ public class GameResources implements Disposable{
     }
 
 
-    public void registerSound(String soundID, Resource resource){
+    public void registerSound(int ID, Resource resource){
         final AudioBuffer buffer = new AudioBuffer();
         AudioLoader.load(buffer, resource);
-        audioList.put(soundID, buffer);
+        soundList.put(ID, buffer);
     }
 
-    public void registerSound(String soundID, String path, String name){
-        registerSound(soundID, new Resource(path + name + ".ogg"));
+    public void registerSound(int ID, String path){
+        registerSound(ID, Resource.internal(path));
     }
 
-    public void registerSound(String path, String name){
-        final String soundID = name.replace("/", ".");
-        registerSound(soundID, path, name);
+    public AudioBuffer getSound(Integer soundID){
+        return soundList.get(soundID);
     }
 
-    public void registerSound(String path, String name, int min, int max){
-        for(int i = min; i <= max; i++){
-            final String soundID = name.replace("/", ".") + "." + i;
-            registerSound(soundID, path, name + i);
-        }
+
+    public void registerMusic(String ID, String path){
+
     }
 
-    public AudioBuffer getAudio(String soundID){
-        return audioList.get(soundID);
-    }
-
-    public void registerMusic(String path, String name){
-        registerSound(path, name);
+    public AudioBuffer getMusic(String musicID){
+        return null;
     }
 
 
@@ -96,7 +89,7 @@ public class GameResources implements Disposable{
         blocksToLoadList.clear();
         blockAtlas.getTexture().dispose();
 
-        for(AudioBuffer audio: audioList.values())
+        for(AudioBuffer audio: soundList.values())
             audio.dispose();
     }
 

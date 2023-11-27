@@ -1,5 +1,5 @@
 remote.host : 0.0.0.0:22854
-graphics.fieldOfView : 99
+graphics.fieldOfView : 110.0
 graphics.renderDistance : 8
 graphics.maxFramerate : 0
 graphics.fullscreen : false
@@ -7,7 +7,7 @@ graphics.showFps : true
 graphics.brightness : 1.0
 graphics.fog : true
 graphics.firstPersonModel : false
-control.mouseSensitivity : 0.3
+control.mouseSensitivity : 0.15
 key.forward : w
 key.left : a
 key.back : s
@@ -19,5 +19,5 @@ key.chat : t
 key.command : slash
 key.zoom : c
 key.fullscreen : f11
-key.toggle_perspective : f5
+key.toggle_perspective : r
 key.screenshot : f2

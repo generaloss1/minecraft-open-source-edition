@@ -1,23 +1,22 @@
 package minecraftose.client.entity;
 
 import jpize.Jpize;
-import jpize.math.Mathc;
 import jpize.math.util.EulerAngles;
 import jpize.math.vecmath.vector.Vec3f;
 import minecraftose.client.ClientGame;
 import minecraftose.client.entity.model.PlayerModel;
-import minecraftose.client.time.TickFloat;
+import minecraftose.client.time.var.TickFloat;
 import minecraftose.main.entity.Player;
 import minecraftose.client.level.ClientLevel;
 
 public class AbstractClientPlayer extends Player{
 
-    private final ClientGame game;
+    protected final ClientGame game;
 
-    private volatile PlayerModel model;
-    private final Vec3f lastPosition, lerpPosition;
-    private final EulerAngles lastRotation, lerpRotation;
-    private final TickFloat bobbing, modelBobbing;
+    protected volatile PlayerModel model;
+    protected final Vec3f lastPosition, lerpPosition;
+    protected final EulerAngles lastRotation, lerpRotation;
+    protected final TickFloat bobbing, modelBobbing;
 
     public AbstractClientPlayer(ClientGame game, ClientLevel level, String name){
         super(level, name);
@@ -33,7 +32,7 @@ public class AbstractClientPlayer extends Player{
         this.lerpRotation = new EulerAngles();
 
         // Player model
-        Jpize.execSync( ()-> this.model = new PlayerModel(this) );
+        Jpize.execSync(() -> this.model = new PlayerModel(this));
     }
 
 
@@ -43,23 +42,22 @@ public class AbstractClientPlayer extends Player{
 
     @Override
     public ClientLevel getLevel(){
-        return (ClientLevel) super.getLevel();
+        return (ClientLevel) level;
     }
 
     @Override
     public void tick(){
         // View Bobbing
-        if(isOnGround()){
-            bobbing.add((Math.min(0.1F, getVelLenXZ()) - bobbing.get()) * 0.4F); //: lenXZ
-        }else
-            bobbing.sub(bobbing.get() * 0.4F);
+        if(super.onGround.value())
+            bobbing.add((Math.min(0.1F, super.velocity.lenXZ()) - bobbing.value()) * 0.4F);
+        else
+            bobbing.sub(bobbing.value() * 0.4F);
 
-        modelBobbing.add((Math.min(0.1F, getVelLenXZ()) - bobbing.get()) * 0.4F); //: lenXZ
-        System.out.println(modelBobbing.get());
+        modelBobbing.add((Math.min(0.1F, super.velocity.lenXZ()) - modelBobbing.value()) * 0.4F);
 
         // Interpolation
-        lastPosition.set(getPosition());
-        lastRotation.set(getRotation());
+        lastPosition.set(super.position);
+        lastRotation.set(super.rotation);
         
         // Player tick
         super.tick();
@@ -68,44 +66,43 @@ public class AbstractClientPlayer extends Player{
     public PlayerModel getModel(){
         return model;
     }
-    
 
-    public float getVelLenXZ(){
-        return Mathc.sqrt(getVelocity().x * getVelocity().x + getVelocity().z * getVelocity().z);
-    }
 
     public float getModelBobbing(){
-        final float lerpFactor = game.getTime().getTickLerpFactor();
-        return modelBobbing.getLerp(lerpFactor);
+        final float t = game.getTime().getTickLerpFactor();
+        return modelBobbing.getLerp(t);
     }
 
-    public void updateInterpolation(){
-        final float lerpFactor = game.getTime().getTickLerpFactor();
-
-        lerpPosition.lerp(lastPosition, getPosition(), lerpFactor);
-        lerpRotation.lerp(lastRotation, getRotation(), lerpFactor);
+    public void updateInterpolation(){ //: used
+        // final float t = game.getTime().getTickLerpFactor();
+        // lerpPosition.lerp(lastPosition, super.position, t);
+        // lerpRotation.lerp(lastRotation, super.rotation, t);
     }
 
 
     public float getBobbing(){
-        final float lerpFactor = game.getTime().getTickLerpFactor();
-        return bobbing.getLerp(lerpFactor);
+        final float t = game.getTime().getTickLerpFactor();
+        return bobbing.getLerp(t);
     }
 
     public Vec3f getLerpPosition(){
+        final float t = game.getTime().getTickLerpFactor();
+        lerpPosition.lerp(lastPosition, super.position, t);
         return lerpPosition;
     }
     
     public EulerAngles getLerpRotation(){
+        final float t = game.getTime().getTickLerpFactor();
+        lerpRotation.lerp(lastRotation, super.rotation, t);
         return lerpRotation;
     }
     
     public boolean isPositionChanged(){
-        return !lastPosition.equals(getPosition());
+        return !lastPosition.equals(super.position);
     }
     
     public boolean isRotationChanged(){
-        return !lastRotation.equals(getRotation());
+        return !lastRotation.equals(super.rotation);
     }
     
 }

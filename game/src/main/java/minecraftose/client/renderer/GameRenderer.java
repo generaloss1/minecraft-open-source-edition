@@ -3,6 +3,7 @@ package minecraftose.client.renderer;
 import jpize.io.context.JpizeApplication;
 import minecraftose.client.Minecraft;
 import minecraftose.client.renderer.chat.ChatRenderer;
+import minecraftose.client.renderer.hand.FpsHand;
 import minecraftose.client.renderer.infopanel.ChunkInfoRenderer;
 import minecraftose.client.renderer.infopanel.InfoRenderer;
 import minecraftose.client.renderer.level.LevelRenderer;
@@ -17,15 +18,17 @@ public class GameRenderer extends JpizeApplication{
     private final InfoRenderer infoRenderer;
     private final ChunkInfoRenderer chunkInfoRenderer;
     private final ChatRenderer chatRenderer;
+    private final FpsHand hand;
 
     public GameRenderer(Minecraft session){
         this.session = session;
         
-        textComponentBatch = new TextComponentBatch();
-        levelRenderer = new LevelRenderer(this);
-        infoRenderer = new InfoRenderer(this);
-        chunkInfoRenderer = new ChunkInfoRenderer(this);
-        chatRenderer = new ChatRenderer(this);
+        this.textComponentBatch = new TextComponentBatch();
+        this.levelRenderer = new LevelRenderer(this);
+        this.infoRenderer = new InfoRenderer(this);
+        this.chunkInfoRenderer = new ChunkInfoRenderer(this);
+        this.chatRenderer = new ChatRenderer(this);
+        this.hand = new FpsHand(this);
     }
     
     public Minecraft getSession(){
@@ -40,6 +43,7 @@ public class GameRenderer extends JpizeApplication{
         infoRenderer.render();
         chatRenderer.render();
         chunkInfoRenderer.render();
+        hand.render();
     }
     
     @Override
@@ -76,6 +80,10 @@ public class GameRenderer extends JpizeApplication{
 
     public ChatRenderer getChatRenderer(){
         return chatRenderer;
+    }
+
+    public FpsHand getFirstPersonHand(){
+        return hand;
     }
     
 }

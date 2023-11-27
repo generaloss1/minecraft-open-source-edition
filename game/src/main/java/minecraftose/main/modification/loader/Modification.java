@@ -24,7 +24,7 @@ public class Modification{
         this.id = id;
         this.version = version;
         this.description = description;
-        this.icon = new Resource(iconPath, classLoader.getClass());
+        this.icon = Resource.internal(iconPath, classLoader.getClass());
         
         this.entryPoints = new HashMap<>();
         for(Map.Entry<ModEntryPointType, Class<?>> entryPoint: entryPointMap.entrySet())

@@ -2,8 +2,8 @@ package minecraftose;
 
 import jpize.Jpize;
 import jpize.io.context.ContextBuilder;
-import minecraftose.client.Minecraft;
 import minecraftose.main.network.PlayerProfile;
+import minecraftose.client.Minecraft;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +30,9 @@ public class Main{
             .ssaaSamples(4)
             .size(width, height)
             .register()
-            .setAdapter(Minecraft.instance);
+            .setAdapter(Minecraft.INSTANCE);
+            //.setAdapter(new LerpTest());
+            //.setAdapter(new BiomeGenerator());
 
         Jpize.runContexts();
     }

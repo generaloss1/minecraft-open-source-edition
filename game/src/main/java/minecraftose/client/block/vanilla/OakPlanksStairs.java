@@ -1,7 +1,7 @@
 package minecraftose.client.block.vanilla;
 
 import jpize.graphics.texture.Region;
-import minecraftose.client.block.BlockClient;
+import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.model.BlockModel;
 import minecraftose.client.block.model.Face;
 import minecraftose.client.block.model.Quad;
@@ -13,7 +13,7 @@ import minecraftose.main.Dir;
 import minecraftose.main.audio.SoundType;
 import minecraftose.main.chunk.ChunkUtils;
 
-public class OakPlanksStairs extends BlockClient{
+public class OakPlanksStairs extends ClientBlock{
 
     public OakPlanksStairs(int id){
         super(id);

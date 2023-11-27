@@ -1,9 +1,8 @@
 package minecraftose.main.block;
 
-import minecraftose.client.block.BlockClient;
+import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.ClientBlocks;
-import minecraftose.main.registry.Registry;
 
 public class ChunkBlockData{
     
@@ -11,15 +10,15 @@ public class ChunkBlockData{
         return getBlock(getID(data)).getState(getState(data));
     }
     
-    public static BlockClient getBlock(byte ID){
+    public static ClientBlock getBlock(byte ID){
         return ClientBlocks.get(ID);
     }
 
-    public static BlockClient getBlock(short data){
+    public static ClientBlock getBlock(short data){
         return ClientBlocks.get(getID(data));
     }
 
-    public static short getData(BlockClient block, byte state){
+    public static short getData(ClientBlock block, byte state){
         return getData(block.getID(), state);
     }
 
@@ -31,7 +30,7 @@ public class ChunkBlockData{
         return getData((byte) id, (byte) state);
     }
 
-    public static short getData(BlockClient block){
+    public static short getData(ClientBlock block){
         return getData(block.getID());
     }
 

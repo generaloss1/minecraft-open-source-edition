@@ -10,7 +10,7 @@ import minecraftose.client.chunk.mesh.ChunkMesh;
 import minecraftose.client.chunk.mesh.ChunkMeshType;
 import minecraftose.client.chunk.builder.ChunkBuilder;
 import minecraftose.main.Dir;
-import minecraftose.main.biome.BiomeProperties;
+import minecraftose.main.biome.Biome;
 
 import java.util.*;
 
@@ -328,12 +328,12 @@ public class BlockModel{
     }
 
 
-    public IColor pickFaceColor(Face face, BiomeProperties biome){
+    public IColor pickFaceColor(Face face, Biome biome){
         final IColor color;
         if(face.isGrassColoring())
-            color = biome.getGrassColor();
+            color = biome.grassColor;
         else if(face.isWaterColoring())
-            color = biome.getWaterColor();
+            color = biome.waterColor;
         else
             color = Color.WHITE;
 
@@ -355,10 +355,10 @@ public class BlockModel{
 
     public void build(ChunkBuilder builder, BlockProps block, int lx, int y, int lz){
         // Custom faces
-        final float skyLight = (float) builder.chunk.getSkyLight(lx, y, lz) / MAX_LIGHT_LEVEL;
+        final float skyLight = 1.000F;//(float) builder.chunk.getSkyLight(lx, y, lz) / MAX_LIGHT_LEVEL;
         final float blockLight = (float) builder.chunk.getBlockLight(lx, y, lz) / MAX_LIGHT_LEVEL;
         for(Face face: faces){
-            final IColor color = pickFaceColor(face, builder.currentBiome.getProps());
+            final IColor color = pickFaceColor(face, builder.currentBiome);
             face.putFloats(builder.customMesh,  lx, y, lz,  color, color, color, color,  1, 1, 1, 1,  skyLight, skyLight, skyLight, skyLight,  blockLight, blockLight, blockLight, blockLight);
         }
 
@@ -382,10 +382,10 @@ public class BlockModel{
     }
 
     private void buildNxFace(ChunkBuilder builder, Face face, int x, int y, int z){
-        final float skyLight1 = builder.getSkyLight(x-1, y  , z,  x-1, y, z+1,  x-1, y+1, z+1,  x-1, y+1, z  ) / MAX_LIGHT_LEVEL;
-        final float skyLight2 = builder.getSkyLight(x-1, y  , z,  x-1, y, z+1,  x-1, y-1, z+1,  x-1, y-1, z  ) / MAX_LIGHT_LEVEL;
-        final float skyLight3 = builder.getSkyLight(x-1, y  , z,  x-1, y, z-1,  x-1, y-1, z-1,  x-1, y-1, z  ) / MAX_LIGHT_LEVEL;
-        final float skyLight4 = builder.getSkyLight(x-1, y  , z,  x-1, y, z-1,  x-1, y+1, z-1,  x-1, y+1, z  ) / MAX_LIGHT_LEVEL;
+        final float skyLight1 = 1.000F;//builder.getSkyLight(x-1, y  , z,  x-1, y, z+1,  x-1, y+1, z+1,  x-1, y+1, z  ) / MAX_LIGHT_LEVEL;
+        final float skyLight2 = 1.000F;//builder.getSkyLight(x-1, y  , z,  x-1, y, z+1,  x-1, y-1, z+1,  x-1, y-1, z  ) / MAX_LIGHT_LEVEL;
+        final float skyLight3 = 1.000F;//builder.getSkyLight(x-1, y  , z,  x-1, y, z-1,  x-1, y-1, z-1,  x-1, y-1, z  ) / MAX_LIGHT_LEVEL;
+        final float skyLight4 = 1.000F;//builder.getSkyLight(x-1, y  , z,  x-1, y, z-1,  x-1, y+1, z-1,  x-1, y+1, z  ) / MAX_LIGHT_LEVEL;
 
         final float blockLight1 = builder.getBlockLight(x-1, y  , z,  x-1, y, z+1,  x-1, y+1, z+1,  x-1, y+1, z  ) / MAX_LIGHT_LEVEL;
         final float blockLight2 = builder.getBlockLight(x-1, y  , z,  x-1, y, z+1,  x-1, y-1, z+1,  x-1, y-1, z  ) / MAX_LIGHT_LEVEL;
@@ -418,10 +418,10 @@ public class BlockModel{
     }
 
     private void buildPxFace(ChunkBuilder builder, Face face, int x, int y, int z){
-        final float skyLight1 = builder.getSkyLight(x+1, y, z,  x+1, y, z-1,  x+1, y+1, z-1,  x+1, y+1, z  ) / MAX_LIGHT_LEVEL;
-        final float skyLight2 = builder.getSkyLight(x+1, y, z,  x+1, y, z-1,  x+1, y-1, z-1,  x+1, y-1, z  ) / MAX_LIGHT_LEVEL;
-        final float skyLight3 = builder.getSkyLight(x+1, y, z,  x+1, y, z+1,  x+1, y-1, z+1,  x+1, y-1, z  ) / MAX_LIGHT_LEVEL;
-        final float skyLight4 = builder.getSkyLight(x+1, y, z,  x+1, y, z+1,  x+1, y+1, z+1,  x+1, y+1, z  ) / MAX_LIGHT_LEVEL;
+        final float skyLight1 = 1.000F;//builder.getSkyLight(x+1, y, z,  x+1, y, z-1,  x+1, y+1, z-1,  x+1, y+1, z  ) / MAX_LIGHT_LEVEL;
+        final float skyLight2 = 1.000F;//builder.getSkyLight(x+1, y, z,  x+1, y, z-1,  x+1, y-1, z-1,  x+1, y-1, z  ) / MAX_LIGHT_LEVEL;
+        final float skyLight3 = 1.000F;//builder.getSkyLight(x+1, y, z,  x+1, y, z+1,  x+1, y-1, z+1,  x+1, y-1, z  ) / MAX_LIGHT_LEVEL;
+        final float skyLight4 = 1.000F;//builder.getSkyLight(x+1, y, z,  x+1, y, z+1,  x+1, y+1, z+1,  x+1, y+1, z  ) / MAX_LIGHT_LEVEL;
 
         final float blockLight1 = builder.getBlockLight(x+1, y, z,  x+1, y, z-1,  x+1, y+1, z-1,  x+1, y+1, z  ) / MAX_LIGHT_LEVEL;
         final float blockLight2 = builder.getBlockLight(x+1, y, z,  x+1, y, z-1,  x+1, y-1, z-1,  x+1, y-1, z  ) / MAX_LIGHT_LEVEL;
@@ -454,10 +454,10 @@ public class BlockModel{
     }
 
     private void buildNyFace(ChunkBuilder builder, Face face, int x, int y, int z){
-        final float skyLight1 = builder.getSkyLight(x, y-1, z,  x, y-1, z+1,  x+1, y-1, z+1,  x+1, y-1, z  ) / MAX_LIGHT_LEVEL;
-        final float skyLight2 = builder.getSkyLight(x, y-1, z,  x, y-1, z-1,  x+1, y-1, z-1,  x+1, y-1, z  ) / MAX_LIGHT_LEVEL;
-        final float skyLight3 = builder.getSkyLight(x, y-1, z,  x, y-1, z-1,  x-1, y-1, z-1,  x-1, y-1, z  ) / MAX_LIGHT_LEVEL;
-        final float skyLight4 = builder.getSkyLight(x, y-1, z,  x, y-1, z+1,  x-1, y-1, z+1,  x-1, y-1, z  ) / MAX_LIGHT_LEVEL;
+        final float skyLight1 = 1.000F;//builder.getSkyLight(x, y-1, z,  x, y-1, z+1,  x+1, y-1, z+1,  x+1, y-1, z  ) / MAX_LIGHT_LEVEL;
+        final float skyLight2 = 1.000F;//builder.getSkyLight(x, y-1, z,  x, y-1, z-1,  x+1, y-1, z-1,  x+1, y-1, z  ) / MAX_LIGHT_LEVEL;
+        final float skyLight3 = 1.000F;//builder.getSkyLight(x, y-1, z,  x, y-1, z-1,  x-1, y-1, z-1,  x-1, y-1, z  ) / MAX_LIGHT_LEVEL;
+        final float skyLight4 = 1.000F;//builder.getSkyLight(x, y-1, z,  x, y-1, z+1,  x-1, y-1, z+1,  x-1, y-1, z  ) / MAX_LIGHT_LEVEL;
 
         final float blockLight1 = builder.getBlockLight(x, y-1, z,  x, y-1, z+1,  x+1, y-1, z+1,  x+1, y-1, z  ) / MAX_LIGHT_LEVEL;
         final float blockLight2 = builder.getBlockLight(x, y-1, z,  x, y-1, z-1,  x+1, y-1, z-1,  x+1, y-1, z  ) / MAX_LIGHT_LEVEL;
@@ -490,10 +490,10 @@ public class BlockModel{
     }
 
     private void buildPyFace(ChunkBuilder builder, Face face, int x, int y, int z){
-        final float skyLight1 = builder.getSkyLight(x, y+1, z,  x, y+1, z-1,  x+1, y+1, z-1,  x+1, y+1, z  ) / MAX_LIGHT_LEVEL;
-        final float skyLight2 = builder.getSkyLight(x, y+1, z,  x, y+1, z+1,  x+1, y+1, z+1,  x+1, y+1, z  ) / MAX_LIGHT_LEVEL;
-        final float skyLight3 = builder.getSkyLight(x, y+1, z,  x, y+1, z+1,  x-1, y+1, z+1,  x-1, y+1, z  ) / MAX_LIGHT_LEVEL;
-        final float skyLight4 = builder.getSkyLight(x, y+1, z,  x, y+1, z-1,  x-1, y+1, z-1,  x-1, y+1, z  ) / MAX_LIGHT_LEVEL;
+        final float skyLight1 = 1.000F;//builder.getSkyLight(x, y+1, z,  x, y+1, z-1,  x+1, y+1, z-1,  x+1, y+1, z  ) / MAX_LIGHT_LEVEL;
+        final float skyLight2 = 1.000F;//builder.getSkyLight(x, y+1, z,  x, y+1, z+1,  x+1, y+1, z+1,  x+1, y+1, z  ) / MAX_LIGHT_LEVEL;
+        final float skyLight3 = 1.000F;//builder.getSkyLight(x, y+1, z,  x, y+1, z+1,  x-1, y+1, z+1,  x-1, y+1, z  ) / MAX_LIGHT_LEVEL;
+        final float skyLight4 = 1.000F;//builder.getSkyLight(x, y+1, z,  x, y+1, z-1,  x-1, y+1, z-1,  x-1, y+1, z  ) / MAX_LIGHT_LEVEL;
 
         final float blockLight1 = builder.getBlockLight(x, y+1, z,  x, y+1, z-1,  x+1, y+1, z-1,  x+1, y+1, z  ) / MAX_LIGHT_LEVEL;
         final float blockLight2 = builder.getBlockLight(x, y+1, z,  x, y+1, z+1,  x+1, y+1, z+1,  x+1, y+1, z  ) / MAX_LIGHT_LEVEL;
@@ -526,10 +526,10 @@ public class BlockModel{
     }
 
     private void buildNzFace(ChunkBuilder builder, Face face, int x, int y, int z){
-        final float skyLight1 = builder.getSkyLight(x, y, z-1,  x, y+1, z-1,  x-1, y+1, z-1,  x, y+1, z-1  ) / MAX_LIGHT_LEVEL;
-        final float skyLight2 = builder.getSkyLight(x, y, z-1,  x, y-1, z-1,  x-1, y-1, z-1,  x, y-1, z-1  ) / MAX_LIGHT_LEVEL;
-        final float skyLight3 = builder.getSkyLight(x, y, z-1,  x, y-1, z-1,  x+1, y-1, z-1,  x, y-1, z-1  ) / MAX_LIGHT_LEVEL;
-        final float skyLight4 = builder.getSkyLight(x, y, z-1,  x, y+1, z-1,  x+1, y+1, z-1,  x, y+1, z-1  ) / MAX_LIGHT_LEVEL;
+        final float skyLight1 = 1.000F;//builder.getSkyLight(x, y, z-1,  x, y+1, z-1,  x-1, y+1, z-1,  x, y+1, z-1  ) / MAX_LIGHT_LEVEL;
+        final float skyLight2 = 1.000F;//builder.getSkyLight(x, y, z-1,  x, y-1, z-1,  x-1, y-1, z-1,  x, y-1, z-1  ) / MAX_LIGHT_LEVEL;
+        final float skyLight3 = 1.000F;//builder.getSkyLight(x, y, z-1,  x, y-1, z-1,  x+1, y-1, z-1,  x, y-1, z-1  ) / MAX_LIGHT_LEVEL;
+        final float skyLight4 = 1.000F;//builder.getSkyLight(x, y, z-1,  x, y+1, z-1,  x+1, y+1, z-1,  x, y+1, z-1  ) / MAX_LIGHT_LEVEL;
 
         final float blockLight1 = builder.getBlockLight(x, y, z-1,  x, y+1, z-1,  x-1, y+1, z-1,  x, y+1, z-1  ) / MAX_LIGHT_LEVEL;
         final float blockLight2 = builder.getBlockLight(x, y, z-1,  x, y-1, z-1,  x-1, y-1, z-1,  x, y-1, z-1  ) / MAX_LIGHT_LEVEL;
@@ -562,10 +562,10 @@ public class BlockModel{
     }
 
     private void buildPzFace(ChunkBuilder builder, Face face, int x, int y, int z){
-        final float skyLight1 = builder.getSkyLight(x, y, z+1,  x, y+1, z+1,  x+1, y+1, z+1,  x+1, y, z+1  ) / MAX_LIGHT_LEVEL;
-        final float skyLight2 = builder.getSkyLight(x, y, z+1,  x, y-1, z+1,  x+1, y-1, z+1,  x+1, y, z+1  ) / MAX_LIGHT_LEVEL;
-        final float skyLight3 = builder.getSkyLight(x, y, z+1,  x, y-1, z+1,  x-1, y-1, z+1,  x-1, y, z+1  ) / MAX_LIGHT_LEVEL;
-        final float skyLight4 = builder.getSkyLight(x, y, z+1,  x, y+1, z+1,  x-1, y+1, z+1,  x-1, y, z+1  ) / MAX_LIGHT_LEVEL;
+        final float skyLight1 = 1.000F;//builder.getSkyLight(x, y, z+1,  x, y+1, z+1,  x+1, y+1, z+1,  x+1, y, z+1  ) / MAX_LIGHT_LEVEL;
+        final float skyLight2 = 1.000F;//builder.getSkyLight(x, y, z+1,  x, y-1, z+1,  x+1, y-1, z+1,  x+1, y, z+1  ) / MAX_LIGHT_LEVEL;
+        final float skyLight3 = 1.000F;//builder.getSkyLight(x, y, z+1,  x, y-1, z+1,  x-1, y-1, z+1,  x-1, y, z+1  ) / MAX_LIGHT_LEVEL;
+        final float skyLight4 = 1.000F;//builder.getSkyLight(x, y, z+1,  x, y+1, z+1,  x-1, y+1, z+1,  x-1, y, z+1  ) / MAX_LIGHT_LEVEL;
 
         final float blockLight1 = builder.getBlockLight(x, y, z+1,  x, y+1, z+1,  x+1, y+1, z+1,  x+1, y, z+1  ) / MAX_LIGHT_LEVEL;
         final float blockLight2 = builder.getBlockLight(x, y, z+1,  x, y-1, z+1,  x+1, y-1, z+1,  x+1, y, z+1  ) / MAX_LIGHT_LEVEL;

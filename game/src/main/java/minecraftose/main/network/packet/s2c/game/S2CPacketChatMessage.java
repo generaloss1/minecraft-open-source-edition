@@ -1,11 +1,11 @@
 package minecraftose.main.network.packet.s2c.game;
 
 import jpize.net.tcp.packet.IPacket;
-import minecraftose.client.net.ClientPacketHandler;
-import minecraftose.main.chat.MessageSource;
-import minecraftose.main.chat.MessageSourcePlayer;
-import minecraftose.main.chat.MessageSourceServer;
-import minecraftose.main.chat.MessageSources;
+import minecraftose.client.network.ClientPacketHandler;
+import minecraftose.main.chat.source.MessageSource;
+import minecraftose.main.chat.source.MessageSourcePlayer;
+import minecraftose.main.chat.source.MessageSourceServer;
+import minecraftose.main.chat.source.MessageSources;
 import minecraftose.main.text.ComponentText;
 import minecraftose.main.text.TextStyle;
 import jpize.util.io.JpizeInputStream;

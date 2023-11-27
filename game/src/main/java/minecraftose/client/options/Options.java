@@ -3,6 +3,7 @@ package minecraftose.client.options;
 import jpize.Jpize;
 import jpize.sdl.input.Key;
 import jpize.util.file.Resource;
+import jpize.util.file.ResourceExt;
 import minecraftose.client.Minecraft;
 import minecraftose.client.control.camera.GameCamera;
 import minecraftose.main.SharedConstants;
@@ -16,7 +17,7 @@ public class Options{
 
     public static int UNLIMITED_FPS_THRESHOLD = 256;
 
-    public static int DEFAULT_FIELD_OF_VIEW = 85;
+    public static float DEFAULT_FIELD_OF_VIEW = 85F;
     public static int DEFAULT_RENDER_DISTANCE = 14;
     public static float DEFAULT_MOUSE_SENSITIVITY = 1F;
     public static float DEFAULT_BRIGHTNESS = 0.5F;
@@ -30,11 +31,11 @@ public class Options{
 
 
     private final Minecraft session;
-    private final Resource fileResource;
+    private final ResourceExt fileResource;
     
     private String host = DEFAULT_HOST;
     private final Map<KeyMapping, Key> keyMappings;
-    private int fieldOfView = DEFAULT_FIELD_OF_VIEW;
+    private float fieldOfView = DEFAULT_FIELD_OF_VIEW;
     private int renderDistance = DEFAULT_RENDER_DISTANCE;
     private int maxFrameRate = DEFAULT_MAX_FRAME_RATE; // 0 - VSync; [1, 255]; 256 - Unlimited
     private boolean fullscreen = DEFAULT_FULLSCREEN;
@@ -49,28 +50,28 @@ public class Options{
         this.session = session;
 
         this.keyMappings = new HashMap<>();
-        this.fileResource = new Resource(gameDirPath + "options.txt", true);
+        this.fileResource = Resource.external(gameDirPath + "options.txt");
         this.fileResource.create();
     }
     
 
     public void load(){
-        final FastReader reader = fileResource.getReader();
+        final FastReader reader = fileResource.reader();
 
         try{
             while(reader.hasNext()){
-                String[] parts = reader.nextLine().split(" : ");
+                final String[] parts = reader.nextLine().split(" : ");
                 if(parts.length != 2)
                     continue;
 
-                String value = parts[1].trim();
+                final String value = parts[1].trim();
 
-                String[] keyParts = parts[0].split("\\.");
+                final String[] keyParts = parts[0].split("\\.");
                 if(keyParts.length != 2)
                     continue;
 
-                String category = keyParts[0];
-                String key = keyParts[1];
+                final String category = keyParts[0];
+                final String key = keyParts[1];
 
                 // category.key : value
                 switch(category){
@@ -81,7 +82,7 @@ public class Options{
                     }
                     case "graphics" -> {
                         switch(key){
-                            case "fieldOfView" -> setFieldOfView(Integer.parseInt(value));
+                            case "fieldOfView" -> setFieldOfView(Float.parseFloat(value));
                             case "renderDistance" -> setRenderDistance(Integer.parseInt(value));
                             case "maxFramerate" -> setMaxFrameRate(Integer.parseInt(value));
                             case "fullscreen" -> setFullscreen(Boolean.parseBoolean(value));
@@ -106,7 +107,7 @@ public class Options{
     }
 
     public void save(){
-        final PrintStream out = fileResource.getWriter();
+        final PrintStream out = fileResource.writer();
         
         out.println("remote.host : " + host);
         out.println("graphics.fieldOfView : " + fieldOfView);
@@ -144,11 +145,11 @@ public class Options{
     }
 
 
-    public int getFieldOfView(){
+    public float getFieldOfView(){
         return fieldOfView;
     }
 
-    public void setFieldOfView(int fieldOfView){
+    public void setFieldOfView(float fieldOfView){
         this.fieldOfView = fieldOfView;
         
         final GameCamera camera = session.getGame().getCamera();

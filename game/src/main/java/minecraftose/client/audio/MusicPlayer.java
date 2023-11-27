@@ -17,7 +17,7 @@ public class MusicPlayer implements Disposable{
     public MusicPlayer(Minecraft session){
         this.session = session;
         this.source = new AudioSource();
-        this.source.setVolume(0.15);
+        this.source.setGain(0.15);
     }
 
     public Minecraft getSession(){
@@ -37,7 +37,7 @@ public class MusicPlayer implements Disposable{
 
     private void play(){
         final String musicID = group.getList()[index];
-        final AudioBuffer buffer = session.getResources().getAudio(musicID);
+        final AudioBuffer buffer = session.getResources().getMusic(musicID);
         if(buffer == null){
             System.err.println("Music " + musicID + " is not found");
             return;

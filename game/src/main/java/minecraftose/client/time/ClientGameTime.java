@@ -1,22 +1,15 @@
 package minecraftose.client.time;
 
 import jpize.util.time.DeltaTimeCounter;
-import minecraftose.client.ClientGame;
 import minecraftose.main.time.GameTime;
 
 public class ClientGameTime extends GameTime{
 
-    private final ClientGame game;
     private final DeltaTimeCounter dtCounter;
     private long prevTickPointMillis;
 
-    public ClientGameTime(ClientGame game){
-        this.game = game;
+    public ClientGameTime(){
         this.dtCounter = new DeltaTimeCounter();
-    }
-
-    public ClientGame getGame(){
-        return game;
     }
 
     @Override

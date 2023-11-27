@@ -18,19 +18,19 @@ public class BiomeMix{
         final Color color = new Color(0, 0, 0);
         int n = 0;
         if(biome0 != null){
-            color.add3(biome0.getProps().getGrassColor());
+            color.add3(biome0.grassColor);
             n++;
         }
         if(biome1 != null){
-            color.add3(biome1.getProps().getGrassColor());
+            color.add3(biome1.grassColor);
             n++;
         }
         if(biome2 != null){
-            color.add3(biome2.getProps().getGrassColor());
+            color.add3(biome2.grassColor);
             n++;
         }
         if(biome3 != null){
-            color.add3(biome3.getProps().getGrassColor());
+            color.add3(biome3.grassColor);
             n++;
         }
         return color.div3(n);
@@ -40,19 +40,19 @@ public class BiomeMix{
         final Color color = new Color(0, 0, 0);
         int n = 0;
         if(biome0 != null){
-            color.add3(biome0.getProps().getWaterColor());
+            color.add3(biome0.waterColor);
             n++;
         }
         if(biome1 != null){
-            color.add3(biome1.getProps().getWaterColor());
+            color.add3(biome1.waterColor);
             n++;
         }
         if(biome2 != null){
-            color.add3(biome2.getProps().getWaterColor());
+            color.add3(biome2.waterColor);
             n++;
         }
         if(biome3 != null){
-            color.add3(biome3.getProps().getWaterColor());
+            color.add3(biome3.waterColor);
             n++;
         }
         return color.div3(n);

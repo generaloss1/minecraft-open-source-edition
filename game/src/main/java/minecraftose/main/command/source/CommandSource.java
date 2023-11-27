@@ -1,21 +1,33 @@
 package minecraftose.main.command.source;
 
 import jpize.math.vecmath.vector.Vec3f;
+import minecraftose.main.level.Level;
 import minecraftose.main.text.Component;
-import minecraftose.server.level.ServerLevel;
-import minecraftose.server.player.ServerPlayer;
+import minecraftose.server.Server;
 
 public abstract class CommandSource{
     
     public abstract Vec3f getPosition();
 
-    public abstract ServerLevel getLevel();
+    public abstract <L extends Level> L getLevel();
 
     public abstract void sendMessage(Component message);
-    
-    
-    public ServerPlayer asPlayer(){
-        return ((CommandSourcePlayer) this).getPlayer();
+
+    public final void sendMessage(String unformattedText){
+        sendMessage(new Component().text(unformattedText));
     }
+
     
+    public CommandLocalPlayerSource asClientSource(){
+        return ((CommandLocalPlayerSource) this);
+    }
+
+    public CommandServerPlayerSource asServerPlayerSource(){
+        return ((CommandServerPlayerSource) this);
+    }
+
+    public Server tryToGetServer(){
+        return ((CommandServerSource) this).getServer();
+    }
+
 }

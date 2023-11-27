@@ -1,6 +1,5 @@
 package minecraftose.main.command.argument;
 
-import minecraftose.server.Server;
 import minecraftose.main.command.source.CommandSource;
 
 public class CommandArgInteger extends CommandArg{
@@ -9,7 +8,7 @@ public class CommandArgInteger extends CommandArg{
     private int number;
     
     @Override
-    public int parse(String remainingChars, CommandSource source, Server server){
+    public int parse(String remainingChars, CommandSource source){
         // Разделяем оставшуюся часть команды на части
         final String[] args = remainingChars.split(" ");
         

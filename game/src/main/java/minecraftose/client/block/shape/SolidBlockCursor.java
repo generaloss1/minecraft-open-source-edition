@@ -24,6 +24,14 @@ public class SolidBlockCursor extends BlockCursor{
                 7, 3, 3, 1, 1, 5, 5, 7, //Right
                 3, 2, 2, 0, 0, 1, 1, 3, //Front
                 4, 6, 6, 7, 7, 5, 5, 4, //Back
+            },
+            new int[]{
+                0, 1, 5, 4, //Top
+                2, 3, 7, 6, //Bottom
+                1, 3, 7, 5, //Left
+                0, 2, 6, 4, //Right
+                4, 5, 7, 6, //Front
+                0, 1, 3, 2, //Back
             }
         );
     }

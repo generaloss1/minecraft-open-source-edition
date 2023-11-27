@@ -20,7 +20,7 @@ public class ThirdPersonFrontCameraTarget implements CameraTarget{
     public Vec3f getPosition(){
         final float dist = 5;
         
-        position.set(targetPlayer.getLerpPosition()).add(0, targetPlayer.getEyeHeight(), 0).add(targetPlayer.getRotation().getDirection().mul(dist));
+        position.set(targetPlayer.getLerpPosition()).add(targetPlayer.getRotation().getDirection().mul(dist));
         return position;
     }
     

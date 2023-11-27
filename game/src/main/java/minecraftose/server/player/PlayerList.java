@@ -8,7 +8,7 @@ import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
 import minecraftose.server.Server;
 import minecraftose.server.level.ServerLevel;
-import minecraftose.server.net.PlayerGameConnection;
+import minecraftose.server.network.PlayerGameConnection;
 
 import java.util.Collection;
 import java.util.Map;

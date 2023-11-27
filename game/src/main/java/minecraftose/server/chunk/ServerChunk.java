@@ -1,6 +1,6 @@
 package minecraftose.server.chunk;
 
-import minecraftose.client.block.BlockClient;
+import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.main.block.ChunkBlockData;
@@ -37,7 +37,7 @@ public class ServerChunk extends LevelChunk{
     }
 
 
-    public void setBlockFast(int lx, int y, int lz, BlockClient block){
+    public void setBlockFast(int lx, int y, int lz, ClientBlock block){
         super.setBlock(lx, y, lz, block);
     }
 
@@ -47,7 +47,7 @@ public class ServerChunk extends LevelChunk{
 
 
     @Override
-    public boolean setBlock(int lx, int y, int lz, BlockClient block){
+    public boolean setBlock(int lx, int y, int lz, ClientBlock block){
         final BlockProps oldBlock = super.getBlockProps(lx, y, lz);
 
         final boolean result = super.setBlock(lx, y, lz, block);

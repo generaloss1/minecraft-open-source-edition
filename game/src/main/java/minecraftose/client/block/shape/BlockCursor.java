@@ -13,12 +13,25 @@ public class BlockCursor implements Disposable{
     
     
     private final IndexedMesh mesh;
+    private final float[] vertices;
+    private final int[] quadIndices;
     
-    public BlockCursor(float[] vertices, int[] indices){
+    public BlockCursor(float[] vertices, int[] indices, int[] quadIndices){
+        this.vertices = vertices;
+        this.quadIndices = quadIndices;
+
         this.mesh = new IndexedMesh(new GlVertexAttr(3, GlType.FLOAT));
         this.mesh.getBuffer().setData(vertices);
         this.mesh.getIndexBuffer().setData(indices);
         this.mesh.setMode(GlPrimitive.LINES);
+    }
+
+    public float[] getVertices(){
+        return vertices;
+    }
+
+    public int[] getQuadIndices(){
+        return quadIndices;
     }
     
     

@@ -130,7 +130,7 @@ public class ClientChunkManager extends ChunkManager {
             executor.awaitTermination(5, TimeUnit.SECONDS);
         }catch(InterruptedException ignored){ }
         thread.interrupt();
-        while(!chunksLoadIsEnd); //: NOT ENDED!!!!!!!!!!!!!!!!
+        while(!chunksLoadIsEnd) Thread.onSpinWait();
         System.out.println("ENDED");
         clear();
     }
@@ -189,7 +189,7 @@ public class ClientChunkManager extends ChunkManager {
         frontiers.add(frontierPos);
 
         if(!allChunks.containsKey(frontierPos) && !requestedChunks.containsKey(frontierPos) && toBuildQueue.stream().noneMatch(chunk -> chunk.getPosition().equals(frontierPos))){
-            getLevel().getGame().getConnectionHandler().sendPacket(new C2SPacketChunkRequest(frontierPos.x, frontierPos.z));
+            getLevel().getGame().getConnection().sendPacket(new C2SPacketChunkRequest(frontierPos.x, frontierPos.z));
             requestedChunks.put(frontierPos, System.currentTimeMillis());
         }
     }

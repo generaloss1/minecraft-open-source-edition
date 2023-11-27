@@ -1,5 +1,6 @@
 package minecraftose.client.audio;
 
+import jpize.al.listener.AlListener;
 import jpize.util.Disposable;
 import jpize.audio.sound.AudioBuffer;
 import jpize.audio.sound.AudioSource;
@@ -20,18 +21,22 @@ public class SoundPlayer implements Disposable{
         System.out.println("[Client]: Initialize audio player");
 
         this.sources = new AudioSource[MAX_SOUND_SOURCES];
-        for(int i = 0; i < sources.length; i++)
+        for(int i = 0; i < sources.length; i++){
             sources[i] = new AudioSource();
+            sources[i].setRelative(false); //: ?
+        }
+
+        AlListener.setOrientation(0, 0, 1, 0, 1, 0); //: check it
     }
 
 
     public void play(Sound sound, float volume, float pitch, float x, float y, float z){
-        final AudioBuffer buffer = session.getResources().getAudio(sound.getID());
+        final AudioBuffer buffer = session.getResources().getSound(sound.getID());
         if(buffer == null){
-            System.err.println("Sound " + sound.getID() + " is not found");
+            System.err.println("Sound " + sound.name() + " is not found");
             return;
         }
-        play(buffer, volume, pitch * sound.getPitch(), x, y, z);
+        play(buffer, volume, pitch * sound.pitch(), x, y, z);
     }
 
     public void play(AudioBuffer buffer, float volume, float pitch, float x, float y, float z){
@@ -44,7 +49,7 @@ public class SoundPlayer implements Disposable{
 
         final AudioSource source = sources[sourceIndex];
         source.setBuffer(buffer);
-        source.setVolume(volume);
+        source.setGain(volume);
         source.setPitch(pitch);
         source.setPosition(x, y, z);
         source.play();
