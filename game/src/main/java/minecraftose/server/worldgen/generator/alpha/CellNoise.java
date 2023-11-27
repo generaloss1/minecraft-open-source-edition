@@ -155,7 +155,9 @@ public class CellNoise{
                     dNeighbour = dCandidate;
                     dCandidate = dist;
 					
-					/*dNeighbour = dCandidate;
+					/*
+					some code
+					dNeighbour = dCandidate;
 					xNeighbour = xCandidate;
 					zNeighbour = zCandidate;
 					
