@@ -32,7 +32,7 @@ public class ChunkInfoRenderer implements Resizable, Disposable{
         if(!open)
             return;
 
-        final GameCamera gameCam = gameRenderer.getSession().getGame().getCamera();
+        final GameCamera gameCam = gameRenderer.getMinecraft().getCamera();
         if(gameCam == null)
             return;
 
@@ -45,7 +45,7 @@ public class ChunkInfoRenderer implements Resizable, Disposable{
         batch.setAlpha(0.3);
         batch.begin(camera);
 
-        final Collection<ServerLevel> levels = gameRenderer.getSession().getIntegratedServer().getLevelManager().getLoadedLevels();
+        final Collection<ServerLevel> levels = gameRenderer.getMinecraft().getIntegratedServer().getLevelManager().getLoadedLevels();
         for(ServerLevel level: levels)
             level.getChunkManager().render(batch, size);
 

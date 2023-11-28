@@ -56,9 +56,9 @@ public class ClientBlocks{
 
     private static final Map<Byte, ClientBlock> blocks = new HashMap<>();
 
-    public static void loadBlocks(Minecraft session){
+    public static void loadBlocks(Minecraft minecraft){
         System.out.println("[Resources] Load Blocks");
-        final GameResources resources = session.getRenderer().getSession().getResources();
+        final GameResources resources = minecraft.getResources();
         for(ClientBlock block: blocks.values())
             block.load(resources);
     }

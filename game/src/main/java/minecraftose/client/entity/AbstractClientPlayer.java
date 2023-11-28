@@ -3,7 +3,7 @@ package minecraftose.client.entity;
 import jpize.Jpize;
 import jpize.math.util.EulerAngles;
 import jpize.math.vecmath.vector.Vec3f;
-import minecraftose.client.ClientGame;
+import minecraftose.client.Minecraft;
 import minecraftose.client.entity.model.PlayerModel;
 import minecraftose.client.time.var.TickFloat;
 import minecraftose.main.entity.Player;
@@ -11,16 +11,16 @@ import minecraftose.client.level.ClientLevel;
 
 public class AbstractClientPlayer extends Player{
 
-    protected final ClientGame game;
+    protected final Minecraft minecraft;
 
     protected volatile PlayerModel model;
     protected final Vec3f lastPosition, lerpPosition;
     protected final EulerAngles lastRotation, lerpRotation;
     protected final TickFloat bobbing, modelBobbing;
 
-    public AbstractClientPlayer(ClientGame game, ClientLevel level, String name){
+    public AbstractClientPlayer(Minecraft minecraft, ClientLevel level, String name){
         super(level, name);
-        this.game = game;
+        this.minecraft = minecraft;
 
         this.bobbing = new TickFloat();
         this.modelBobbing = new TickFloat();
@@ -36,8 +36,8 @@ public class AbstractClientPlayer extends Player{
     }
 
 
-    public ClientGame getGame(){
-        return game;
+    public Minecraft getMinecraft(){
+        return minecraft;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class AbstractClientPlayer extends Player{
 
 
     public float getModelBobbing(){
-        final float t = game.getTime().getTickLerpFactor();
+        final float t = minecraft.getTime().getTickLerpFactor();
         return modelBobbing.getLerp(t);
     }
 
@@ -81,18 +81,18 @@ public class AbstractClientPlayer extends Player{
 
 
     public float getBobbing(){
-        final float t = game.getTime().getTickLerpFactor();
+        final float t = minecraft.getTime().getTickLerpFactor();
         return bobbing.getLerp(t);
     }
 
     public Vec3f getLerpPosition(){
-        final float t = game.getTime().getTickLerpFactor();
+        final float t = minecraft.getTime().getTickLerpFactor();
         lerpPosition.lerp(lastPosition, super.position, t);
         return lerpPosition;
     }
     
     public EulerAngles getLerpRotation(){
-        final float t = game.getTime().getTickLerpFactor();
+        final float t = minecraft.getTime().getTickLerpFactor();
         lerpRotation.lerp(lastRotation, super.rotation, t);
         return lerpRotation;
     }

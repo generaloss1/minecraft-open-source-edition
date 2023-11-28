@@ -27,6 +27,7 @@ public class PlayerController implements Tickable{
 
         this.rotationController = new Rotation3DController();
         this.rotationController.setSmoothness(0);
+        this.rotationController.setSpeed(player.getMinecraft().getOptions().getMouseSensitivity());
 
         this.horizontalMoveController = new HorizontalMoveController(this);
         this.prevJumpTime = new Stopwatch();
@@ -42,11 +43,11 @@ public class PlayerController implements Tickable{
         final ClientLevel level = player.getLevel();
         if(level == null)
             return;
-        if(level.getGame().getChat().isOpened())
+        if(level.getMinecraft().getChat().isOpened())
             return;
 
-        final Minecraft session = level.getGame().getSession();
-        final Options options = session.getOptions();
+        final Minecraft minecraft = level.getMinecraft();
+        final Options options = minecraft.getOptions();
 
         // Rotation
         rotationController.update();
@@ -71,10 +72,10 @@ public class PlayerController implements Tickable{
 
         if(options.getKey(KeyMapping.SNEAK).isDown()){
             player.setSneaking(true);
-            session.getGame().getConnection().sendPacket(new C2SPacketPlayerSneaking(player));
+            minecraft.getConnection().sendPacket(new C2SPacketPlayerSneaking(player));
         }else if(options.getKey(KeyMapping.SNEAK).isReleased()){
             player.setSneaking(false);
-            session.getGame().getConnection().sendPacket(new C2SPacketPlayerSneaking(player));
+            minecraft.getConnection().sendPacket(new C2SPacketPlayerSneaking(player));
         }
 
         // Jump, Sprint, Sneak
@@ -91,7 +92,7 @@ public class PlayerController implements Tickable{
             player.setJumping(false);
 
         // Toggle perspective
-        final GameCamera camera = session.getGame().getCamera();
+        final GameCamera camera = minecraft.getCamera();
 
         if(options.getKey(KeyMapping.TOGGLE_PERSPECTIVE).isDown()){
             switch(camera.getPerspective()){

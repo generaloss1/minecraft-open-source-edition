@@ -8,20 +8,20 @@ import minecraftose.client.Minecraft;
 
 public class MusicPlayer implements Disposable{
 
-    private final Minecraft session;
+    private final Minecraft minecraft;
 
     private final AudioSource source;
     private MusicGroup group;
     private int index;
 
-    public MusicPlayer(Minecraft session){
-        this.session = session;
+    public MusicPlayer(Minecraft minecraft){
+        this.minecraft = minecraft;
         this.source = new AudioSource();
         this.source.setGain(0.15);
     }
 
-    public Minecraft getSession(){
-        return session;
+    public Minecraft getMinecraft(){
+        return minecraft;
     }
 
 
@@ -37,7 +37,7 @@ public class MusicPlayer implements Disposable{
 
     private void play(){
         final String musicID = group.getList()[index];
-        final AudioBuffer buffer = session.getResources().getMusic(musicID);
+        final AudioBuffer buffer = minecraft.getResources().getMusic(musicID);
         if(buffer == null){
             System.err.println("Music " + musicID + " is not found");
             return;

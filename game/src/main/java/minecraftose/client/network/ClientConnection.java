@@ -7,7 +7,7 @@ import jpize.net.tcp.TcpConnection;
 import jpize.net.tcp.TcpListener;
 import jpize.net.tcp.packet.IPacket;
 import jpize.net.tcp.packet.PacketDispatcher;
-import minecraftose.client.ClientGame;
+import minecraftose.client.Minecraft;
 import minecraftose.main.network.packet.s2c.game.*;
 import minecraftose.main.network.packet.s2c.login.S2CPacketEncryptStart;
 
@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ClientConnection implements TcpListener{
 
-    private final ClientGame game;
+    private final Minecraft minecraft;
 
     private final TcpClient tcpClient;
     private TcpConnection tcpConnection;
@@ -26,8 +26,8 @@ public class ClientConnection implements TcpListener{
 
     private int txCounter, rxCounter, tx, rx;
 
-    public ClientConnection(ClientGame game){
-        this.game = game;
+    public ClientConnection(Minecraft minecraft){
+        this.minecraft = minecraft;
         this.handler = new ClientPacketHandler(this);
         this.dispatcher = new PacketDispatcher();
         this.receivedPacketsQueue = new ConcurrentLinkedQueue<>();
@@ -47,8 +47,8 @@ public class ClientConnection implements TcpListener{
         this.tcpClient = new TcpClient(this);
     }
     
-    public ClientGame getGame(){
-        return game;
+    public Minecraft getMinecraft(){
+        return minecraft;
     }
 
 
@@ -132,6 +132,7 @@ public class ClientConnection implements TcpListener{
         dispatcher.register(S2CPacketSpawnPlayer.PACKET_ID, S2CPacketSpawnPlayer.class);
         dispatcher.register(S2CPacketTeleportPlayer.PACKET_ID, S2CPacketTeleportPlayer.class);
         dispatcher.register(S2CPacketTime.PACKET_ID, S2CPacketTime.class);
+        dispatcher.register(S2CPacketPlayerVelocity.PACKET_ID, S2CPacketPlayerVelocity.class);
     }
     
 }

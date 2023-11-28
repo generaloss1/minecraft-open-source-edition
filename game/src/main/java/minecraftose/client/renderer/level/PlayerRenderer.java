@@ -16,8 +16,8 @@ public class PlayerRenderer implements Disposable{
     
     
     public void render(GameCamera camera){
-        final Options options = levelRenderer.getGameRenderer().getSession().getOptions();
-        final PlayerModel playerModel = levelRenderer.getGameRenderer().getSession().getGame().getPlayer().getModel();
+        final Options options = levelRenderer.getGameRenderer().getMinecraft().getOptions();
+        final PlayerModel playerModel = levelRenderer.getGameRenderer().getMinecraft().getPlayer().getModel();
         
         // Render player
         if(playerModel != null){

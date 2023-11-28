@@ -10,20 +10,21 @@ public class BlockCursor implements Disposable{
     
     public final static BlockCursor SOLID = new SolidBlockCursor();
     public final static BlockCursor GRASS = new GrassBlockCursor();
-    
+    public final static BlockCursor CACTUS = new CactusBlockCursor();
+
     
     private final IndexedMesh mesh;
     private final float[] vertices;
     private final int[] quadIndices;
     
-    public BlockCursor(float[] vertices, int[] indices, int[] quadIndices){
+    public BlockCursor(float[] vertices, int[] lineIndices, int[] quadIndices){
         this.vertices = vertices;
         this.quadIndices = quadIndices;
 
         this.mesh = new IndexedMesh(new GlVertexAttr(3, GlType.FLOAT));
-        this.mesh.getBuffer().setData(vertices);
-        this.mesh.getIndexBuffer().setData(indices);
         this.mesh.setMode(GlPrimitive.LINES);
+        this.mesh.getBuffer().setData(vertices);
+        this.mesh.getIndexBuffer().setData(lineIndices);
     }
 
     public float[] getVertices(){

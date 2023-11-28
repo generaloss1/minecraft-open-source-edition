@@ -1,6 +1,6 @@
 package minecraftose.client.command;
 
-import minecraftose.client.ClientGame;
+import minecraftose.client.Minecraft;
 import minecraftose.client.command.vanilla.*;
 import minecraftose.main.command.Command;
 import minecraftose.main.command.CommandContext;
@@ -15,21 +15,21 @@ import java.util.*;
 
 public class ClientCommandDispatcher{
 
-    private final ClientGame game;
+    private final Minecraft minecraft;
     private final Map<String, CommandNodeLiteral> commands;
     private final CommandLocalPlayerSource source;
     
-    public ClientCommandDispatcher(ClientGame game){
-        this.game = game;
+    public ClientCommandDispatcher(Minecraft minecraft){
+        this.minecraft = minecraft;
         this.commands = new HashMap<>();
-        this.source = new CommandLocalPlayerSource(game.getPlayer());
+        this.source = new CommandLocalPlayerSource(minecraft.getPlayer());
         
         // Register commands
         CCommandOption.registerTo(this);
     }
     
-    public ClientGame getGame(){
-        return game;
+    public Minecraft getMinecraft(){
+        return minecraft;
     }
     
     

@@ -4,8 +4,6 @@ import jpize.net.tcp.TcpServer;
 import minecraftose.main.text.Component;
 import minecraftose.main.time.GameTime;
 import minecraftose.server.command.ServerCommandDispatcher;
-import minecraftose.server.worldgen.generator.ChunkGeneratorDefault;
-import minecraftose.server.worldgen.generator.ChunkGeneratorFlat;
 import minecraftose.server.level.LevelManager;
 import minecraftose.server.level.ServerLevel;
 import minecraftose.server.network.ServerConnectionManager;
@@ -13,6 +11,7 @@ import minecraftose.server.player.PlayerList;
 import minecraftose.server.player.ServerPlayer;
 import jpize.util.time.TickGenerator;
 import jpize.util.time.Tickable;
+import minecraftose.server.worldgen.generator.ChunkGeneratorTestNew;
 
 import java.util.Collection;
 
@@ -41,8 +40,8 @@ public abstract class Server implements Tickable{
     
     public void run(){
         final long seed = 61128216; // Maths.randomSeed(8);
-        getLevelManager().createLevel(getConfiguration().getDefaultLevelName(), String.valueOf(seed), ChunkGeneratorDefault.INSTANCE); // Create overworld level
-        getLevelManager().createLevel("flat-world", "FLAT", ChunkGeneratorFlat.INSTANCE); // Create flat-world level
+        getLevelManager().createLevel(getConfiguration().getDefaultLevelName(), String.valueOf(seed), ChunkGeneratorTestNew.INSTANCE); // Create overworld level
+        // getLevelManager().createLevel("flat-world", "FLAT", ChunkGeneratorFlat.INSTANCE); // Create flat-world level
 
         tcpServer.run(getConfiguration().getAddress(), getConfiguration().getPort()); // Run TCP server
         

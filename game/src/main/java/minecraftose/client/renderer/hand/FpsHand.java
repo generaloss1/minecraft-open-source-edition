@@ -16,11 +16,11 @@ public class FpsHand{
     }
 
     public void render(){
-        final GameCamera camera = gameRenderer.getSession().getGame().getCamera();
+        final GameCamera camera = gameRenderer.getMinecraft().getCamera();
         if(camera.getPerspective() != PerspectiveType.FIRST_PERSON)
             return;
 
-        final LocalPlayer player = gameRenderer.getSession().getGame().getPlayer();
+        final LocalPlayer player = gameRenderer.getMinecraft().getPlayer();
 
         final PlayerModel model = player.getModel();
         final ModelPart arm = model.getRightArm();

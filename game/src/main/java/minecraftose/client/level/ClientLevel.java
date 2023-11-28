@@ -1,7 +1,7 @@
 package minecraftose.client.level;
 
 import jpize.math.Maths;
-import minecraftose.client.ClientGame;
+import minecraftose.client.Minecraft;
 import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.chunk.ClientChunk;
@@ -14,20 +14,20 @@ import static minecraftose.main.chunk.ChunkUtils.MAX_LIGHT_LEVEL;
 
 public class ClientLevel extends Level{
 
-    private final ClientGame game;
+    private final Minecraft minecraft;
     private final ClientChunkManager chunkManager;
     private final ClientLevelConfiguration configuration;
 
-    public ClientLevel(ClientGame game, String levelName){
-        this.game = game;
+    public ClientLevel(Minecraft minecraft, String levelName){
+        this.minecraft = minecraft;
         this.chunkManager = new ClientChunkManager(this);
         this.configuration = new ClientLevelConfiguration();
 
         configuration.load(levelName);
     }
 
-    public ClientGame getGame(){
-        return game;
+    public Minecraft getMinecraft(){
+        return minecraft;
     }
 
 
@@ -112,7 +112,7 @@ public class ClientLevel extends Level{
     public int getLight(int x, int y, int z){
         final int skyLight = getSkyLight(x, y, z);
         final int blockLight = getBlockLight(x, y, z);
-        final float skyBrightness = game.getSession().getRenderer().getWorldRenderer().getSkyRenderer().getSkyBrightness();
+        final float skyBrightness = minecraft.getRenderer().getWorldRenderer().getSkyRenderer().getSkyBrightness();
 
         return Math.max(Maths.round(skyLight * skyBrightness), blockLight);
     }

@@ -5,7 +5,7 @@ import jpize.math.Mathc;
 import jpize.math.Maths;
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.util.time.Stopwatch;
-import minecraftose.client.ClientGame;
+import minecraftose.client.Minecraft;
 import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.control.PlayerController;
@@ -26,8 +26,8 @@ public class LocalPlayer extends AbstractClientPlayer{
     protected float jumpHeight;
     protected Stopwatch stepTimer;
 
-    public LocalPlayer(ClientGame game, ClientLevel level, String name){
-        super(game, level, name);
+    public LocalPlayer(Minecraft minecraft, ClientLevel level, String name){
+        super(minecraft, level, name);
 
         this.controller = new PlayerController(this);
         this.inventory = new PlayerInventory();
@@ -50,7 +50,7 @@ public class LocalPlayer extends AbstractClientPlayer{
         super.tick();
         controller.tick();
 
-        final float t = game.getTime().getTickLerpFactor();
+        final float t = minecraft.getTime().getTickLerpFactor();
 
         /* -------- Vertical Move -------- */
 
@@ -93,8 +93,8 @@ public class LocalPlayer extends AbstractClientPlayer{
                 Maths.random(2, 10) * Maths.sinDeg(rotation.yaw)
             );
             velocity.add(push);
-            game.getCamera().push(push);
-            Jpize.execSync(() -> game.getSession().getSoundPlayer().play(SoundGroup.EXPLODE.random(), 1, 1, position.x, position.y, position.z) );
+            minecraft.getCamera().push(push);
+            Jpize.execSync(() -> minecraft.getSoundPlayer().play(SoundGroup.EXPLODE.random(), 1, 1, position.x, position.y, position.z) );
         }
 
         // Gravity
@@ -161,14 +161,14 @@ public class LocalPlayer extends AbstractClientPlayer{
 
             // Play fall sound
             if(fallHeight > 7)
-                game.getSession().getSoundPlayer().play(Sound.FALL_BIG, 1, 1, position.x + 0.4F, position.y, position.z + 0.4F);
+                minecraft.getSoundPlayer().play(Sound.FALL_BIG, 1, 1, position.x + 0.4F, position.y, position.z + 0.4F);
             else if(fallHeight > 3)
-                game.getSession().getSoundPlayer().play(Sound.FALL_SMALL, 0.5F, 1, position.x + 0.4F, position.y, position.z + 0.4F);
+                minecraft.getSoundPlayer().play(Sound.FALL_SMALL, 0.5F, 1, position.x + 0.4F, position.y, position.z + 0.4F);
 
             if(fallHeight > 3){
                 final SoundType sounds = getFloorBlockSounds();
                 if(sounds != null)
-                    game.getSession().getSoundPlayer().play(sounds.getStepSounds().random(), 0.5F, 1, position.x + 0.4F, position.y, position.z + 0.4F);
+                    minecraft.getSoundPlayer().play(sounds.getStepSounds().random(), 0.5F, 1, position.x + 0.4F, position.y, position.z + 0.4F);
             }
         }
         
@@ -191,7 +191,7 @@ public class LocalPlayer extends AbstractClientPlayer{
 
                 final SoundType sounds = getFloorBlockSounds();
                 if(sounds != null)
-                    game.getSession().getSoundPlayer().play(sounds.getStepSounds().random(), 0.5F, 1, position.x + 0.4F, position.y, position.z + 0.4F);
+                    minecraft.getSoundPlayer().play(sounds.getStepSounds().random(), 0.5F, 1, position.x + 0.4F, position.y, position.z + 0.4F);
             }
         }
     }

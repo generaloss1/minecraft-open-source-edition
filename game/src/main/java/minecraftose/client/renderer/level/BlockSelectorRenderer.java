@@ -25,7 +25,7 @@ public class BlockSelectorRenderer implements Disposable{
     
     
     public void render(GameCamera camera){
-        final BlockRayCast rayCast = levelRenderer.getGameRenderer().getSession().getGame().getBlockRayCast();
+        final BlockRayCast rayCast = levelRenderer.getGameRenderer().getMinecraft().getBlockRayCast();
         if(!rayCast.isSelected())
             return;
         

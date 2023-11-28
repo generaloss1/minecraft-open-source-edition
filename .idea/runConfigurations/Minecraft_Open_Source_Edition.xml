@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Minecraft Open Source Edition" type="Application" factoryName="Application">
+  <configuration default="false" name="Minecraft Open Source Edition" type="Application" factoryName="Application" singleton="false">
     <option name="MAIN_CLASS_NAME" value="minecraftose.Main" />
     <module name="game" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/launcher/minecraftose" />

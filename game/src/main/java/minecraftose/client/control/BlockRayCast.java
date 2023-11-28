@@ -19,7 +19,7 @@ import minecraftose.main.chunk.ChunkUtils;
 
 public class BlockRayCast{
     
-    private final Minecraft session;
+    private final Minecraft minecraft;
     
     private final Ray3f ray;
     private float length;
@@ -28,24 +28,31 @@ public class BlockRayCast{
     private Dir selectedFace;
     private boolean selected;
     private ClientLevel level;
+    private final Matrix4f blockMatrix;
     
-    public BlockRayCast(Minecraft session, float length){
-        this.session = session;
-        
-        ray = new Ray3f();
+    public BlockRayCast(Minecraft minecraft, float length){
+        this.minecraft = minecraft;
+
+        this.ray = new Ray3f();
         setLength(length);
         
-        selectedBlock = new Vec3i();
-        imaginarySelectedBlock = new Vec3i();
+        this.selectedBlock = new Vec3i();
+        this.imaginarySelectedBlock = new Vec3i();
+
+        this.blockMatrix = new Matrix4f();
     }
     
-    public Minecraft getSession(){
-        return session;
+    public Minecraft getMinecraft(){
+        return minecraft;
     }
     
     
     public void setLevel(ClientLevel level){
         this.level = level;
+    }
+
+    public Ray3f getRay(){
+        return ray;
     }
     
     
@@ -54,7 +61,7 @@ public class BlockRayCast{
             return;
         
         // Update ray
-        final LocalPlayer player = session.getGame().getPlayer();
+        final LocalPlayer player = minecraft.getPlayer();
         ray.dir().set(player.getRotation().getDirection());
         ray.origin().set(player.getLerpPosition().copy().add(0, player.getEyeHeight(), 0));
         
@@ -114,7 +121,7 @@ public class BlockRayCast{
             final BlockProps block = ChunkBlockData.getProps(blockData);
 
             if(!block.isEmpty() && block.getID() != ClientBlocks.VOID_AIR.getID() && block.getCursor() != null){
-                if(block.isSolid()){
+                if(block.getCursor() == BlockCursor.SOLID){
                     selectedFace = Dir.fromNormal(faceNormal.x, faceNormal.y, faceNormal.z);
                     selectedBlockProps = block;
                     imaginarySelectedBlock.set(selectedBlock).add(selectedFace.getNormal());
@@ -123,10 +130,8 @@ public class BlockRayCast{
                     break;
                 }else{
                     final BlockCursor shape = block.getCursor();
-                    final Matrix4f mat = new Matrix4f().translate(selectedBlock);
-                    final float intersect = Intersector.getRayIntersectionQuadMesh(ray, mat, shape.getVertices(), shape.getQuadIndices());
-                    System.out.println(intersect);
-                    if(intersect != -1){
+                    blockMatrix.toTranslated(selectedBlock);
+                    if(Intersector.isRayIntersectQuadMesh(ray, blockMatrix, shape.getVertices(), shape.getQuadIndices())){
                         selectedFace = Dir.fromNormal(faceNormal.x, faceNormal.y, faceNormal.z);
                         selectedBlockProps = block;
                         imaginarySelectedBlock.set(selectedBlock).add(selectedFace.getNormal());

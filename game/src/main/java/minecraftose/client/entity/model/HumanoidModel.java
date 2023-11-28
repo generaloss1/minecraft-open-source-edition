@@ -103,7 +103,7 @@ public class HumanoidModel{
         shader.setUniform("u_projection", camera.getProjection());
         shader.setUniform("u_view", camera.getView());
         shader.setUniform("u_texture", skinTexture);
-        shader.setUniform("u_skyBrightness", camera.getGame().getSession().getRenderer().getWorldRenderer().getSkyRenderer().getSkyBrightness());
+        shader.setUniform("u_skyBrightness", camera.getMinecraft().getRenderer().getWorldRenderer().getSkyRenderer().getSkyBrightness());
 
         torso.render(camera, shader, "u_model");
         head.render(camera, shader, "u_model");

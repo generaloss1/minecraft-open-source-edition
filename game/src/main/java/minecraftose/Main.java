@@ -2,8 +2,9 @@ package minecraftose;
 
 import jpize.Jpize;
 import jpize.io.context.ContextBuilder;
-import minecraftose.main.network.PlayerProfile;
+import jpize.math.Maths;
 import minecraftose.client.Minecraft;
+import minecraftose.main.network.PlayerProfile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +19,7 @@ public class Main{
         // Parse arguments
         final Map<String, String> argsMap = mapArgs(args);
 
-        profile = new PlayerProfile(argsMap.getOrDefault("username", "GeneralPashon"));
+        profile = new PlayerProfile(argsMap.getOrDefault("username", "Player_" + Maths.random(10, 99)));
         sessionToken = argsMap.getOrDefault("sessionToken", "54_54-iWantPizza-54_54");
         gameDir = argsMap.get("gameDir");
 

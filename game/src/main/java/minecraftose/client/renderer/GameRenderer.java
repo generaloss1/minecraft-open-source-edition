@@ -11,7 +11,7 @@ import minecraftose.client.renderer.text.TextComponentBatch;
 
 public class GameRenderer extends JpizeApplication{
     
-    private final Minecraft session;
+    private final Minecraft minecraft;
     
     private final TextComponentBatch textComponentBatch;
     private final LevelRenderer levelRenderer;
@@ -20,8 +20,8 @@ public class GameRenderer extends JpizeApplication{
     private final ChatRenderer chatRenderer;
     private final FpsHand hand;
 
-    public GameRenderer(Minecraft session){
-        this.session = session;
+    public GameRenderer(Minecraft minecraft){
+        this.minecraft = minecraft;
         
         this.textComponentBatch = new TextComponentBatch();
         this.levelRenderer = new LevelRenderer(this);
@@ -31,8 +31,8 @@ public class GameRenderer extends JpizeApplication{
         this.hand = new FpsHand(this);
     }
     
-    public Minecraft getSession(){
-        return session;
+    public Minecraft getMinecraft(){
+        return minecraft;
     }
     
     

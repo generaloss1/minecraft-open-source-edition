@@ -3,7 +3,7 @@ package minecraftose.client.block.shape;
 public class GrassBlockCursor extends BlockCursor{
     
     static final float min = 0.15F;
-    static final float max = 0.85F;
+    static final float max = 1 - min;
     static final float minY = 0F;
     static final float maxY = 1F;
     

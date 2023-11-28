@@ -131,7 +131,7 @@ public class ParticleBatch implements Disposable{
     private void setup(GameCamera camera){
         shader.bind();
         shader.setUniform("u_projection", camera.getProjection());
-        shader.setUniform("u_skyBrightness", camera.getGame().getSession().getRenderer().getWorldRenderer().getSkyRenderer().getSkyBrightness());
+        shader.setUniform("u_skyBrightness", camera.getMinecraft().getRenderer().getWorldRenderer().getSkyRenderer().getSkyBrightness());
         shader.setUniform("u_view", camera.getImaginaryView());
     }
     

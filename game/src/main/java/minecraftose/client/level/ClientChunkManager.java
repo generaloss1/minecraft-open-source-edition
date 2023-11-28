@@ -160,7 +160,7 @@ public class ClientChunkManager extends ChunkManager {
     
     private void findChunks(){
         if(frontiers.isEmpty()){
-            final LocalPlayer player = level.getGame().getPlayer();
+            final LocalPlayer player = level.getMinecraft().getPlayer();
 
             putFrontier(new ChunkPos(
                 ChunkUtils.getChunkPos(player.getPosition().xFloor()),
@@ -189,7 +189,7 @@ public class ClientChunkManager extends ChunkManager {
         frontiers.add(frontierPos);
 
         if(!allChunks.containsKey(frontierPos) && !requestedChunks.containsKey(frontierPos) && toBuildQueue.stream().noneMatch(chunk -> chunk.getPosition().equals(frontierPos))){
-            getLevel().getGame().getConnection().sendPacket(new C2SPacketChunkRequest(frontierPos.x, frontierPos.z));
+            getLevel().getMinecraft().getConnection().sendPacket(new C2SPacketChunkRequest(frontierPos.x, frontierPos.z));
             requestedChunks.put(frontierPos, System.currentTimeMillis());
         }
     }
@@ -262,11 +262,11 @@ public class ClientChunkManager extends ChunkManager {
 
     
     private boolean isOffTheGrid(ChunkPos chunkPos){
-        final LocalPlayer player = level.getGame().getPlayer();
+        final LocalPlayer player = level.getMinecraft().getPlayer();
         if(player == null)
             return true;
 
-        final int renderDist = level.getGame().getSession().getOptions().getRenderDistance();
+        final int renderDist = level.getMinecraft().getOptions().getRenderDistance();
         final float distToChunk = distToChunk(chunkPos.x, chunkPos.z, player.getPosition());
 
         return distToChunk > renderDist;

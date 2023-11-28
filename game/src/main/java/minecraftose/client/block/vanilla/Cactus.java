@@ -39,7 +39,7 @@ public class Cactus extends ClientBlock{
                 .setFacing(Dir.NONE)
                 .setModel(model)
                 .setCollide(BlockCollide.CACTUS)
-                .setCursor(BlockCursor.SOLID);
+                .setCursor(BlockCursor.CACTUS);
     }
 
 }

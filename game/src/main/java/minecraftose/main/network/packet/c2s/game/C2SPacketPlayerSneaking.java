@@ -2,14 +2,14 @@ package minecraftose.main.network.packet.c2s.game;
 
 import jpize.net.tcp.packet.IPacket;
 import minecraftose.main.entity.Player;
-import minecraftose.server.network.PlayerGameConnection;
+import minecraftose.server.network.ServerPlayerGameConnection;
 import jpize.util.io.JpizeInputStream;
 import jpize.util.io.JpizeOutputStream;
 
 import java.io.IOException;
 import java.util.UUID;
 
-public class C2SPacketPlayerSneaking extends IPacket<PlayerGameConnection>{
+public class C2SPacketPlayerSneaking extends IPacket<ServerPlayerGameConnection>{
     
     public static final int PACKET_ID = 16;
     
@@ -41,7 +41,7 @@ public class C2SPacketPlayerSneaking extends IPacket<PlayerGameConnection>{
     }
     
     @Override
-    public void handle(PlayerGameConnection handler){
+    public void handle(ServerPlayerGameConnection handler){
         handler.sneaking(this);
     }
     

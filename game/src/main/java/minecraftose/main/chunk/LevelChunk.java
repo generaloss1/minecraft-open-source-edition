@@ -48,6 +48,18 @@ public class LevelChunk{
         return level;
     }
 
+    public ChunkPos getPosition(){
+        return position;
+    }
+
+    public int getX(){
+        return position.x;
+    }
+
+    public int getZ(){
+        return position.z;
+    }
+
 
     public long getLifeTimeMillis(){
         return System.currentTimeMillis() - spawnTimeMillis;
@@ -189,10 +201,6 @@ public class LevelChunk{
     
     public Heightmap getHeightMap(HeightmapType type){
         return heightmaps.get(type);
-    }
-    
-    public ChunkPos getPosition(){
-        return position;
     }
     
     

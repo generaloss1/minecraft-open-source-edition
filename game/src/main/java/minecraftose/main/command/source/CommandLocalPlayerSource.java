@@ -32,7 +32,7 @@ public class CommandLocalPlayerSource extends CommandSource{
 
     @Override
     public void sendMessage(Component message){
-        player.getGame().getChat().putMessage(new MessageSourceClient(), message);
+        player.getMinecraft().getChat().putMessage(new MessageSourceClient(), message);
     }
 
 }

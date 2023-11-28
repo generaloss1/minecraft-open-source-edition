@@ -78,7 +78,7 @@ public class SkyRenderer implements Disposable{
         // [Skybox]: skyBox.render(camera.getProjection(), skyViewMat);
 
         // Calc brightness
-        final GameTime time = levelRenderer.getGameRenderer().getSession().getGame().getTime();
+        final GameTime time = levelRenderer.getGameRenderer().getMinecraft().getTime();
         this.skyBrightness = calcSkyBrightness(time);
 
         // Color
@@ -114,7 +114,7 @@ public class SkyRenderer implements Disposable{
     public Color getFogColor(GameCamera camera){
         final float playerY = camera.getPlayer().getLerpPosition().y;
         final float voidFactor = Maths.clamp(playerY + 10, 0, 10) / 10F;
-        final float brightness = camera.getPlayer().getGame().getSession().getOptions().getBrightness() * 0.1F + 0.9F;
+        final float brightness = camera.getPlayer().getMinecraft().getOptions().getBrightness() * 0.1F + 0.9F;
         return new Color(0.6, 0.75, 0.9, 1).mul3(skyBrightness * voidFactor * brightness);
     }
     

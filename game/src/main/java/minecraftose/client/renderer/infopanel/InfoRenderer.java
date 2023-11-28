@@ -7,7 +7,6 @@ import jpize.math.Maths;
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.math.vecmath.vector.Vec3i;
 import minecraftose.client.Minecraft;
-import minecraftose.client.ClientGame;
 import minecraftose.client.audio.SoundPlayer;
 import minecraftose.client.chunk.builder.ChunkBuilder;
 import minecraftose.client.control.BlockRayCast;
@@ -87,27 +86,26 @@ public class InfoRenderer implements Disposable{
         
         if(!open && animationEnded)
             return;
-        
-        final Minecraft session = gameRenderer.getSession();
-        final ClientGame game = session.getGame();
-        final GameCamera camera = game.getCamera();
+
+        final Minecraft minecraft = gameRenderer.getMinecraft();
+        final GameCamera camera = minecraft.getCamera();
         
         if(camera == null)
             return;
         
-        final Options options = session.getOptions();
+        final Options options = minecraft.getOptions();
         
-        final ClientLevel level = game.getLevel();
+        final ClientLevel level = minecraft.getLevel();
         if(level == null)
             return;
 
         final ChunkBuilder chunkBuilder = level.getChunkManager().getChunkBuilders()[0];
-        final GameTime time = game.getTime();
+        final GameTime time = minecraft.getTime();
         
-        final LocalPlayer player = game.getPlayer();
+        final LocalPlayer player = minecraft.getPlayer();
         final Vec3f playerPos = player.getLerpPosition();
         
-        final BlockRayCast blockRayCast = game.getBlockRayCast();
+        final BlockRayCast blockRayCast = minecraft.getBlockRayCast();
         final Vec3i blockPos = blockRayCast.getSelectedBlockPosition();
         final Vec3i imaginaryBlockPos = blockRayCast.getImaginaryBlockPosition();
         final int lightLevel = level.getLight(imaginaryBlockPos.x, imaginaryBlockPos.y, imaginaryBlockPos.z);
@@ -121,11 +119,11 @@ public class InfoRenderer implements Disposable{
         /* -------- INFO -------- */
         
         // Game Version
-        final Collection<Modification> loadedMods = session.getModLoader().getLoadedMods();
+        final Collection<Modification> loadedMods = minecraft.getModLoader().getLoadedMods();
         final String modLoaderState = loadedMods.isEmpty() ? "Vanilla" : loadedMods.size() + " Mod(s) loaded";
         info(new Component().color(TextColor.DARK_GRAY)
             .text("Minecraft Open Source Edition")
-            .text(" " + session.getVersion().getName() + " (" + modLoaderState + ")")
+            .text(" " + minecraft.getVersion().getName() + " (" + modLoaderState + ")")
         );
         
         // FPS
@@ -133,8 +131,8 @@ public class InfoRenderer implements Disposable{
         
         // Packets
         infoNextLine();
-        info(TextColor.GRAY, "Packets sent", TextColor.YELLOW, game.getConnection().getTX());
-        info(TextColor.GRAY, "Packets received", TextColor.YELLOW, game.getConnection().getRX());
+        info(TextColor.GRAY, "Packets sent", TextColor.YELLOW, minecraft.getConnection().getTX());
+        info(TextColor.GRAY, "Packets received", TextColor.YELLOW, minecraft.getConnection().getRX());
         
         // Position
         infoNextLine();
@@ -230,7 +228,7 @@ public class InfoRenderer implements Disposable{
         info(new Component()
                 .color(TextColor.YELLOW).text("Sounds")
                 .reset().text(": ")
-                .color(TextColor.AQUA).text(session.getSoundPlayer().getPlayingSoundsNum())
+                .color(TextColor.AQUA).text(minecraft.getSoundPlayer().getPlayingSoundsNum())
                 .reset().text("/")
                 .color(TextColor.AQUA).text(SoundPlayer.MAX_SOUND_SOURCES)
         );

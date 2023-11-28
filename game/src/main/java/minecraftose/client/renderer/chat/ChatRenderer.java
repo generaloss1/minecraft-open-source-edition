@@ -58,7 +58,7 @@ public class ChatRenderer implements Disposable{
         final float scale = font.getScale();
         final float lineAdvance = font.getOptions().getAdvance() * scale;
         
-        final Chat chat = gameRenderer.getSession().getGame().getChat();
+        final Chat chat = gameRenderer.getMinecraft().getChat();
         final List<ChatMessage> messages = chat.getMessages();
         
         final float openedChatY = chatY + (chat.isOpened() ? lineAdvance + 10 : 0);

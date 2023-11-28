@@ -57,6 +57,7 @@ public class ServerConnectionManager implements TcpListener{
         dispatcher.register(C2SPacketPlayerBlockSet.PACKET_ID, C2SPacketPlayerBlockSet.class);
         dispatcher.register(C2SPacketPlayerSneaking.PACKET_ID, C2SPacketPlayerSneaking.class);
         dispatcher.register(C2SPacketRenderDistance.PACKET_ID, C2SPacketRenderDistance.class);
+        dispatcher.register(C2SPacketHitEntity.PACKET_ID, C2SPacketHitEntity.class);
     }
     
     
@@ -82,7 +83,7 @@ public class ServerConnectionManager implements TcpListener{
     public void disconnected(TcpConnection connection){
         final PacketHandler packetHandler = handlerMap.get(connection);
 
-        if(packetHandler instanceof PlayerGameConnection connectionAdapter){
+        if(packetHandler instanceof ServerPlayerGameConnection connectionAdapter){
             final ServerPlayer player = connectionAdapter.getPlayer();
             server.getPlayerList().disconnectPlayer(player);
             

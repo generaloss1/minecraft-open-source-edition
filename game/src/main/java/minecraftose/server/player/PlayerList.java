@@ -8,7 +8,7 @@ import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
 import minecraftose.server.Server;
 import minecraftose.server.level.ServerLevel;
-import minecraftose.server.network.PlayerGameConnection;
+import minecraftose.server.network.ServerPlayerGameConnection;
 
 import java.util.Collection;
 import java.util.Map;
@@ -70,7 +70,7 @@ public class PlayerList{
         playerMap.put(name, serverPlayer);
         
         // Send packets to player
-        final PlayerGameConnection connectionAdapter = serverPlayer.getConnectionAdapter();
+        final ServerPlayerGameConnection connectionAdapter = serverPlayer.getConnectionAdapter();
         
         connection.send(new S2CPacketSpawnInfo(level.getConfiguration().getName(), spawnPosition, server.getGameTime().getTicks())); // spawn init info
         connection.send(new S2CPacketAbilities(false)); // abilities

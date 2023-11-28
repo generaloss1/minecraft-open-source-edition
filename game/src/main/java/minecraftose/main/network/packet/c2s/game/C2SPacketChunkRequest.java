@@ -1,13 +1,13 @@
 package minecraftose.main.network.packet.c2s.game;
 
 import jpize.net.tcp.packet.IPacket;
-import minecraftose.server.network.PlayerGameConnection;
+import minecraftose.server.network.ServerPlayerGameConnection;
 import jpize.util.io.JpizeInputStream;
 import jpize.util.io.JpizeOutputStream;
 
 import java.io.IOException;
 
-public class C2SPacketChunkRequest extends IPacket<PlayerGameConnection>{
+public class C2SPacketChunkRequest extends IPacket<ServerPlayerGameConnection>{
     
     public static final int PACKET_ID = 12;
     
@@ -38,7 +38,7 @@ public class C2SPacketChunkRequest extends IPacket<PlayerGameConnection>{
     }
     
     @Override
-    public void handle(PlayerGameConnection handler){
+    public void handle(ServerPlayerGameConnection handler){
         handler.chunkRequest(this);
     }
     

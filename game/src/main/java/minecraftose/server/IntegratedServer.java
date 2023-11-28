@@ -4,15 +4,15 @@ import minecraftose.client.Minecraft;
 
 public class IntegratedServer extends Server{
     
-    private final Minecraft session;
+    private final Minecraft minecraft;
     
-    public IntegratedServer(Minecraft session){
-        this.session = session;
+    public IntegratedServer(Minecraft minecraft){
+        this.minecraft = minecraft;
         getConfiguration().loadDefaults(); // Load server configuration
     }
     
-    public Minecraft getSession(){
-        return session;
+    public Minecraft getMinecraft(){
+        return minecraft;
     }
     
     

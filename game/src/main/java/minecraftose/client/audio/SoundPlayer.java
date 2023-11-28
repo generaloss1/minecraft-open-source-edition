@@ -12,11 +12,11 @@ public class SoundPlayer implements Disposable{
     public static final int MAX_SOUND_SOURCES = 64;
 
 
-    private final Minecraft session;
+    private final Minecraft minecraft;
     private final AudioSource[] sources;
 
-    public SoundPlayer(Minecraft session){
-        this.session = session;
+    public SoundPlayer(Minecraft minecraft){
+        this.minecraft = minecraft;
 
         System.out.println("[Client]: Initialize audio player");
 
@@ -31,7 +31,7 @@ public class SoundPlayer implements Disposable{
 
 
     public void play(Sound sound, float volume, float pitch, float x, float y, float z){
-        final AudioBuffer buffer = session.getResources().getSound(sound.getID());
+        final AudioBuffer buffer = minecraft.getResources().getSound(sound.getID());
         if(buffer == null){
             System.err.println("Sound " + sound.name() + " is not found");
             return;

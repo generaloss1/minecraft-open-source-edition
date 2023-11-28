@@ -20,10 +20,10 @@ public class HorizontalMoveController{
     public void update(){
         motion.zero();
         
-        final Minecraft session = playerController.getPlayer().getLevel().getGame().getSession();
-        final Options options = session.getOptions();
+        final Minecraft minecraft = playerController.getPlayer().getMinecraft();
+        final Options options = minecraft.getOptions();
         
-        final LocalPlayer player = session.getGame().getPlayer();
+        final LocalPlayer player = minecraft.getPlayer();
         final Vec3f dir = player.getRotation().getDirectionHorizontal();
         
         if(options.getKey(KeyMapping.FORWARD).isPressed())

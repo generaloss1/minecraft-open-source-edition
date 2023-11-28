@@ -1,6 +1,6 @@
 package minecraftose.client.chat;
 
-import minecraftose.client.ClientGame;
+import minecraftose.client.Minecraft;
 import minecraftose.client.command.ClientCommandDispatcher;
 import minecraftose.main.chat.source.MessageSource;
 import minecraftose.main.chat.source.MessageSourceOther;
@@ -15,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Chat{
     
-    private final ClientGame game;
+    private final Minecraft minecraft;
     private final CopyOnWriteArrayList<ChatMessage> messageList;
     private final TextProcessor textProcessor;
     private boolean opened;
@@ -23,8 +23,8 @@ public class Chat{
     private final List<String> history;
     private int historyPointer = 0;
     
-    public Chat(ClientGame game){
-        this.game = game;
+    public Chat(Minecraft minecraft){
+        this.minecraft = minecraft;
         this.messageList = new CopyOnWriteArrayList<>();
         this.history = new ArrayList<>();
         this.textProcessor = new TextProcessor(false);
@@ -59,7 +59,7 @@ public class Chat{
 
     private void processMessage(String message){
         if(message.startsWith("/")){
-            final ClientCommandDispatcher dispatcher = game.getCommandDispatcher();
+            final ClientCommandDispatcher dispatcher = minecraft.getCommandDispatcher();
             final String command = message.substring(1);
 
             if(dispatcher.hasCommand(command.split(" ")[0])){
@@ -68,7 +68,7 @@ public class Chat{
             }
         }
 
-        game.getConnection().sendPacket(new C2SPacketChatMessage(message));
+        minecraft.getConnection().sendPacket(new C2SPacketChatMessage(message));
     }
 
     public void enter(){
@@ -121,11 +121,11 @@ public class Chat{
     private void setOpened(boolean opened){
         this.opened = opened;
         textProcessor.setActive(opened);
-        game.getSession().getGame().getPlayer().getController().getRotationController().setEnabled(!opened);
+        minecraft.getPlayer().getController().getRotationController().setEnabled(!opened);
     }
     
     public void close(){
-        game.getSession().getGame().getPlayer().getController().getRotationController().lockNextFrame();
+        minecraft.getPlayer().getController().getRotationController().lockNextFrame();
         historyPointer = history.size() - 1;
         textProcessor.removeLine();
         setOpened(false);

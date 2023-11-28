@@ -17,7 +17,7 @@ public class EntityRenderer implements Disposable{
     
     
     public void render(GameCamera camera){
-        final ClientLevel level = levelRenderer.getGameRenderer().getSession().getGame().getLevel();
+        final ClientLevel level = levelRenderer.getGameRenderer().getMinecraft().getLevel();
         if(level == null)
             return;
 

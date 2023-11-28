@@ -30,7 +30,7 @@ public class Options{
     public static String DEFAULT_HOST = "0.0.0.0:" + SharedConstants.DEFAULT_PORT;
 
 
-    private final Minecraft session;
+    private final Minecraft minecraft;
     private final ResourceExt fileResource;
     
     private String host = DEFAULT_HOST;
@@ -46,8 +46,8 @@ public class Options{
     private boolean firstPersonModel = DEFAULT_FIRST_PERSON_MODEL;
     
 
-    public Options(Minecraft session, String gameDirPath){
-        this.session = session;
+    public Options(Minecraft minecraft, String gameDirPath){
+        this.minecraft = minecraft;
 
         this.keyMappings = new HashMap<>();
         this.fileResource = Resource.external(gameDirPath + "options.txt");
@@ -152,7 +152,7 @@ public class Options{
     public void setFieldOfView(float fieldOfView){
         this.fieldOfView = fieldOfView;
         
-        final GameCamera camera = session.getGame().getCamera();
+        final GameCamera camera = minecraft.getCamera();
         if(camera != null)
             camera.setFov(fieldOfView);
     }
@@ -165,7 +165,7 @@ public class Options{
     public void setRenderDistance(int renderDistance){
         this.renderDistance = renderDistance;
         
-        final GameCamera camera = session.getGame().getCamera();
+        final GameCamera camera = minecraft.getCamera();
         if(camera != null)
             camera.setDistance(renderDistance);
     }
@@ -177,9 +177,9 @@ public class Options{
 
     public void setMaxFrameRate(int maxFrameRate){
         this.maxFrameRate = maxFrameRate;
-        session.getFpsSync().setTPS(maxFrameRate);
+        minecraft.getFpsSync().setTPS(maxFrameRate);
 
-        session.getFpsSync().enable(maxFrameRate > 0 && maxFrameRate < UNLIMITED_FPS_THRESHOLD);
+        minecraft.getFpsSync().enable(maxFrameRate > 0 && maxFrameRate < UNLIMITED_FPS_THRESHOLD);
         Jpize.setVsync(maxFrameRate == 0);
     }
 
@@ -190,7 +190,6 @@ public class Options{
 
     public void setFullscreen(boolean fullscreen){
         this.fullscreen = fullscreen;
-
         Jpize.window().setFullscreenDesktop(fullscreen);
     }
 
@@ -228,7 +227,6 @@ public class Options{
 
     public void setMouseSensitivity(float mouseSensitivity){
         this.mouseSensitivity = mouseSensitivity;
-        session.getGame().getPlayer().getController().getRotationController().setSpeed(mouseSensitivity);
     }
     
     

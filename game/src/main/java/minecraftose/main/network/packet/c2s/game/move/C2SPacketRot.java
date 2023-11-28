@@ -7,11 +7,11 @@ import jpize.physic.utils.Velocity3f;
 import jpize.util.io.JpizeInputStream;
 import jpize.util.io.JpizeOutputStream;
 import minecraftose.client.entity.LocalPlayer;
-import minecraftose.server.network.PlayerGameConnection;
+import minecraftose.server.network.ServerPlayerGameConnection;
 
 import java.io.IOException;
 
-public class C2SPacketRot extends IPacket<PlayerGameConnection>{
+public class C2SPacketRot extends IPacket<ServerPlayerGameConnection>{
 
     public static final int PACKET_ID = 25;
 
@@ -41,7 +41,7 @@ public class C2SPacketRot extends IPacket<PlayerGameConnection>{
     }
 
     @Override
-    public void handle(PlayerGameConnection handler){
+    public void handle(ServerPlayerGameConnection handler){
         handler.rotate(this);
     }
 

@@ -3,14 +3,14 @@ package minecraftose.main.network.packet.c2s.game.move;
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.net.tcp.packet.IPacket;
 import minecraftose.client.entity.LocalPlayer;
-import minecraftose.server.network.PlayerGameConnection;
+import minecraftose.server.network.ServerPlayerGameConnection;
 import jpize.util.io.JpizeInputStream;
 import jpize.util.io.JpizeOutputStream;
 import jpize.physic.utils.Velocity3f;
 
 import java.io.IOException;
 
-public class C2SPacketMove extends IPacket<PlayerGameConnection>{
+public class C2SPacketMove extends IPacket<ServerPlayerGameConnection>{
     
     public static final int PACKET_ID = 9;
     
@@ -42,7 +42,7 @@ public class C2SPacketMove extends IPacket<PlayerGameConnection>{
     }
     
     @Override
-    public void handle(PlayerGameConnection handler){
+    public void handle(ServerPlayerGameConnection handler){
         handler.move(this);
     }
     

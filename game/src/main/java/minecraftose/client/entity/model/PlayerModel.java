@@ -113,9 +113,9 @@ public class PlayerModel extends HumanoidModel{
         torso.getPosition().set(player.getLerpPosition());
         head.getPosition().set(player.getLerpPosition());
         
-        final Minecraft session = level.getGame().getSession();
-        final Options options = session.getOptions();
-        final GameCamera camera = session.getGame().getCamera();
+        final Minecraft minecraft = level.getMinecraft();
+        final Options options = minecraft.getOptions();
+        final GameCamera camera = minecraft.getCamera();
         if(options.isFirstPersonModel() && camera.getPerspective() == PerspectiveType.FIRST_PERSON){
             final Vec3f offset = player.getRotation().getDirectionHorizontal().mul(-4 * w);
             torso.getPosition().add(offset);
@@ -149,7 +149,7 @@ public class PlayerModel extends HumanoidModel{
         }
 
         // Animation
-        final float lerpFactor = player.getLevel().getGame().getTime().getTickLerpFactor();
+        final float lerpFactor = player.getLevel().getMinecraft().getTime().getTickLerpFactor();
         final float moveDist = player.getWalkDist(lerpFactor) * 4;
         final float bobbing = Math.min(1, player.getModelBobbing() * 10);
 

@@ -35,7 +35,7 @@ public class CloudsRenderer implements Disposable{
         cloudsTexture.getParameters().setWrap(GlWrap.REPEAT);
         cloudsTexture.update();
 
-        final Options options = levelRenderer.getGameRenderer().getSession().getOptions();
+        final Options options = levelRenderer.getGameRenderer().getMinecraft().getOptions();
         renderDistance = options.getRenderDistance() + 1;
 
         this.shader = new Shader(
@@ -65,7 +65,7 @@ public class CloudsRenderer implements Disposable{
     }
 
     public void render(GameCamera camera){
-        final Options options = levelRenderer.getGameRenderer().getSession().getOptions();
+        final Options options = levelRenderer.getGameRenderer().getMinecraft().getOptions();
         final SkyRenderer skyRenderer = levelRenderer.getSkyRenderer();
         final Vec2f position = getCloudsPosition(0.1);
 
@@ -92,11 +92,11 @@ public class CloudsRenderer implements Disposable{
     }
 
     private Vec2f getCloudsPosition(double speed){
-        final Minecraft session = levelRenderer.getGameRenderer().getSession();
-        final ClientGameTime gameTime = session.getGame().getTime();
+        final Minecraft minecraft = levelRenderer.getGameRenderer().getMinecraft();
+        final ClientGameTime gameTime = minecraft.getTime();
         final float time = gameTime.getLerpSeconds();
 
-        final LocalPlayer player = session.getGame().getPlayer();
+        final LocalPlayer player = minecraft.getPlayer();
         final Vec3f playerPos = player.getLerpPosition();
 
         final float pixelUv = 1F / cloudsTexture.getWidth();

@@ -72,7 +72,7 @@ public class LevelRenderer implements Disposable, Resizable{
     
     public void render(){
         // Get camera
-        final GameCamera camera = gameRenderer.getSession().getGame().getCamera();
+        final GameCamera camera = gameRenderer.getMinecraft().getCamera();
         if(camera == null)
             return;
 

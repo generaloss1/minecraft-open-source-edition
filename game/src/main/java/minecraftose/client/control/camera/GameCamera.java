@@ -8,7 +8,7 @@ import jpize.math.util.EulerAngles;
 import jpize.math.vecmath.vector.Vec2d;
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.physic.utils.Velocity3f;
-import minecraftose.client.ClientGame;
+import minecraftose.client.Minecraft;
 import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.chunk.ClientChunk;
@@ -24,7 +24,7 @@ import minecraftose.main.chunk.storage.ChunkPos;
 
 public class GameCamera extends PerspectiveCamera{
 
-    private final ClientGame game;
+    private final Minecraft minecraft;
     
     private final LocalPlayer player;
     private CameraTarget target;
@@ -36,11 +36,11 @@ public class GameCamera extends PerspectiveCamera{
     private final Velocity3f hitDirection;
     private float eyeHeight;
 
-    public GameCamera(ClientGame game, double near, double far, double fieldOfView){
+    public GameCamera(Minecraft minecraft, double near, double far, double fieldOfView){
         super(near, far, fieldOfView);
         
-        this.game = game;
-        this.player = game.getPlayer();
+        this.minecraft = minecraft;
+        this.player = minecraft.getPlayer();
         
         this.firstPerson = new FirstPersonPlayerCameraTarget(player);
         this.thirdPersonFront = new ThirdPersonFrontCameraTarget(player);
@@ -54,8 +54,8 @@ public class GameCamera extends PerspectiveCamera{
         setImaginaryOrigins(true, false, true);
     }
     
-    public ClientGame getGame(){
-        return game;
+    public Minecraft getMinecraft(){
+        return minecraft;
     }
     
     public LocalPlayer getPlayer(){
@@ -64,7 +64,7 @@ public class GameCamera extends PerspectiveCamera{
 
 
     public void update(){
-        final ClientLevel level = game.getLevel();
+        final ClientLevel level = minecraft.getLevel();
         if(level == null)
             return;
 
@@ -96,7 +96,7 @@ public class GameCamera extends PerspectiveCamera{
         getRotation().set(rotation);
 
         // Player
-        final Options options = game.getSession().getOptions();
+        final Options options = minecraft.getOptions();
         
         float fov = options.getFieldOfView() / zoom;
         if(player.isSprinting())
@@ -115,7 +115,7 @@ public class GameCamera extends PerspectiveCamera{
         //this.rotation.pitch -= Maths.clamp(player.getVelocity().y / 2, -10, 10);
 
         // View Bobbing
-        bobView(game.getTime().getTickLerpFactor());
+        bobView(minecraft.getTime().getTickLerpFactor());
 
         // Interpolate FOV
         final float currentFOV = getFov();

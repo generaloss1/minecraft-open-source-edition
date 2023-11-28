@@ -1,7 +1,7 @@
 package minecraftose.client;
 
 import jpize.Jpize;
-import jpize.util.file.Resource;
+import jpize.al.listener.AlListener;
 import jpize.gl.Gl;
 import jpize.graphics.texture.Texture;
 import jpize.io.context.JpizeApplication;
@@ -9,86 +9,123 @@ import jpize.math.Mathc;
 import jpize.math.Maths;
 import jpize.math.vecmath.vector.Vec3f;
 import jpize.physic.utils.Velocity3f;
+import jpize.util.Utils;
+import jpize.util.file.Resource;
+import jpize.util.time.Sync;
 import jpize.util.time.TickGenerator;
 import minecraftose.Main;
 import minecraftose.client.audio.MusicGroup;
 import minecraftose.client.audio.MusicPlayer;
 import minecraftose.client.audio.SoundPlayer;
 import minecraftose.client.block.ClientBlocks;
-import minecraftose.client.control.GameController;
+import minecraftose.client.chat.Chat;
+import minecraftose.client.command.ClientCommandDispatcher;
+import minecraftose.client.control.BlockRayCast;
+import minecraftose.client.control.GameInput;
+import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.entity.LocalPlayer;
 import minecraftose.client.level.ClientLevel;
+import minecraftose.client.network.ClientConnection;
 import minecraftose.client.options.Options;
 import minecraftose.client.renderer.GameRenderer;
 import minecraftose.client.renderer.particle.Particle;
+import minecraftose.client.renderer.particle.ParticleBatch;
 import minecraftose.client.resources.GameResources;
-import minecraftose.client.resources.VanillaSound;
 import minecraftose.client.resources.VanillaBlocks;
 import minecraftose.client.resources.VanillaMusic;
+import minecraftose.client.resources.VanillaSound;
+import minecraftose.client.time.ClientGameTime;
 import minecraftose.main.SharedConstants;
+import minecraftose.main.Tickable;
 import minecraftose.main.Version;
 import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.modification.loader.ModEntryPointType;
 import minecraftose.main.modification.loader.ModLoader;
 import minecraftose.main.network.PlayerProfile;
+import minecraftose.main.network.packet.c2s.game.move.C2SPacketMoveAndRot;
+import minecraftose.main.network.packet.c2s.game.move.C2SPacketRot;
+import minecraftose.main.network.packet.c2s.login.C2SPacketLogin;
+import minecraftose.main.network.packet.c2s.game.move.C2SPacketMove;
 import minecraftose.main.time.GameTime;
 import minecraftose.server.IntegratedServer;
-import jpize.util.Utils;
-import jpize.util.time.Sync;
 
-public class Minecraft extends JpizeApplication{
+public class Minecraft extends JpizeApplication implements Tickable{
 
     public static final Minecraft INSTANCE = new Minecraft();
 
-
-    private GameResources gameResources;
-    private Options options;
-
-    private Sync fpsSync;
-    private Version version;
-    private GameController gameController;
-    private GameRenderer clientRenderer;
+    private final PlayerProfile profile = Main.profile;
+    private final Options options;
+    private final Version version;
+    private final GameInput gameInput;
+    private final GameResources gameResources;
+    private final GameRenderer renderer;
     private IntegratedServer integratedServer;
-    private ClientGame clientGame;
-    private SoundPlayer soundPlayer;
-    private MusicPlayer musicPlayer;
+    private final SoundPlayer soundPlayer;
+    private final MusicPlayer musicPlayer;
+    private final ModLoader modLoader;
+    private final TickGenerator ticks;
 
-    private ModLoader modLoader;
-    private TickGenerator ticks;
+    private final Sync fpsSync;
 
-    @Override
-    public void init(){
+    private final ClientConnection connection;
+    private final ClientCommandDispatcher commandDispatcher;
+    private final Chat chat;
+
+    private final BlockRayCast blockRayCast;
+    private final ClientGameTime time;
+    private final LocalPlayer player;
+    private final GameCamera camera;
+
+
+    private ClientLevel level;
+    
+    public Minecraft(){
         // Create Instances //
         Thread.currentThread().setName("Render-Thread");
 
         // Resources //
-        gameResources = new GameResources();
+        this.gameResources = new GameResources();
         VanillaBlocks.register(gameResources);
         VanillaSound.register(gameResources);
         VanillaMusic.register(gameResources);
-        gameResources.load();
+        this.gameResources.load();
 
         // Other //
-        version = new Version();
+        this.version = new Version();
 
-        options = new Options(this, SharedConstants.GAME_DIR_PATH);
-        fpsSync = new Sync(0);
-        fpsSync.enable(false);
+        this.options = new Options(this, SharedConstants.GAME_DIR_PATH);
+        this.fpsSync = new Sync(0);
+        this.fpsSync.enable(false);
 
-        gameController = new GameController(this);
-        clientRenderer = new GameRenderer(this);
-        clientGame = new ClientGame(this);
-        soundPlayer = new SoundPlayer(this);
-        musicPlayer = new MusicPlayer(this);
+        this.gameInput = new GameInput(this);
+        this.renderer = new GameRenderer(this);
+        this.soundPlayer = new SoundPlayer(this);
+        this.musicPlayer = new MusicPlayer(this);
 
-        clientRenderer.init();
+        this.renderer.init();
         Resource.external(SharedConstants.GAME_DIR_PATH).mkDirs();
         Resource.external(SharedConstants.MODS_PATH).mkDirs();
 
-        options.load();
+        this.options.load();
+
+        this.ticks = new TickGenerator(GameTime.TICKS_PER_SECOND);
+        this.ticks.startAsync(this::tick);
+
+        this.connection = new ClientConnection(this);
+        
+        this.blockRayCast = new BlockRayCast(this, 16);
+        this.chat = new Chat(this);
+        this.time = new ClientGameTime();
+
+        this.player = new LocalPlayer(this, null, profile.getUsername());
+        this.commandDispatcher = new ClientCommandDispatcher(this);
+
+        this.camera = new GameCamera(this, 0.1, 5000, options.getFieldOfView());
+        this.camera.setDistance(options.getRenderDistance());
 
         // Mod Loader //
-        modLoader = new ModLoader();
-        modLoader.loadMods(SharedConstants.MODS_PATH);
+        this.modLoader = new ModLoader();
+        this.modLoader.loadMods(SharedConstants.MODS_PATH);
 
         // Run local server //
         final String[] address = options.getHost().split(":");
@@ -98,8 +135,8 @@ public class Minecraft extends JpizeApplication{
         }
 
         // Init mods //
-        modLoader.initializeMods(ModEntryPointType.CLIENT);
-        modLoader.initializeMods(ModEntryPointType.MAIN);
+        this.modLoader.initializeMods(ModEntryPointType.CLIENT);
+        this.modLoader.initializeMods(ModEntryPointType.MAIN);
 
         // Load blocks
         ClientBlocks.register();
@@ -107,31 +144,87 @@ public class Minecraft extends JpizeApplication{
 
         // Connect to server //
         Utils.delayElapsed(1000);
-        clientGame.connect(address[0], Integer.parseInt(address[1]));
+        this.connect(address[0], Integer.parseInt(address[1]));
 
         // Music
-        musicPlayer.setGroup(MusicGroup.GAME);
+        this.musicPlayer.setGroup(MusicGroup.GAME);
+    }
 
-        ticks = new TickGenerator(GameTime.TICKS_PER_SECOND);
-        ticks.startAsync(clientGame::tick);
+    
+    public void connect(String address, int port){
+        System.out.println("[Client]: Connect to " + address + ":" + port);
+        connection.connect(address, port);
+        connection.sendPacket( new C2SPacketLogin(version.getID(), profile.getUsername()) );
+    }
+
+    @Override
+    public void tick(){
+        if(level == null)
+            return;
+
+        // Send player position & rotation
+        if(player.isPositionChanged() && player.isRotationChanged())
+            connection.sendPacket(new C2SPacketMoveAndRot(player));
+        else if(player.isPositionChanged())
+            connection.sendPacket(new C2SPacketMove(player));
+        else if(player.isRotationChanged())
+            connection.sendPacket(new C2SPacketRot(player));
+
+        time.tick();
+        player.tick();
+        level.tick();
+
+        // Update audio listener
+        if(player.isRotationChanged())
+            AlListener.setOrientation(player.getRotation().getDirection().rotY(180));
+        if(player.isPositionChanged()){
+            AlListener.setPosition(player.getLerpPosition().copy().add(0, player.getEyeHeight(), 0));
+            AlListener.setVelocity(player.getVelocity());
+        }
+
+        if(time.getTicks() % GameTime.TICKS_IN_SECOND == 0)
+            connection.countTxRx();
+    }
+
+    @Override
+    public void update(){
+        if(camera == null)
+            return;
+
+        player.getController().update();
+        player.updateInterpolation();
+        blockRayCast.update();
+        camera.update();
     }
     
+    public void createClientLevel(String worldName){
+        if(level != null){
+            Jpize.execSync(() ->{
+                level.getConfiguration().setName(worldName);
+                level.getChunkManager().reset();
+            });
+        }else{
+            level = new ClientLevel(this, worldName);
+            blockRayCast.setLevel(level);
+            player.setLevel(level);
+        }
+    }
+
     @Override
     public void render(){
         fpsSync.sync();
-        gameController.update();
-        clientGame.update();
-        
+        gameInput.update();
+
         Gl.clearColorDepthBuffers();
-        clientRenderer.render();
-        
+        renderer.render();
+
         modLoader.invokeMethod(ModEntryPointType.CLIENT, "render");
     }
-    
+
     @Override
     public void resize(int width, int height){
-        clientRenderer.resize(width, height);
-        getGame().getCamera().resize(width, height);
+        renderer.resize(width, height);
+        camera.resize(width, height);
     }
 
     @Override
@@ -145,15 +238,63 @@ public class Minecraft extends JpizeApplication{
         if(integratedServer != null)
             integratedServer.stop();
         else
-            clientGame.disconnect();
+            this.disconnect();
 
         // Free resources
-        clientRenderer.dispose();
+        renderer.dispose();
         gameResources.dispose();
         soundPlayer.dispose();
         musicPlayer.dispose();
     }
     
+    public void disconnect(){
+        connection.disconnect();
+        
+        if(level != null){
+            Jpize.execSync(() -> {
+                System.out.println(10000);
+                level.getChunkManager().dispose();
+            });
+        }
+    }
+    
+    public void spawnParticle(Particle particle, Vec3f position){
+        final ParticleBatch particleBatch = renderer.getWorldRenderer().getParticleBatch();
+        particleBatch.spawnParticle(particle, position);
+    }
+    
+    public final ClientLevel getLevel(){
+        return level;
+    }
+    
+    public final LocalPlayer getPlayer(){
+        return player;
+    }
+    
+    public final GameCamera getCamera(){
+        return camera;
+    }
+    
+    public final BlockRayCast getBlockRayCast(){
+        return blockRayCast;
+    }
+    
+    public final Chat getChat(){
+        return chat;
+    }
+
+    public final ClientCommandDispatcher getCommandDispatcher(){
+        return commandDispatcher;
+    }
+
+    public final ClientGameTime getTime(){
+        return time;
+    }
+
+    public final ClientConnection getConnection(){
+        return connection;
+    }
+
     public final Options getOptions(){
         return options;
     }
@@ -161,31 +302,27 @@ public class Minecraft extends JpizeApplication{
     public final Sync getFpsSync(){
         return fpsSync;
     }
-    
+
     public final Version getVersion(){
         return version;
     }
-    
+
     public final PlayerProfile getProfile(){
         return Main.profile;
     }
 
     public final GameRenderer getRenderer(){
-        return clientRenderer;
+        return renderer;
     }
-    
+
     public final IntegratedServer getIntegratedServer(){
         return integratedServer;
     }
-    
-    public final ClientGame getGame(){
-        return clientGame;
+
+    public final GameInput getController(){
+        return gameInput;
     }
-    
-    public final GameController getController(){
-        return gameController;
-    }
-    
+
     public final ModLoader getModLoader(){
         return modLoader;
     }
@@ -223,8 +360,6 @@ public class Minecraft extends JpizeApplication{
         });
 
     public void collide(Vec3f position, Velocity3f velocity){
-        final ClientLevel level = clientGame.getLevel();
-
         double x = velocity.x;
         double y = velocity.y;
         if(ChunkBlockData.getID(level.getBlockState(position.xFloor(), position.yFloor() + Mathc.signum(x), position.zFloor())) != 0){
@@ -236,5 +371,5 @@ public class Minecraft extends JpizeApplication{
 
         velocity.set(x, y, z);
     }
-    
+
 }

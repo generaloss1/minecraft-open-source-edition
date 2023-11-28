@@ -52,7 +52,7 @@ public class ChunkRenderer implements Disposable{
     
     private void renderMeshes(GameCamera camera){
         // Level
-        final ClientLevel level = levelRenderer.getGameRenderer().getSession().getGame().getLevel();
+        final ClientLevel level = levelRenderer.getGameRenderer().getMinecraft().getLevel();
         if(level == null)
             return;
 
@@ -65,7 +65,7 @@ public class ChunkRenderer implements Disposable{
         renderedChunks = chunks.size();
 
         // Atlas
-        final Texture blockAtlas = levelRenderer.getGameRenderer().getSession().getResources().getBlocks();
+        final Texture blockAtlas = levelRenderer.getGameRenderer().getMinecraft().getResources().getBlocks();
 
 
         // Update translation matrix
@@ -118,12 +118,12 @@ public class ChunkRenderer implements Disposable{
     }
     
     private void setupShaders(GameCamera camera){
-        final Options options = levelRenderer.getGameRenderer().getSession().getOptions();
+        final Options options = levelRenderer.getGameRenderer().getMinecraft().getOptions();
         final Color fogColor = levelRenderer.getSkyRenderer().getFogColor(camera);
         final float fogStart = levelRenderer.getSkyRenderer().getFogStart();
         final float skyBrightness = levelRenderer.getSkyRenderer().getSkyBrightness();
-        final Texture blockAtlas = levelRenderer.getGameRenderer().getSession().getResources().getBlocks();
-        final GameTime gameTime = levelRenderer.getGameRenderer().getSession().getGame().getTime();
+        final Texture blockAtlas = levelRenderer.getGameRenderer().getMinecraft().getResources().getBlocks();
+        final GameTime gameTime = levelRenderer.getGameRenderer().getMinecraft().getTime();
 
         // Shader
         shader.bind();

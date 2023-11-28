@@ -16,12 +16,12 @@ import minecraftose.main.network.packet.s2c.game.S2CPacketTeleportPlayer;
 import minecraftose.main.text.Component;
 import minecraftose.server.Server;
 import minecraftose.server.level.ServerLevel;
-import minecraftose.server.network.PlayerGameConnection;
+import minecraftose.server.network.ServerPlayerGameConnection;
 
 public class ServerPlayer extends Player{
     
     private final Server server;
-    private final PlayerGameConnection connectionAdapter;
+    private final ServerPlayerGameConnection connectionAdapter;
     private final PlayerInventory inventory;
     
     private int renderDistance;
@@ -29,7 +29,7 @@ public class ServerPlayer extends Player{
     public ServerPlayer(ServerLevel level, TcpConnection connection, String name){
         super(level, name);
         this.server = level.getServer();
-        this.connectionAdapter = new PlayerGameConnection(this, connection);
+        this.connectionAdapter = new ServerPlayerGameConnection(this, connection);
         this.renderDistance = server.getConfiguration().getMaxRenderDistance(); //: 0
         this.inventory = new PlayerInventory();
     }
@@ -97,7 +97,7 @@ public class ServerPlayer extends Player{
     }
     
     
-    public PlayerGameConnection getConnectionAdapter(){
+    public ServerPlayerGameConnection getConnectionAdapter(){
         return connectionAdapter;
     }
     
