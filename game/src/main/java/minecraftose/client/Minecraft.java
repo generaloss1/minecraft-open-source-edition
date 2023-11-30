@@ -22,7 +22,7 @@ import minecraftose.client.chat.Chat;
 import minecraftose.client.command.ClientCommandDispatcher;
 import minecraftose.client.control.BlockRayCast;
 import minecraftose.client.control.GameInput;
-import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.entity.LocalPlayer;
 import minecraftose.client.level.ClientLevel;
 import minecraftose.client.network.ClientConnection;
@@ -74,7 +74,7 @@ public class Minecraft extends JpizeApplication implements Tickable{
     private final BlockRayCast blockRayCast;
     private final ClientGameTime time;
     private final LocalPlayer player;
-    private final GameCamera camera;
+    private final PlayerCamera camera;
 
 
     private ClientLevel level;
@@ -120,7 +120,7 @@ public class Minecraft extends JpizeApplication implements Tickable{
         this.player = new LocalPlayer(this, null, profile.getUsername());
         this.commandDispatcher = new ClientCommandDispatcher(this);
 
-        this.camera = new GameCamera(this, 0.1, 5000, options.getFieldOfView());
+        this.camera = new PlayerCamera(this, 0.1, 5000, options.getFieldOfView());
         this.camera.setDistance(options.getRenderDistance());
 
         // Mod Loader //
@@ -191,7 +191,7 @@ public class Minecraft extends JpizeApplication implements Tickable{
         if(camera == null)
             return;
 
-        player.getController().update();
+        player.getInput().update();
         player.updateInterpolation();
         blockRayCast.update();
         camera.update();
@@ -271,7 +271,7 @@ public class Minecraft extends JpizeApplication implements Tickable{
         return player;
     }
     
-    public final GameCamera getCamera(){
+    public final PlayerCamera getCamera(){
         return camera;
     }
     

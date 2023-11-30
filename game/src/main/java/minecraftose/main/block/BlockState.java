@@ -1,8 +1,19 @@
 package minecraftose.main.block;
 
 import minecraftose.main.audio.SoundType;
+import minecraftose.main.block.list.AirBlock;
 
 public class BlockState{
+
+    final Block block;
+
+    public BlockState(Block block){
+        this.block = block;
+    }
+
+    public Block getBlock(){
+        return block;
+    }
 
     // private MaterialColor color;
     // private PushReaction pushReaction;
@@ -34,8 +45,10 @@ public class BlockState{
     // private final StatePredicate emissiveRendering;
     // private final OffsetType offsetType;
 
+
+
     public final boolean isAir(){
-        return false;
+        return AirBlock.isBlockAir(this);
     }
 
     public final boolean isReplaceable(){

@@ -10,7 +10,7 @@ import jpize.graphics.util.Framebuffer3D;
 import jpize.graphics.util.Shader;
 import jpize.graphics.util.batch.TextureBatch;
 import jpize.graphics.util.color.Color;
-import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.renderer.GameRenderer;
 import minecraftose.client.renderer.particle.ParticleBatch;
 import jpize.util.Disposable;
@@ -72,7 +72,7 @@ public class LevelRenderer implements Disposable, Resizable{
     
     public void render(){
         // Get camera
-        final GameCamera camera = gameRenderer.getMinecraft().getCamera();
+        final PlayerCamera camera = gameRenderer.getMinecraft().getCamera();
         if(camera == null)
             return;
 

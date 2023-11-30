@@ -5,8 +5,7 @@ import jpize.math.Mathc;
 import jpize.math.Maths;
 import jpize.math.vecmath.vector.Vec3f;
 import minecraftose.client.Minecraft;
-import minecraftose.client.control.camera.GameCamera;
-import minecraftose.client.control.camera.PerspectiveType;
+import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.entity.AbstractClientPlayer;
 import minecraftose.client.level.ClientLevel;
 import minecraftose.client.options.Options;
@@ -92,7 +91,7 @@ public class PlayerModel extends HumanoidModel{
     }
     
     
-    public void render(GameCamera camera){
+    public void render(PlayerCamera camera){
         super.render(camera);
 
         jacket.render(camera, shader, "u_model");
@@ -115,8 +114,8 @@ public class PlayerModel extends HumanoidModel{
         
         final Minecraft minecraft = level.getMinecraft();
         final Options options = minecraft.getOptions();
-        final GameCamera camera = minecraft.getCamera();
-        if(options.isFirstPersonModel() && camera.getPerspective() == PerspectiveType.FIRST_PERSON){
+        final PlayerCamera camera = minecraft.getCamera();
+        if(options.isFirstPersonModel() && camera.getPerspective().isFirstPerson()){
             final Vec3f offset = player.getRotation().getDirectionHorizontal().mul(-4 * w);
             torso.getPosition().add(offset);
             head.setShow(false);
@@ -126,7 +125,7 @@ public class PlayerModel extends HumanoidModel{
         if(Float.isNaN(player.getLerpRotation().yaw) || Float.isNaN(torso.getRotation().yaw))
             return;
 
-        torso.getRotation().yaw += (-player.getLerpRotation().yaw - torso.getRotation().yaw) * Jpize.getDt() * 4;
+        torso.getRotation().yaw += (-player.getLerpRotation().yaw - torso.getRotation().yaw) * Jpize.getDt() * 6;
 
         head.getRotation().yaw = -player.getLerpRotation().yaw;
         head.getRotation().pitch = player.getLerpRotation().pitch;

@@ -4,7 +4,7 @@ import jpize.graphics.mesh.IndexedMesh;
 import jpize.graphics.util.Shader;
 import jpize.math.util.EulerAngles;
 import jpize.math.vecmath.vector.Vec3f;
-import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.control.camera.PlayerCamera;
 
 public class ModelPart{
     
@@ -21,7 +21,7 @@ public class ModelPart{
     }
     
     
-    public void render(GameCamera camera, Shader shader, String modelMatrixUniform){
+    public void render(PlayerCamera camera, Shader shader, String modelMatrixUniform){
         initialPose.updateMatrices(camera, initialPose);
         if(parent == null)
             pose.updateMatrices(camera, initialPose);

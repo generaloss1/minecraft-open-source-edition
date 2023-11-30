@@ -4,7 +4,7 @@ import jpize.math.vecmath.matrix.Matrix4f;
 import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.chunk.mesh.ChunkMeshStack;
-import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.level.ClientLevel;
 import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.chunk.ChunkUtils;
@@ -36,7 +36,7 @@ public class ClientChunk extends LevelChunk{
         return translationMatrix;
     }
 
-    public void updateTranslationMatrix(GameCamera camera){
+    public void updateTranslationMatrix(PlayerCamera camera){
         final float relativeChunkX = position.globalX() - camera.getX();
         final float relativeChunkZ = position.globalZ() - camera.getZ();
         translationMatrix.toTranslated(relativeChunkX, 0, relativeChunkZ);

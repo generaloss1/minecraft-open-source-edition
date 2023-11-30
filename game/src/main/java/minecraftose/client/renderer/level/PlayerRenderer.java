@@ -1,8 +1,7 @@
 package minecraftose.client.renderer.level;
 
 import jpize.util.Disposable;
-import minecraftose.client.control.camera.GameCamera;
-import minecraftose.client.control.camera.PerspectiveType;
+import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.entity.model.PlayerModel;
 import minecraftose.client.options.Options;
 
@@ -15,14 +14,14 @@ public class PlayerRenderer implements Disposable{
     }
     
     
-    public void render(GameCamera camera){
+    public void render(PlayerCamera camera){
         final Options options = levelRenderer.getGameRenderer().getMinecraft().getOptions();
         final PlayerModel playerModel = levelRenderer.getGameRenderer().getMinecraft().getPlayer().getModel();
         
         // Render player
         if(playerModel != null){
             playerModel.animate();
-            if(camera.getPerspective() != PerspectiveType.FIRST_PERSON || options.isFirstPersonModel())
+            if(!camera.getPerspective().isFirstPerson() || options.isFirstPersonModel())
                 playerModel.render(camera);
         }
     }

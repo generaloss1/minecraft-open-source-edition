@@ -8,18 +8,20 @@ import jpize.util.time.Stopwatch;
 import minecraftose.client.Minecraft;
 import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.ClientBlocks;
-import minecraftose.client.control.PlayerController;
+import minecraftose.client.control.PlayerInput;
 import minecraftose.client.level.ClientLevel;
+import minecraftose.main.Dir;
 import minecraftose.main.audio.Sound;
 import minecraftose.main.audio.SoundGroup;
 import minecraftose.main.audio.SoundType;
 import minecraftose.main.inventory.PlayerInventory;
 import minecraftose.main.item.ItemStack;
 import minecraftose.main.item.Items;
+import org.w3c.dom.ls.LSOutput;
 
 public class LocalPlayer extends AbstractClientPlayer{
-    
-    protected final PlayerController controller;
+
+    protected final PlayerInput input;
     protected float jumpDownY, lastVelocityY, fallHeight;
     protected final PlayerInventory inventory;
     protected float walkSpeed;
@@ -29,7 +31,7 @@ public class LocalPlayer extends AbstractClientPlayer{
     public LocalPlayer(Minecraft minecraft, ClientLevel level, String name){
         super(minecraft, level, name);
 
-        this.controller = new PlayerController(this);
+        this.input = new PlayerInput(this);
         this.inventory = new PlayerInventory();
         this.inventory.setItemStack(0, new ItemStack(Items.AIR));
         this.walkSpeed = 1;
@@ -48,15 +50,16 @@ public class LocalPlayer extends AbstractClientPlayer{
     @Override
     public void tick(){
         super.tick();
-        controller.tick();
+        input.tick();
 
         final float t = minecraft.getTime().getTickLerpFactor();
 
-        /* -------- Vertical Move -------- */
+        // -------- Vertical Move --------
 
         // Jumping
         if(isJumping()){
             if(isOnGround()){
+                onGround.set(false);
                 // Jump
                 velocity.y = 0.42F * jumpHeight;
                 
@@ -108,7 +111,7 @@ public class LocalPlayer extends AbstractClientPlayer{
             velocity.y *= 0.98F;
         
         
-        /* -------- Horizontal Move -------- */
+        // -------- Horizontal Move --------
         
         // Movement multiplier
         float movementMul = 0.98F * walkSpeed; // Default
@@ -133,8 +136,8 @@ public class LocalPlayer extends AbstractClientPlayer{
         final float reduceHorizontal = slipperinessMul * 0.91F;
         velocity.mul(reduceHorizontal, 1, reduceHorizontal);
         
-        // Move
-        final Vec3f moveControl = controller.getHorizontalMoveController().getMotion();
+        // Horizontal Move
+        final Vec3f moveControl = input.getHorizontalMove().getMotion().mul(0.98);
         float moveControlLen = moveControl.len();
         if(moveControlLen > 0){
             final Vec3f acceleration = new Vec3f(moveControl.x, 0, moveControl.z);
@@ -149,7 +152,7 @@ public class LocalPlayer extends AbstractClientPlayer{
         }
         
         
-        /* -------- Other -------- */
+        // -------- Other --------
         
         // Fall height
         if(velocity.y < 0 && lastVelocityY >= 0)
@@ -177,16 +180,25 @@ public class LocalPlayer extends AbstractClientPlayer{
         // Sneaking
         if(sneaking && super.isOnGround()){ //: жоские костыли
             final Vec3f movement = velocity.copy();
-            movement.y = -1E-5F;
+            movement.y = -1e-5F;
             if(!isOverlapsAt(movement)){
                 velocity.x = 0;
                 velocity.z = 0;
             }
         }
 
+        // Move
+        velocity.zeroThatLess(0.003);
+        final Vec3f collideMovement = collideMovement(super.velocity);
+        velocity.zeroThatBigger(collideMovement);
+
+        // Walk dist
+        walkDist.add(Math.min(0.25F, collideMovement.lenXZ() * 0.6F));
+        moveDist.add(collideMovement.len() * 0.6F);
+
         // Step sounds
         if((super.isOnGround() || jumping) && !sneaking){
-            if(stepTimer.getMillis() > 80 / velocity.len()){
+            if(stepTimer.getMillis() > 80 / collideMovement.len()){
                 stepTimer.reset();
 
                 final SoundType sounds = getFloorBlockSounds();
@@ -194,6 +206,8 @@ public class LocalPlayer extends AbstractClientPlayer{
                     minecraft.getSoundPlayer().play(sounds.getStepSounds().random(), 0.5F, 1, position.x + 0.4F, position.y, position.z + 0.4F);
             }
         }
+
+        onGround.set(isCollidedTo(Dir.NEGATIVE_Y));
     }
 
     private SoundType getFloorBlockSounds(){
@@ -209,8 +223,8 @@ public class LocalPlayer extends AbstractClientPlayer{
         return fallHeight;
     }
 
-    public PlayerController getController(){
-        return controller;
+    public PlayerInput getInput(){
+        return input;
     }
 
     public PlayerInventory getInventory(){

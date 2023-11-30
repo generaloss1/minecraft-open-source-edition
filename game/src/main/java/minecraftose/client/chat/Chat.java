@@ -121,11 +121,11 @@ public class Chat{
     private void setOpened(boolean opened){
         this.opened = opened;
         textProcessor.setActive(opened);
-        minecraft.getPlayer().getController().getRotationController().setEnabled(!opened);
+        minecraft.getPlayer().getInput().getRotation().setEnabled(!opened);
     }
     
     public void close(){
-        minecraft.getPlayer().getController().getRotationController().lockNextFrame();
+        minecraft.getPlayer().getInput().getRotation().lockNextFrame();
         historyPointer = history.size() - 1;
         textProcessor.removeLine();
         setOpened(false);

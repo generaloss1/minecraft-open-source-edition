@@ -4,16 +4,16 @@ import jpize.math.vecmath.vector.Vec3f;
 import minecraftose.client.Minecraft;
 import minecraftose.client.options.KeyMapping;
 import minecraftose.client.options.Options;
-import minecraftose.client.control.PlayerController;
+import minecraftose.client.control.PlayerInput;
 import minecraftose.client.entity.LocalPlayer;
 
 public class HorizontalMoveController{
     
-    private final PlayerController playerController;
+    private final PlayerInput playerController;
     private final Vec3f motion;
 
-    public HorizontalMoveController(PlayerController playerController){
-        this.playerController = playerController;
+    public HorizontalMoveController(PlayerInput playerInput){
+        this.playerController = playerInput;
         motion = new Vec3f();
     }
     

@@ -9,7 +9,7 @@ import jpize.gl.vertex.GlVertexAttr;
 import jpize.graphics.util.Shader;
 import jpize.math.vecmath.matrix.Matrix4f;
 import jpize.math.vecmath.vector.Vec3f;
-import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.control.camera.PlayerCamera;
 
 import static minecraftose.main.chunk.ChunkUtils.HEIGHT;
 import static minecraftose.main.chunk.ChunkUtils.SIZE;
@@ -66,7 +66,7 @@ public class ChunkBorderRenderer implements Disposable{
     }
     
     
-    public void render(GameCamera camera){
+    public void render(PlayerCamera camera){
         if(!show)
             return;
         

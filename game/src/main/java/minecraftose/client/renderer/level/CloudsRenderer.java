@@ -11,7 +11,7 @@ import jpize.graphics.util.Shader;
 import jpize.math.vecmath.vector.Vec2f;
 import jpize.math.vecmath.vector.Vec3f;
 import minecraftose.client.Minecraft;
-import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.entity.LocalPlayer;
 import minecraftose.client.options.Options;
 import minecraftose.client.time.ClientGameTime;
@@ -64,7 +64,7 @@ public class CloudsRenderer implements Disposable{
         });
     }
 
-    public void render(GameCamera camera){
+    public void render(PlayerCamera camera){
         final Options options = levelRenderer.getGameRenderer().getMinecraft().getOptions();
         final SkyRenderer skyRenderer = levelRenderer.getSkyRenderer();
         final Vec2f position = getCloudsPosition(0.1);

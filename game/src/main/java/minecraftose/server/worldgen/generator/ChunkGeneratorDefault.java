@@ -11,9 +11,9 @@ import minecraftose.main.biome.chunk.BiomeMap;
 import minecraftose.main.chunk.storage.Heightmap;
 import minecraftose.main.chunk.storage.HeightmapType;
 import minecraftose.server.chunk.ServerChunk;
+import minecraftose.server.level.ServerLevel;
 import minecraftose.server.worldgen.ChunkGenerator;
 import minecraftose.server.worldgen.decoration.old.*;
-import minecraftose.server.worldgen.pool.BlockPool;
 import minecraftose.server.worldgen.decoration.*;
 
 import java.util.Objects;
@@ -276,10 +276,9 @@ public class ChunkGeneratorDefault extends ChunkGenerator{
 
     @Override
     public void decorate(ServerChunk chunk){
-        final BlockPool pool = chunk.getLevel().getBlockPool();
-        pool.setGeneratingChunk(chunk);
+        final ServerLevel level = chunk.getLevel();
 
-        final int seed = chunk.getLevel().getConfiguration().getSeed();
+        final int seed = level.getConfiguration().getSeed();
         final int baseX = chunk.getPosition().x * SIZE;
         final int baseZ = chunk.getPosition().z * SIZE;
 
@@ -310,47 +309,47 @@ public class ChunkGeneratorDefault extends ChunkGenerator{
                 if(biome == Biome.DESERT){
 
                     if(random.randomBoolean(0.008) && !prevCactusGen){
-                        Cactus.generate(pool, x, height + 1, z, random);
+                        Cactus.generate(level, x, height + 1, z, random);
                         prevCactusGen = true;
                     }else if(random.randomBoolean(0.00001))
-                        DesertPyramid.generate(pool, x, height - 1, z, random);
+                        DesertPyramid.generate(level, x, height - 1, z, random);
                     else if(random.randomBoolean(0.00005))
-                        MiniPyramid.generate(pool, x, height, z, random);
+                        MiniPyramid.generate(level, x, height, z, random);
 
                 }else if(biome == Biome.FOREST){
 
                     if(random.randomBoolean(0.03)){
                         if(random.randomBoolean(0.7))
-                            OldGenOakTree.generate(chunk.getLevel(), random.getRandom(), x, height + 1, z);
+                            OldGenOakTree.generate(level, random.getRandom(), x, height + 1, z);
                         else
-                            OldGenBirchTree.generate(chunk.getLevel(), random.getRandom(), x, height + 1, z);
+                            OldGenBirchTree.generate(level, random.getRandom(), x, height + 1, z);
                     }else if(random.randomBoolean(0.00002))
-                        House.generate(pool, x, height, z, random);
+                        House.generate(level, x, height, z, random);
 
                 }else if(biome == Biome.TAIGA){
 
                     if(random.randomBoolean(0.02))
-                        OldGenTaigaTree2.generate(chunk.getLevel(), random.getRandom(), x, height + 1, z);
+                        OldGenTaigaTree2.generate(level, random.getRandom(), x, height + 1, z);
                     else if(random.randomBoolean(0.02))
-                        OldGenTaigaTree1.generate(chunk.getLevel(), random.getRandom(), x, height + 1, z);
+                        OldGenTaigaTree1.generate(level, random.getRandom(), x, height + 1, z);
 
                     else if(random.randomBoolean(0.00005))
-                        Tower.generate(pool, x, height, z, random);
+                        Tower.generate(level, x, height, z, random);
 
                 }else if(biome == Biome.SNOWY_TAIGA){
 
                     if(random.randomBoolean(0.02))
-                        OldGenTaigaTree2.generate(chunk.getLevel(), random.getRandom(), x, height + 1, z);
+                        OldGenTaigaTree2.generate(level, random.getRandom(), x, height + 1, z);
                     else if(random.randomBoolean(0.02))
-                        OldGenTaigaTree1.generate(chunk.getLevel(), random.getRandom(), x, height + 1, z);
+                        OldGenTaigaTree1.generate(level, random.getRandom(), x, height + 1, z);
 
                     else if(random.randomBoolean(0.00008))
-                        Tower.generate(pool, x, height, z, random);
+                        Tower.generate(level, x, height, z, random);
 
                 }
 
                 if(random.randomBoolean(0.00001))
-                    OldGenDungeons.generate(chunk.getLevel(), random.getRandom(), x, height - 5, z);
+                    OldGenDungeons.generate(level, random.getRandom(), x, height - 5, z);
 
             }
         }

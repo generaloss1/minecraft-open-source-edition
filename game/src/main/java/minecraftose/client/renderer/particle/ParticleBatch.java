@@ -13,7 +13,7 @@ import jpize.graphics.util.Shader;
 import jpize.graphics.util.color.Color;
 import jpize.math.vecmath.matrix.Matrix4f;
 import jpize.math.vecmath.vector.Vec3f;
-import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.control.camera.PlayerCamera;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -58,7 +58,7 @@ public class ParticleBatch implements Disposable{
     }
     
     
-    public void render(GameCamera camera){
+    public void render(PlayerCamera camera){
         setup(camera); // Setup shader
         
         for(ParticleInstance instance: instances){
@@ -128,7 +128,7 @@ public class ParticleBatch implements Disposable{
         vertexIndex++;
     }
     
-    private void setup(GameCamera camera){
+    private void setup(PlayerCamera camera){
         shader.bind();
         shader.setUniform("u_projection", camera.getProjection());
         shader.setUniform("u_skyBrightness", camera.getMinecraft().getRenderer().getWorldRenderer().getSkyRenderer().getSkyBrightness());

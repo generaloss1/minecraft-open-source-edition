@@ -8,5 +8,5 @@ public class RemotePlayer extends AbstractClientPlayer{
     public RemotePlayer(Minecraft minecraft, ClientLevel level, String name){
         super(minecraft, level, name);
     }
-    
+
 }

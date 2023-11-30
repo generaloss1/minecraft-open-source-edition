@@ -17,7 +17,7 @@ import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.block.shape.BlockCollide;
 import minecraftose.client.chat.Chat;
-import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.entity.LocalPlayer;
 import minecraftose.client.level.ClientLevel;
 import minecraftose.client.options.KeyMapping;
@@ -53,7 +53,7 @@ public class GameInput{
     
     public void update(){
         final Options options = minecraft.getOptions();
-        final GameCamera camera = minecraft.getCamera();
+        final PlayerCamera camera = minecraft.getCamera();
         final BlockRayCast blockRayCast = minecraft.getBlockRayCast();
         final ClientLevel level = minecraft.getLevel();
         
@@ -152,7 +152,7 @@ public class GameInput{
 
         // Show mouse
         if(Key.M.isDown())
-            minecraft.getPlayer().getController().getRotationController().toggleEnabled();
+            minecraft.getPlayer().getInput().getRotation().toggleEnabled();
 
         // Camera zoom
         if(options.getKey(KeyMapping.ZOOM).isDown())

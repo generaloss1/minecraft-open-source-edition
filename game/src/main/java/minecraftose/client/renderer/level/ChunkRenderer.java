@@ -8,7 +8,7 @@ import jpize.graphics.texture.Texture;
 import jpize.graphics.util.Shader;
 import jpize.graphics.util.color.Color;
 import minecraftose.client.chunk.ClientChunk;
-import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.level.ClientLevel;
 import minecraftose.client.options.Options;
 import minecraftose.main.time.GameTime;
@@ -42,7 +42,7 @@ public class ChunkRenderer implements Disposable{
     }
     
     
-    public void render(GameCamera camera){
+    public void render(PlayerCamera camera){
         setupShaders(camera);
         Gl.enable(GlTarget.POLYGON_OFFSET_FILL);
         renderMeshes(camera);
@@ -50,7 +50,7 @@ public class ChunkRenderer implements Disposable{
     }
     
     
-    private void renderMeshes(GameCamera camera){
+    private void renderMeshes(PlayerCamera camera){
         // Level
         final ClientLevel level = levelRenderer.getGameRenderer().getMinecraft().getLevel();
         if(level == null)
@@ -117,7 +117,7 @@ public class ChunkRenderer implements Disposable{
         //Gl.enable(GlTarget.CULL_FACE);
     }
     
-    private void setupShaders(GameCamera camera){
+    private void setupShaders(PlayerCamera camera){
         final Options options = levelRenderer.getGameRenderer().getMinecraft().getOptions();
         final Color fogColor = levelRenderer.getSkyRenderer().getFogColor(camera);
         final float fogStart = levelRenderer.getSkyRenderer().getFogStart();

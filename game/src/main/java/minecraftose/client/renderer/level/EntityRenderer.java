@@ -2,7 +2,7 @@ package minecraftose.client.renderer.level;
 
 import jpize.util.Disposable;
 import minecraftose.main.entity.Entity;
-import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.entity.RemotePlayer;
 import minecraftose.client.entity.model.PlayerModel;
 import minecraftose.client.level.ClientLevel;
@@ -16,7 +16,7 @@ public class EntityRenderer implements Disposable{
     }
     
     
-    public void render(GameCamera camera){
+    public void render(PlayerCamera camera){
         final ClientLevel level = levelRenderer.getGameRenderer().getMinecraft().getLevel();
         if(level == null)
             return;

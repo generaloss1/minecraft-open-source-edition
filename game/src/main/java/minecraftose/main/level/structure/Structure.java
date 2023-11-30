@@ -5,29 +5,29 @@ import jpize.math.Maths;
 import jpize.math.vecmath.vector.Vec2f;
 import jpize.math.vecmath.vector.Vec3i;
 import minecraftose.client.block.ClientBlock;
-import minecraftose.server.worldgen.pool.BlockPool;
+import minecraftose.server.level.ServerLevel;
 import jpize.util.io.JpizeInputStream;
 
 import java.io.IOException;
 
 public class Structure{
 
-    public static void circleFilledXZ(BlockPool pool, int x, int y, int z, float radius, ClientBlock block){
+    public static void circleFilledXZ(ServerLevel level, int x, int y, int z, float radius, ClientBlock block){
         final int intRadius = Maths.ceil(radius);
         for(int i = 0; i < intRadius; i++){
             for(int j = 0; j < intRadius; j++){
                 if(Vec2f.len(i, j) >= radius)
                     continue;
 
-                pool.genBlock(x + i, y, z + j, block);
-                pool.genBlock(x - i, y, z + j, block);
-                pool.genBlock(x - i, y, z - j, block);
-                pool.genBlock(x + i, y, z - j, block);
+                level.genBlock(x + i, y, z + j, block);
+                level.genBlock(x - i, y, z + j, block);
+                level.genBlock(x - i, y, z - j, block);
+                level.genBlock(x + i, y, z - j, block);
             }
         }
     }
 
-    public static void circleXZ(BlockPool pool, int x, int y, int z, float radius, ClientBlock block){
+    public static void circleXZ(ServerLevel level, int x, int y, int z, float radius, ClientBlock block){
         final int intRadius = Maths.ceil(radius);
         for(int i = 0; i < intRadius; i++){
             for(int j = 0; j < intRadius; j++){
@@ -35,15 +35,15 @@ public class Structure{
                 if( !(len < radius && len >= radius - 1) )
                     continue;
 
-                pool.genBlock(x + i, y, z + j, block);
-                pool.genBlock(x - i, y, z + j, block);
-                pool.genBlock(x - i, y, z - j, block);
-                pool.genBlock(x + i, y, z - j, block);
+                level.genBlock(x + i, y, z + j, block);
+                level.genBlock(x - i, y, z + j, block);
+                level.genBlock(x - i, y, z - j, block);
+                level.genBlock(x + i, y, z - j, block);
             }
         }
     }
 
-    public static void loadTo(BlockPool pool, String name, int x, int y, int z){
+    public static void loadTo(ServerLevel level, String name, int x, int y, int z){
         // File
         final Resource file = Resource.internal("struct/" + name + ".struct");
         try(final JpizeInputStream inStream = file.jpizeIn()){
@@ -55,7 +55,7 @@ public class Structure{
                     for(int k = 0; k < size.z; k++){
 
                         final short block = inStream.readShort();
-                        pool.setBlockData(x + i, y + j, z + k, block);
+                        level.setBlockState(x + i, y + j, z + k, block);
                     }
 
         }catch(IOException e){

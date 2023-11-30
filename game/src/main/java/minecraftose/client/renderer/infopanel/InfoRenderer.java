@@ -10,7 +10,7 @@ import minecraftose.client.Minecraft;
 import minecraftose.client.audio.SoundPlayer;
 import minecraftose.client.chunk.builder.ChunkBuilder;
 import minecraftose.client.control.BlockRayCast;
-import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.entity.LocalPlayer;
 import minecraftose.client.level.ClientLevel;
 import minecraftose.client.options.KeyMapping;
@@ -88,7 +88,7 @@ public class InfoRenderer implements Disposable{
             return;
 
         final Minecraft minecraft = gameRenderer.getMinecraft();
-        final GameCamera camera = minecraft.getCamera();
+        final PlayerCamera camera = minecraft.getCamera();
         
         if(camera == null)
             return;

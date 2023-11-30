@@ -4,8 +4,9 @@ import jpize.util.Disposable;
 import jpize.util.Resizable;
 import jpize.graphics.camera.CenteredOrthographicCamera;
 import jpize.graphics.util.batch.TextureBatch;
-import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.renderer.GameRenderer;
+import minecraftose.server.IntegratedServer;
 import minecraftose.server.level.ServerLevel;
 
 import java.util.Collection;
@@ -32,20 +33,24 @@ public class ChunkInfoRenderer implements Resizable, Disposable{
         if(!open)
             return;
 
-        final GameCamera gameCam = gameRenderer.getMinecraft().getCamera();
-        if(gameCam == null)
+        final IntegratedServer server = gameRenderer.getMinecraft().getIntegratedServer();
+        if(server == null)
+            return;
+
+        final PlayerCamera playerCamera = gameRenderer.getMinecraft().getCamera();
+        if(playerCamera == null)
             return;
 
         final float size = 20;
 
         camera.update();
-        camera.getPosition().set(gameCam.getPosition().xz().mul(1 / 16F * size));
-        camera.setRotation(-gameCam.getRotation().yaw + 90);
+        camera.getPosition().set(playerCamera.getPosition().xz().mul(1 / 16F * size));
+        camera.setRotation(-playerCamera.getRotation().yaw + 90);
 
         batch.setAlpha(0.3);
         batch.begin(camera);
 
-        final Collection<ServerLevel> levels = gameRenderer.getMinecraft().getIntegratedServer().getLevelManager().getLoadedLevels();
+        final Collection<ServerLevel> levels = server.getLevelManager().getLoadedLevels();
         for(ServerLevel level: levels)
             level.getChunkManager().render(batch, size);
 

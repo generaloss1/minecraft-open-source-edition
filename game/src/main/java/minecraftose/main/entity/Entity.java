@@ -128,23 +128,11 @@ public abstract class Entity implements Tickable{
     @Override
     public void tick(){
         // Check is chunk loaded
-        if(level.getBlockChunk(position.xFloor(), position.zFloor()) == null)
-            return;
+        // if(level.getBlockChunk(position.xFloor(), position.zFloor()) == null)
+        //     return;
         
         // Update blocks around player
         updateBlockBoxes();
-
-        // Movement
-        final Vec3f collideMovement = collideMovement(velocity);
-        if(collideMovement != null){
-            // Zero axes
-            velocity.collidedAxesToZero(collideMovement);
-
-            // Walk dist
-            walkDist.add(Math.min(0.25F, collideMovement.lenXZ() * 0.6F));
-            moveDist.add(collideMovement.len() * 0.6F);
-        }
-
         // Check is entity on a ground
         onGround.set(isCollidedTo(Dir.NEGATIVE_Y));
     }
@@ -168,11 +156,11 @@ public abstract class Entity implements Tickable{
     }
     
     public boolean isCollidedTo(Dir face){
-        return isOverlapsAt(face.getNormal().castFloat().mul(1E-5F));
+        return isOverlapsAt(face.getNormal().castFloat().mul(1e-5));
     }
     
     public boolean isCollidedTo(Vec3f direction){
-        return isOverlapsAt(direction.copy().nor().mul(1E-5F));
+        return isOverlapsAt(direction.copy().nor().mul(1e-5));
     }
 
     public boolean isOverlapsAt(Vec3f movement){
@@ -180,18 +168,17 @@ public abstract class Entity implements Tickable{
     }
 
 
-    private Vec3f collideMovement(Vec3f motion){
+    public Vec3f collideMovement(Vec3f velocity){ //: private
         if(blockBoxes == null)
-            return null;
+            return velocity;
 
-        final Vec3f collideMovement = AABoxCollider.getCollidedMovement(motion, aabb, blockBoxes);
+        final Vec3f collideMovement = AABoxCollider.getCollidedMovement(velocity, aabb, blockBoxes);
         position.add(collideMovement);
-
         return collideMovement;
     }
 
     /** Get Bounding Boxes of blocks around Entity */
-    private void updateBlockBoxes(){
+    public void updateBlockBoxes(){ //: private
         blockBoxes.clear();
 
         final Velocity3f velocity = getVelocity();

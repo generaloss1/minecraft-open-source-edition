@@ -15,7 +15,7 @@ import jpize.graphics.util.color.Color;
 import jpize.math.Mathc;
 import jpize.math.Maths;
 import jpize.math.vecmath.matrix.Matrix4f;
-import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.main.time.GameTime;
 
 public class SkyRenderer implements Disposable{
@@ -69,7 +69,7 @@ public class SkyRenderer implements Disposable{
     }
     
     
-    public void render(GameCamera camera){
+    public void render(PlayerCamera camera){
         // Matrix
         skyViewMat.set(camera.getView());
         skyViewMat.cullPosition();
@@ -111,7 +111,7 @@ public class SkyRenderer implements Disposable{
         return skyBrightness;
     }
     
-    public Color getFogColor(GameCamera camera){
+    public Color getFogColor(PlayerCamera camera){
         final float playerY = camera.getPlayer().getLerpPosition().y;
         final float voidFactor = Maths.clamp(playerY + 10, 0, 10) / 10F;
         final float brightness = camera.getPlayer().getMinecraft().getOptions().getBrightness() * 0.1F + 0.9F;

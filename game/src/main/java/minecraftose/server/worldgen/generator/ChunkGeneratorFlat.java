@@ -3,9 +3,9 @@ package minecraftose.server.worldgen.generator;
 import jpize.math.util.JpizeRandom;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.server.chunk.ServerChunk;
+import minecraftose.server.level.ServerLevel;
 import minecraftose.server.worldgen.ChunkGenerator;
 import minecraftose.server.worldgen.decoration.old.*;
-import minecraftose.server.worldgen.pool.BlockPool;
 import minecraftose.server.worldgen.decoration.*;
 
 import java.util.Objects;
@@ -38,8 +38,7 @@ public class ChunkGeneratorFlat extends ChunkGenerator{
 
     @Override
     public void decorate(ServerChunk chunk){
-        final BlockPool pool = chunk.getLevel().getBlockPool();
-        pool.setGeneratingChunk(chunk);
+        final ServerLevel level = chunk.getLevel();
 
         final int seed = chunk.getLevel().getConfiguration().getSeed();
         final int baseX = chunk.getPosition().x * SIZE;
@@ -52,16 +51,16 @@ public class ChunkGeneratorFlat extends ChunkGenerator{
             final int z = random.random(0, 15) + baseZ;
 
             switch(random.random(9)){
-                default -> House.generate(pool, x, 4, z, random);
-                case 1 -> DesertPyramid.generate(pool, x, 3, z, random);
-                case 2 -> MiniPyramid.generate(pool, x, 4, z, random);
-                case 3 -> Tower.generate(pool, x, 4, z, random);
-                case 4 -> OldGenOakTree.generate(chunk.getLevel(), random.getRandom(), x, 4, z);
-                case 5 -> OldGenBirchTree.generate(chunk.getLevel(), random.getRandom(), x, 4, z);
-                case 6 -> OldGenTaigaTree1.generate(chunk.getLevel(), random.getRandom(), x, 4, z);
-                case 7 -> OldGenTaigaTree2.generate(chunk.getLevel(), random.getRandom(), x, 4, z);
-                case 8 -> Cactus.generate(pool, x, 5, z, random);
-                case 9 -> OldGenDungeons.generate(chunk.getLevel(), random.getRandom(), x, -2, z);
+                default -> House.generate(level, x, 4, z, random);
+                case 1 -> DesertPyramid.generate(level, x, 3, z, random);
+                case 2 -> MiniPyramid.generate(level, x, 4, z, random);
+                case 3 -> Tower.generate(level, x, 4, z, random);
+                case 4 -> OldGenOakTree.generate(level, random.getRandom(), x, 4, z);
+                case 5 -> OldGenBirchTree.generate(level, random.getRandom(), x, 4, z);
+                case 6 -> OldGenTaigaTree1.generate(level, random.getRandom(), x, 4, z);
+                case 7 -> OldGenTaigaTree2.generate(level, random.getRandom(), x, 4, z);
+                case 8 -> Cactus.generate(level, x, 5, z, random);
+                case 9 -> OldGenDungeons.generate(level, random.getRandom(), x, -2, z);
             }
         }
     }

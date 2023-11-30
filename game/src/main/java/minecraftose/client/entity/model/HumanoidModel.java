@@ -3,7 +3,7 @@ package minecraftose.client.entity.model;
 import jpize.util.file.Resource;
 import jpize.graphics.texture.Texture;
 import jpize.graphics.util.Shader;
-import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.main.entity.Player;
 import minecraftose.client.entity.AbstractClientPlayer;
 
@@ -95,7 +95,7 @@ public class HumanoidModel{
     }
     
     
-    public void render(GameCamera camera){
+    public void render(PlayerCamera camera){
         if(camera == null)
             return;
         

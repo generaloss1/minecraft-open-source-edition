@@ -5,7 +5,7 @@ import jpize.sdl.input.Key;
 import jpize.util.file.Resource;
 import jpize.util.file.ResourceExt;
 import minecraftose.client.Minecraft;
-import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.main.SharedConstants;
 import jpize.util.io.FastReader;
 
@@ -152,7 +152,7 @@ public class Options{
     public void setFieldOfView(float fieldOfView){
         this.fieldOfView = fieldOfView;
         
-        final GameCamera camera = minecraft.getCamera();
+        final PlayerCamera camera = minecraft.getCamera();
         if(camera != null)
             camera.setFov(fieldOfView);
     }
@@ -165,7 +165,7 @@ public class Options{
     public void setRenderDistance(int renderDistance){
         this.renderDistance = renderDistance;
         
-        final GameCamera camera = minecraft.getCamera();
+        final PlayerCamera camera = minecraft.getCamera();
         if(camera != null)
             camera.setDistance(renderDistance);
     }

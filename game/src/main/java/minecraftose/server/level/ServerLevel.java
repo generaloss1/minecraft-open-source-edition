@@ -11,7 +11,6 @@ import minecraftose.main.level.Level;
 import minecraftose.main.network.packet.s2c.game.S2CPacketPlaySound;
 import minecraftose.server.Server;
 import minecraftose.server.chunk.ServerChunk;
-import minecraftose.server.worldgen.pool.BlockPool;
 import minecraftose.server.level.chunk.ServerChunkManager;
 import minecraftose.server.level.light.LevelBlockLight;
 import minecraftose.server.level.light.LevelSkyLight;
@@ -26,7 +25,6 @@ public class ServerLevel extends Level{
     private final ServerLevelConfiguration configuration;
     private final LevelSkyLight skyLight;
     private final LevelBlockLight blockLight;
-    private final BlockPool blockPool;
 
     public ServerLevel(Server server){
         this.server = server;
@@ -34,7 +32,6 @@ public class ServerLevel extends Level{
         this.configuration = new ServerLevelConfiguration();
         this.skyLight = new LevelSkyLight(this);
         this.blockLight = new LevelBlockLight(this);
-        this.blockPool = new BlockPool(this);
     }
     
     public Server getServer(){
@@ -62,7 +59,7 @@ public class ServerLevel extends Level{
         if(targetChunk != null)
             return targetChunk.setBlockData(lx, y, lz, blockData);
 
-        targetChunk = chunkManager.getGeneratingChunk(chunkPos);
+        targetChunk = chunkManager.getChunk(chunkPos);
         if(targetChunk != null)
             return targetChunk.setBlockData(lx, y, lz, blockData);
 
@@ -90,7 +87,7 @@ public class ServerLevel extends Level{
         if(targetChunk != null)
             return targetChunk.setBlock(lx, y, lz, block);
 
-        targetChunk = chunkManager.getGeneratingChunk(chunkPos);
+        targetChunk = chunkManager.getChunk(chunkPos);
         if(targetChunk != null)
             return targetChunk.setBlock(lx, y, lz, block);
 
@@ -107,15 +104,10 @@ public class ServerLevel extends Level{
         if(targetChunk != null)
             targetChunk.setBlockFast(lx, y, lz, block);
 
-        targetChunk = chunkManager.getGeneratingChunk(chunkPos);
+        targetChunk = chunkManager.getChunk(chunkPos);
         if(targetChunk != null)
             targetChunk.setBlockFast(lx, y, lz, block);
     }
-
-    public BlockPool getBlockPool(){
-        return blockPool;
-    }
-
 
     @Override
     public int getHeight(HeightmapType heightmapType, int x, int z){

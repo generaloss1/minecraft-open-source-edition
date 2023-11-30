@@ -3,7 +3,7 @@ package minecraftose.client.entity.model;
 import jpize.math.util.EulerAngles;
 import jpize.math.vecmath.matrix.Matrix4f;
 import jpize.math.vecmath.vector.Vec3f;
-import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.control.camera.PlayerCamera;
 
 public class Pose{
     
@@ -23,7 +23,7 @@ public class Pose{
         modelMatrix = new Matrix4f();
     }
     
-    public void updateMatrices(GameCamera camera, Pose initial){
+    public void updateMatrices(PlayerCamera camera, Pose initial){
         translateMatrix.toTranslated(position);
         scaleMatrix.toScaled(scale);
         
@@ -39,7 +39,7 @@ public class Pose{
             .mul(poseModelMatrix);
     }
     
-    public void updateMatrices(GameCamera camera, Pose initial, Pose parent){
+    public void updateMatrices(PlayerCamera camera, Pose initial, Pose parent){
         translateMatrix.toTranslated(position);
         scaleMatrix.toScaled(scale);
         

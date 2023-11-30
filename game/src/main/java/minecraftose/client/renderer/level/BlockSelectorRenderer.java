@@ -6,7 +6,7 @@ import jpize.graphics.util.Shader;
 import jpize.math.vecmath.matrix.Matrix4f;
 import jpize.math.vecmath.vector.Vec3f;
 import minecraftose.client.block.shape.BlockCursor;
-import minecraftose.client.control.camera.GameCamera;
+import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.control.BlockRayCast;
 
 public class BlockSelectorRenderer implements Disposable{
@@ -24,7 +24,7 @@ public class BlockSelectorRenderer implements Disposable{
     }
     
     
-    public void render(GameCamera camera){
+    public void render(PlayerCamera camera){
         final BlockRayCast rayCast = levelRenderer.getGameRenderer().getMinecraft().getBlockRayCast();
         if(!rayCast.isSelected())
             return;

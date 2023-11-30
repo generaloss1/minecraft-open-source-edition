@@ -47,20 +47,20 @@ public class AbstractClientPlayer extends Player{
 
     @Override
     public void tick(){
+        // Player tick
+        super.tick();
+
+        // Interpolate
+        lastPosition.set(super.position);
+        lastRotation.set(super.rotation);
+
         // View Bobbing
         if(super.onGround.value())
             bobbing.add((Math.min(0.1F, super.velocity.lenXZ()) - bobbing.value()) * 0.4F);
         else
             bobbing.sub(bobbing.value() * 0.4F);
-
+        // Model bobbing
         modelBobbing.add((Math.min(0.1F, super.velocity.lenXZ()) - modelBobbing.value()) * 0.4F);
-
-        // Interpolation
-        lastPosition.set(super.position);
-        lastRotation.set(super.rotation);
-        
-        // Player tick
-        super.tick();
     }
     
     public PlayerModel getModel(){

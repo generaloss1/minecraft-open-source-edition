@@ -1,7 +1,6 @@
 package minecraftose.client.renderer.hand;
 
-import minecraftose.client.control.camera.GameCamera;
-import minecraftose.client.control.camera.PerspectiveType;
+import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.entity.LocalPlayer;
 import minecraftose.client.entity.model.ModelPart;
 import minecraftose.client.entity.model.PlayerModel;
@@ -16,8 +15,8 @@ public class FpsHand{
     }
 
     public void render(){
-        final GameCamera camera = gameRenderer.getMinecraft().getCamera();
-        if(camera.getPerspective() != PerspectiveType.FIRST_PERSON)
+        final PlayerCamera camera = gameRenderer.getMinecraft().getCamera();
+        if(!camera.getPerspective().isFirstPerson())
             return;
 
         final LocalPlayer player = gameRenderer.getMinecraft().getPlayer();
