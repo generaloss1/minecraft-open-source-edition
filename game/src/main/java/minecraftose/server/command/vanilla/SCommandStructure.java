@@ -12,7 +12,7 @@ import minecraftose.main.registry.Registry;
 import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
 import minecraftose.server.command.ServerCommandDispatcher;
-import minecraftose.server.level.ServerLevel;
+import minecraftose.server.level.LevelS;
 import minecraftose.server.player.PlayerList;
 import jpize.util.io.JpizeInputStream;
 import jpize.util.io.JpizeOutputStream;
@@ -44,7 +44,7 @@ public class SCommandStructure{
     }
 
     private static void palette(CommandContext context){
-        final ServerLevel level = context.getSource().getLevel();
+        final LevelS level = context.getSource().getLevel();
         final PlayerList playerList = context.getSource().tryToGetServer().getPlayerList();
 
         final Vec3f position = context.getSource().getPosition();
@@ -62,7 +62,7 @@ public class SCommandStructure{
     }
 
     private static void save(CommandContext context){
-        final ServerLevel level = context.getSource().getLevel();
+        final LevelS level = context.getSource().getLevel();
 
         // Dimensions
         final Vec3i begin = context.getArg(0).asPosition().getPosition().floor().castInt();
@@ -87,14 +87,14 @@ public class SCommandStructure{
             outStream.flush();
 
         }catch(IOException e){
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         context.getSource().sendMessage(new Component().text("Structure saved as ").color(TextColor.YELLOW).text(name + ".struct"));
     }
 
     private static void load(CommandContext context){
-        final ServerLevel level = context.getSource().getLevel();
+        final LevelS level = context.getSource().getLevel();
         final PlayerList playerList = context.getSource().tryToGetServer().getPlayerList();
 
         final String name = context.getArg(0).asWord().getWord();
@@ -118,7 +118,7 @@ public class SCommandStructure{
                     }
 
         }catch(IOException e){
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         context.getSource().sendMessage(new Component().text("Structure ").color(TextColor.YELLOW).text(name + ".struct").reset().text(" loaded"));

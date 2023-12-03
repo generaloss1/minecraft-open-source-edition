@@ -1,16 +1,16 @@
 package minecraftose.server.level.light;
 
-import minecraftose.main.chunk.LevelChunk;
+import minecraftose.main.chunk.ChunkBase;
 
 public class LightNode{
 
-    public final LevelChunk chunk;
+    public final ChunkBase chunk;
     public final byte lx;
     public final short y;
     public final byte lz;
     public final byte level;
 
-    public LightNode(LevelChunk chunk, int lx, int y, int lz, int level){
+    public LightNode(ChunkBase chunk, int lx, int y, int lz, int level){
         this.chunk = chunk;
         this.lx = (byte) lx;
         this.y = (short) y;

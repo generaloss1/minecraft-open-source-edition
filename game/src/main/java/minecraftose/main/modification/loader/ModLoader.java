@@ -96,7 +96,7 @@ public class ModLoader{
             for(Modification modification: loadedMods.values())
                 modification.initialize(entryPointType);
         }catch(Exception e){
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
     

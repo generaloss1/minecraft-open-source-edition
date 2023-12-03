@@ -49,11 +49,11 @@ public class McOseClient{
                         System.err.println(errLine);
                 }
             }catch(Exception e){
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
 
         }catch(Exception e){
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

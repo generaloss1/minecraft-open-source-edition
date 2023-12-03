@@ -19,12 +19,13 @@ import minecraftose.client.block.shape.BlockCollide;
 import minecraftose.client.chat.Chat;
 import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.entity.LocalPlayer;
-import minecraftose.client.level.ClientLevel;
+import minecraftose.client.level.LevelC;
 import minecraftose.client.options.KeyMapping;
 import minecraftose.client.options.Options;
 import minecraftose.client.renderer.infopanel.ChunkInfoRenderer;
 import minecraftose.client.renderer.infopanel.InfoRenderer;
 import minecraftose.main.block.ChunkBlockData;
+import minecraftose.main.chunk.storage.ChunkPos;
 import minecraftose.main.entity.Entity;
 import minecraftose.main.item.BlockItem;
 import minecraftose.main.item.Item;
@@ -55,7 +56,7 @@ public class GameInput{
         final Options options = minecraft.getOptions();
         final PlayerCamera camera = minecraft.getCamera();
         final BlockRayCast blockRayCast = minecraft.getBlockRayCast();
-        final ClientLevel level = minecraft.getLevel();
+        final LevelC level = minecraft.getLevel();
         
         /* Window **/
         
@@ -111,15 +112,15 @@ public class GameInput{
             }
 
             // R - Reload chunks
-            if(Key.H.isDown()){
-                minecraft.getLevel().getChunkManager().reload();
-                f3Plus = true;
-                return;
-            }
+            // if(Key.H.isDown()){ //: deprecated chunk reload
+            //     minecraft.getLevel().getChunkProvider().reload();
+            //     f3Plus = true;
+            //     return;
+            // }
 
             // C - Reload chunks
             if(Key.C.isDown()){
-                getMinecraft().getConnection().sendPacket(new C2SPacketChunkRequest(camera.chunkX(), camera.chunkZ()));
+                getMinecraft().getConnection().sendPacket(new C2SPacketChunkRequest(ChunkPos.pack(camera.chunkX(), camera.chunkZ())));
                 f3Plus = true;
                 return;
             }
@@ -222,7 +223,7 @@ public class GameInput{
     
     private void placeBlock(ClientBlock block){
         final BlockRayCast blockRayCast = minecraft.getBlockRayCast();
-        final ClientLevel level = minecraft.getLevel();
+        final LevelC level = minecraft.getLevel();
         final Vec3i blockPos = blockRayCast.getImaginaryBlockPosition();
         final LocalPlayer player = minecraft.getPlayer();
 

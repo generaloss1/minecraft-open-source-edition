@@ -15,10 +15,9 @@ import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.entity.LocalPlayer;
 import minecraftose.client.options.Options;
 import minecraftose.client.time.ClientGameTime;
+import minecraftose.main.chunk.ChunkBase;
 import minecraftose.main.chunk.ChunkUtils;
 import jpize.util.Disposable;
-
-import static minecraftose.main.chunk.ChunkUtils.SIZE;
 
 public class CloudsRenderer implements Disposable{
 
@@ -43,7 +42,7 @@ public class CloudsRenderer implements Disposable{
                 Resource.internal("shader/level/sky/clouds.frag")
         );
 
-        final int size = (renderDistance * 2 + 1) * ChunkUtils.SIZE;
+        final int size = (renderDistance * 2 + 1) * ChunkBase.SIZE;
         final int start = -size / 2;
         float maxUv = renderDistance * 2F / cloudsTexture.getWidth();
 
@@ -76,7 +75,7 @@ public class CloudsRenderer implements Disposable{
         shader.setUniform("u_clouds", cloudsTexture);
         shader.setUniform("u_position", position);
 
-        shader.setUniform("u_renderDistanceBlocks", (renderDistance - 1) * SIZE);
+        shader.setUniform("u_renderDistanceBlocks", (renderDistance - 1) * ChunkBase.SIZE);
         shader.setUniform("u_fogEnabled", options.isFogEnabled());
         shader.setUniform("u_fogColor", skyRenderer.getFogColor(camera));
         shader.setUniform("u_fogStart", skyRenderer.getFogStart());
@@ -101,8 +100,8 @@ public class CloudsRenderer implements Disposable{
 
         final float pixelUv = 1F / cloudsTexture.getWidth();
         return new Vec2f(
-                ( playerPos.x / ChunkUtils.SIZE + time * speed) * pixelUv,
-                (-playerPos.z / ChunkUtils.SIZE               ) * pixelUv
+                ( playerPos.x / ChunkBase.SIZE + time * speed) * pixelUv,
+                (-playerPos.z / ChunkBase.SIZE               ) * pixelUv
         );
     }
 

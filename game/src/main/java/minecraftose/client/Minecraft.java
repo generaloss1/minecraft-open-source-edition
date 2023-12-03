@@ -24,7 +24,7 @@ import minecraftose.client.control.BlockRayCast;
 import minecraftose.client.control.GameInput;
 import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.entity.LocalPlayer;
-import minecraftose.client.level.ClientLevel;
+import minecraftose.client.level.LevelC;
 import minecraftose.client.network.ClientConnection;
 import minecraftose.client.options.Options;
 import minecraftose.client.renderer.GameRenderer;
@@ -77,7 +77,7 @@ public class Minecraft extends JpizeApplication implements Tickable{
     private final PlayerCamera camera;
 
 
-    private ClientLevel level;
+    private LevelC level;
     
     public Minecraft(){
         // Create Instances //
@@ -201,10 +201,10 @@ public class Minecraft extends JpizeApplication implements Tickable{
         if(level != null){
             Jpize.execSync(() ->{
                 level.getConfiguration().setName(worldName);
-                level.getChunkManager().reset();
+                level.getChunkProvider().removeAllChunks();
             });
         }else{
-            level = new ClientLevel(this, worldName);
+            level = new LevelC(this, worldName);
             blockRayCast.setLevel(level);
             player.setLevel(level);
         }
@@ -253,7 +253,7 @@ public class Minecraft extends JpizeApplication implements Tickable{
         if(level != null){
             Jpize.execSync(() -> {
                 System.out.println(10000);
-                level.getChunkManager().dispose();
+                // level.getChunkProvider().dispose(); //: deprecated dispose chunk provider
             });
         }
     }
@@ -263,7 +263,7 @@ public class Minecraft extends JpizeApplication implements Tickable{
         particleBatch.spawnParticle(particle, position);
     }
     
-    public final ClientLevel getLevel(){
+    public final LevelC getLevel(){
         return level;
     }
     

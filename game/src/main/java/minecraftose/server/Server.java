@@ -5,14 +5,14 @@ import minecraftose.main.text.Component;
 import minecraftose.main.time.GameTime;
 import minecraftose.server.command.ServerCommandDispatcher;
 import minecraftose.server.level.LevelManager;
-import minecraftose.server.level.ServerLevel;
+import minecraftose.server.level.LevelS;
 import minecraftose.server.network.ServerConnectionManager;
 import minecraftose.server.player.PlayerList;
 import minecraftose.server.player.ServerPlayer;
 import jpize.util.time.TickGenerator;
 import jpize.util.time.Tickable;
-import minecraftose.server.worldgen.generator.ChunkGeneratorDefault;
-import minecraftose.server.worldgen.generator.ChunkGeneratorTestNew;
+import minecraftose.server.level.gen.generator.ChunkGeneratorDefault;
+import minecraftose.server.time.ServerGameTime;
 
 import java.util.Collection;
 
@@ -60,7 +60,7 @@ public abstract class Server implements Tickable{
     public void tick(){
         gameTime.tick();
         
-        for(ServerLevel level : getLevelManager().getLoadedLevels())
+        for(LevelS level : getLevelManager().getLoadedLevels())
             level.tick();
     }
 

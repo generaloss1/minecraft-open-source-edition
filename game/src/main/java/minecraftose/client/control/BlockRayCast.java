@@ -12,10 +12,10 @@ import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.block.shape.BlockCursor;
 import minecraftose.client.entity.LocalPlayer;
-import minecraftose.client.level.ClientLevel;
+import minecraftose.client.level.LevelC;
 import minecraftose.main.Dir;
 import minecraftose.main.block.ChunkBlockData;
-import minecraftose.main.chunk.ChunkUtils;
+import minecraftose.main.chunk.ChunkBase;
 
 public class BlockRayCast{
     
@@ -27,7 +27,7 @@ public class BlockRayCast{
     private BlockProps selectedBlockProps;
     private Dir selectedFace;
     private boolean selected;
-    private ClientLevel level;
+    private LevelC level;
     private final Matrix4f blockMatrix;
     
     public BlockRayCast(Minecraft minecraft, float length){
@@ -47,7 +47,7 @@ public class BlockRayCast{
     }
     
     
-    public void setLevel(ClientLevel level){
+    public void setLevel(LevelC level){
         this.level = level;
     }
 
@@ -114,7 +114,7 @@ public class BlockRayCast{
                 }
             }
             
-            if(selectedBlock.y < 0 || selectedBlock.y > ChunkUtils.HEIGHT_IDX)
+            if(selectedBlock.y < 0 || selectedBlock.y > ChunkBase.HEIGHT_IDX)
                 break;
             
             final short blockData = level.getBlockState(selectedBlock.x, selectedBlock.y, selectedBlock.z);

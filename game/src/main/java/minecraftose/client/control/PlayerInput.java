@@ -6,7 +6,7 @@ import minecraftose.client.Minecraft;
 import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.control.camera.HorizontalMoveController;
 import minecraftose.client.entity.LocalPlayer;
-import minecraftose.client.level.ClientLevel;
+import minecraftose.client.level.LevelC;
 import minecraftose.client.options.KeyMapping;
 import minecraftose.client.options.Options;
 import minecraftose.main.Tickable;
@@ -39,7 +39,7 @@ public class PlayerInput implements Tickable{
     public void update(){
         if(player == null)
             return;
-        final ClientLevel level = player.getLevel();
+        final LevelC level = player.getLevel();
         if(level == null)
             return;
         if(level.getMinecraft().getChat().isOpened())

@@ -1,7 +1,7 @@
 package minecraftose.server.level;
 
 import minecraftose.server.Server;
-import minecraftose.server.worldgen.ChunkGenerator;
+import minecraftose.server.level.gen.ChunkGenerator;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import java.util.Map;
 public class LevelManager{
     
     public final Server server;
-    public final Map<String, ServerLevel> loadedLevels;
+    public final Map<String, LevelS> loadedLevels;
     
     public LevelManager(Server server){
         this.server = server;
@@ -22,15 +22,15 @@ public class LevelManager{
     }
     
     
-    public Collection<ServerLevel> getLoadedLevels(){
+    public Collection<LevelS> getLoadedLevels(){
         return loadedLevels.values();
     }
     
-    public ServerLevel getLevel(String worldName){
+    public LevelS getLevel(String worldName){
         return loadedLevels.get(worldName);
     }
     
-    public ServerLevel getDefaultLevel(){
+    public LevelS getDefaultLevel(){
         return getLevel(server.getConfiguration().getDefaultLevelName());
     }
     
@@ -41,7 +41,7 @@ public class LevelManager{
         // final ServerLevel level = new ServerLevel(server);
         // level.getConfiguration().load(levelName, seed, generator);
         // loadedLevels.put(levelName, level);
-        // level.getChunkManager().start();
+        // level.getChunkProvider().start();
         
         System.out.println("[Server]: Loaded level '" + levelName + "'");
     }
@@ -50,10 +50,10 @@ public class LevelManager{
         if(levelName == null || !isLevelExists(levelName) || isLevelLoaded(levelName))
             return;
         
-        final ServerLevel level = new ServerLevel(server);
+        final LevelS level = new LevelS(server);
         level.getConfiguration().load(levelName, seed, generator);
         loadedLevels.put(levelName, level);
-        level.getChunkManager().start();
+        level.getChunkProvider().getLoader().run();
         
         System.out.println("[Server]: Created level '" + levelName + "'");
     }

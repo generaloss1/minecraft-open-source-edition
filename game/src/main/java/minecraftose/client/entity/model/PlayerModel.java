@@ -7,7 +7,7 @@ import jpize.math.vecmath.vector.Vec3f;
 import minecraftose.client.Minecraft;
 import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.entity.AbstractClientPlayer;
-import minecraftose.client.level.ClientLevel;
+import minecraftose.client.level.LevelC;
 import minecraftose.client.options.Options;
 
 public class PlayerModel extends HumanoidModel{
@@ -104,7 +104,7 @@ public class PlayerModel extends HumanoidModel{
     
     
     public void animate(){
-        final ClientLevel level = player.getLevel();
+        final LevelC level = player.getLevel();
         if(level == null)
             return;
 

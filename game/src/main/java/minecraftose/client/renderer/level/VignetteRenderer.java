@@ -6,7 +6,7 @@ import jpize.graphics.texture.Texture;
 import jpize.graphics.util.batch.TextureBatch;
 import jpize.math.vecmath.vector.Vec3f;
 import minecraftose.client.Minecraft;
-import minecraftose.client.level.ClientLevel;
+import minecraftose.client.level.LevelC;
 
 import static minecraftose.main.chunk.ChunkUtils.MAX_LIGHT_LEVEL;
 
@@ -29,7 +29,7 @@ public class VignetteRenderer implements Disposable{
         // Get light level
         final Minecraft minecraft = levelRenderer.getGameRenderer().getMinecraft();
         final Vec3f playerPos = minecraft.getPlayer().getPosition();
-        final ClientLevel level = minecraft.getLevel();
+        final LevelC level = minecraft.getLevel();
         if(level == null)
             return;
 

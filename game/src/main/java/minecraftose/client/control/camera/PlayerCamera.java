@@ -10,11 +10,11 @@ import jpize.physic.utils.Velocity3f;
 import minecraftose.client.Minecraft;
 import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.ClientBlocks;
-import minecraftose.client.chunk.ClientChunk;
+import minecraftose.client.chunk.ChunkC;
 import minecraftose.client.entity.LocalPlayer;
-import minecraftose.client.level.ClientLevel;
+import minecraftose.client.level.LevelC;
 import minecraftose.client.options.Options;
-import minecraftose.main.chunk.ChunkUtils;
+import minecraftose.main.chunk.ChunkBase;
 import minecraftose.main.chunk.storage.ChunkPos;
 
 public class PlayerCamera extends PerspectiveCamera{
@@ -54,7 +54,7 @@ public class PlayerCamera extends PerspectiveCamera{
 
 
     public void update(){
-        final ClientLevel level = minecraft.getLevel();
+        final LevelC level = minecraft.getLevel();
         if(level == null)
             return;
 
@@ -159,26 +159,26 @@ public class PlayerCamera extends PerspectiveCamera{
     }
 
     
-    public boolean isChunkSeen(ClientChunk chunk){
-        final ChunkPos position = chunk.getPosition();
+    public boolean isChunkSeen(ChunkC chunk){
+        final ChunkPos position = chunk.pos();
         
         return getFrustum().isBoxInFrustum(
-            position.x * ChunkUtils.SIZE,
+            position.x * ChunkBase.SIZE,
             0,
-            position.z * ChunkUtils.SIZE,
-            position.x * ChunkUtils.SIZE + ChunkUtils.SIZE,
+            position.z * ChunkBase.SIZE,
+            position.x * ChunkBase.SIZE + ChunkBase.SIZE,
             (chunk.getMaxY() + 1),
-            position.z * ChunkUtils.SIZE + ChunkUtils.SIZE
+            position.z * ChunkBase.SIZE + ChunkBase.SIZE
         );
     }
     
     
     public int chunkX(){
-        return Maths.floor(getX() / ChunkUtils.SIZE);
+        return Maths.floor(getX() / ChunkBase.SIZE);
     }
     
     public int chunkZ(){
-        return Maths.floor(getZ() / ChunkUtils.SIZE);
+        return Maths.floor(getZ() / ChunkBase.SIZE);
     }
 
 

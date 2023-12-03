@@ -5,13 +5,13 @@ import minecraftose.main.registry.Registry;
 import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
 import minecraftose.server.Server;
-import minecraftose.server.worldgen.ChunkGenerator;
+import minecraftose.server.level.gen.ChunkGenerator;
 import minecraftose.main.command.CommandContext;
 import minecraftose.server.command.ServerCommandDispatcher;
 import minecraftose.main.command.argument.CommandArg;
 import minecraftose.main.command.builder.Commands;
 import minecraftose.server.level.LevelManager;
-import minecraftose.server.level.ServerLevel;
+import minecraftose.server.level.LevelS;
 import minecraftose.server.player.ServerPlayer;
 
 import java.util.Collection;
@@ -77,7 +77,7 @@ public class SCommandLevel{
         if(!levelManager.isLevelLoaded(levelName))
             sender.sendMessage(new Component().color(TextColor.DARK_RED).text("Level " + levelName + " is not loaded"));
         else{
-            final ServerLevel level = levelManager.getLevel(levelName);
+            final LevelS level = levelManager.getLevel(levelName);
             sender.teleport(level, level.getSpawnPosition());
             sender.sendMessage(new Component().text("You teleported to level " + levelName));
             sender.playSound(Sound.LEVEL_UP, 1, 1);
@@ -87,11 +87,11 @@ public class SCommandLevel{
     private static void sendLevelList(CommandContext context){
         // Levels
         final LevelManager levelManager = context.getSource().tryToGetServer().getLevelManager();
-        final Collection<ServerLevel> levels = levelManager.getLoadedLevels();
+        final Collection<LevelS> levels = levelManager.getLoadedLevels();
         
         // Create list
         final StringJoiner joiner = new StringJoiner(", ");
-        for(ServerLevel level: levels)
+        for(LevelS level: levels)
             joiner.add(level.getConfiguration().getName());
         
         // Send levels

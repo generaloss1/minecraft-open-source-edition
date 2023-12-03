@@ -2,7 +2,7 @@ package minecraftose.main.command.source;
 
 import jpize.math.vecmath.vector.Vec3f;
 import minecraftose.server.Server;
-import minecraftose.server.level.ServerLevel;
+import minecraftose.server.level.LevelS;
 import minecraftose.server.player.ServerPlayer;
 import minecraftose.main.text.Component;
 
@@ -20,7 +20,7 @@ public class CommandServerPlayerSource extends CommandServerSource{
 
     @Override
     @SuppressWarnings("unchecked")
-    public ServerLevel getLevel(){
+    public LevelS getLevel(){
         return player.getLevel();
     }
 

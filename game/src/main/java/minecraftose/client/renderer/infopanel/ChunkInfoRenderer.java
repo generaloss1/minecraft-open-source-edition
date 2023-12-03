@@ -7,7 +7,7 @@ import jpize.graphics.util.batch.TextureBatch;
 import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.renderer.GameRenderer;
 import minecraftose.server.IntegratedServer;
-import minecraftose.server.level.ServerLevel;
+import minecraftose.server.level.LevelS;
 
 import java.util.Collection;
 
@@ -50,9 +50,9 @@ public class ChunkInfoRenderer implements Resizable, Disposable{
         batch.setAlpha(0.3);
         batch.begin(camera);
 
-        final Collection<ServerLevel> levels = server.getLevelManager().getLoadedLevels();
-        for(ServerLevel level: levels)
-            level.getChunkManager().render(batch, size);
+        final Collection<LevelS> levels = server.getLevelManager().getLoadedLevels(); //: WHERE RENDER?
+        // for(LevelS level: levels)
+        //     level.getChunkProvider().render(batch, size);
 
         batch.end();
     }

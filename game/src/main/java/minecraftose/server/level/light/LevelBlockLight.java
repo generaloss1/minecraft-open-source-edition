@@ -3,12 +3,10 @@ package minecraftose.server.level.light;
 import jpize.math.vecmath.vector.Vec3i;
 import minecraftose.client.block.BlockProps;
 import minecraftose.main.Dir;
-import minecraftose.main.chunk.LevelChunk;
-import minecraftose.server.level.ServerLevel;
+import minecraftose.main.chunk.ChunkBase;
+import minecraftose.server.level.LevelS;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import static minecraftose.main.chunk.ChunkUtils.*;
 
 public class LevelBlockLight{
 
@@ -16,10 +14,10 @@ public class LevelBlockLight{
     /**            --------- ALGORITHM ---------            **/
 
 
-    private final ServerLevel level;
+    private final LevelS level;
     private final ConcurrentLinkedQueue<LightNode> bfsIncreaseQueue, bfsDecreaseQueue;
 
-    public LevelBlockLight(ServerLevel level){
+    public LevelBlockLight(LevelS level){
         this.level = level;
         this.bfsIncreaseQueue = new ConcurrentLinkedQueue<>();
         this.bfsDecreaseQueue = new ConcurrentLinkedQueue<>();
@@ -27,7 +25,7 @@ public class LevelBlockLight{
 
 
     /** Распространение света */
-    public synchronized void increase(LevelChunk chunk, int lx, int y, int lz, int level){
+    public synchronized void increase(ChunkBase chunk, int lx, int y, int lz, int level){
         if(chunk.getBlockLight(lx, y, lz) >= level)
             return;
 
@@ -35,18 +33,18 @@ public class LevelBlockLight{
         propagateIncrease();
     }
 
-    private synchronized void addIncrease(LevelChunk chunk, int lx, int y, int lz, int level){
+    private synchronized void addIncrease(ChunkBase chunk, int lx, int y, int lz, int level){
         bfsIncreaseQueue.add(new LightNode(chunk, lx, y, lz, level));
     }
 
-    private synchronized void addIncreaseWithLightSet(LevelChunk chunk, int lx, int y, int lz, int level){
+    private synchronized void addIncreaseWithLightSet(ChunkBase chunk, int lx, int y, int lz, int level){
         chunk.setBlockLight(lx, y, lz, level);
         addIncrease(chunk, lx, y, lz, level);
     }
 
     /** Алгоритм распространения света */
     private synchronized void propagateIncrease(){
-        LevelChunk neighborChunk;
+        ChunkBase neighborChunk;
         int neighborX, neighborY, neighborZ;
         int targetLevel;
 
@@ -54,7 +52,7 @@ public class LevelBlockLight{
         while(!bfsIncreaseQueue.isEmpty()){
             final LightNode lightEntry = bfsIncreaseQueue.poll();
 
-            final LevelChunk chunk = lightEntry.chunk;
+            final ChunkBase chunk = lightEntry.chunk;
             final byte x = lightEntry.lx;
             final short y = lightEntry.y;
             final byte z = lightEntry.lz;
@@ -70,22 +68,22 @@ public class LevelBlockLight{
                 neighborZ = z + normal.z;
 
                 // Находим чанк соседнего блока
-                if(neighborX > SIZE_IDX || neighborZ > SIZE_IDX || neighborX < 0 || neighborZ < 0){
+                if(neighborX > ChunkBase.SIZE_IDX || neighborZ > ChunkBase.SIZE_IDX || neighborX < 0 || neighborZ < 0){
                     // Если координаты выходят за границы чанка - найти соответствующий чанк
                     neighborChunk = chunk.getNeighborChunk(normal.x, normal.z);
                     if(neighborChunk == null)
                         continue;
 
                     // Нормализуем координаты для найденного чанка
-                    neighborX = getLocalCoord(neighborX);
-                    neighborZ = getLocalCoord(neighborZ);
+                    neighborX = ChunkBase.clampToLocal(neighborX);
+                    neighborZ = ChunkBase.clampToLocal(neighborZ);
                 }else
                     // Если нет - выбрать данный чанк
                     neighborChunk = chunk;
 
                 // Координата Y соседнего блока
                 neighborY = y + normal.y;
-                if(neighborY < 0 || neighborY > HEIGHT_IDX)
+                if(neighborY < 0 || neighborY > ChunkBase.HEIGHT_IDX)
                     continue;
 
                 // Узнать уровень освещенности соседнего блока
@@ -108,7 +106,7 @@ public class LevelBlockLight{
 
 
     /** Удаление света */
-    public synchronized void decrease(LevelChunk chunk, int lx, int y, int lz){
+    public synchronized void decrease(ChunkBase chunk, int lx, int y, int lz){
         final int level = chunk.getBlockLight(lx, y, lz);
         if(level == 0)
             return;
@@ -117,25 +115,25 @@ public class LevelBlockLight{
         propagateDecrease();
     }
 
-    private synchronized void addDecrease(LevelChunk chunk, int lx, int y, int lz, int level){
+    private synchronized void addDecrease(ChunkBase chunk, int lx, int y, int lz, int level){
         bfsDecreaseQueue.add(new LightNode(chunk, lx, y, lz, level));
     }
 
-    private synchronized void addDecreaseWithLightSet(LevelChunk chunk, int lx, int y, int lz, int level){
+    private synchronized void addDecreaseWithLightSet(ChunkBase chunk, int lx, int y, int lz, int level){
         chunk.setBlockLight(lx, y, lz, 0);
         addDecrease(chunk, lx, y, lz, level);
     }
 
     /** Алгоритм удаления света **/
     private synchronized void propagateDecrease(){
-        LevelChunk neighborChunk;
+        ChunkBase neighborChunk;
         int neighborX, neighborY, neighborZ;
 
         // Итерируемся по нодам в очереди
         while(!bfsDecreaseQueue.isEmpty()){
             final LightNode lightEntry = bfsDecreaseQueue.poll();
 
-            final LevelChunk chunk = lightEntry.chunk;
+            final ChunkBase chunk = lightEntry.chunk;
             final byte x = lightEntry.lx;
             final short y = lightEntry.y;
             final byte z = lightEntry.lz;
@@ -151,22 +149,22 @@ public class LevelBlockLight{
                 neighborZ = z + normal.z;
 
                 // Находим чанк соседнего блока
-                if(neighborX > SIZE_IDX || neighborZ > SIZE_IDX || neighborX < 0 || neighborZ < 0){
+                if(neighborX > ChunkBase.SIZE_IDX || neighborZ > ChunkBase.SIZE_IDX || neighborX < 0 || neighborZ < 0){
                     // Если координаты выходят за границы чанка - найти соответствующий чанк
                     neighborChunk = chunk.getNeighborChunk(normal.x, normal.z);
                     if(neighborChunk == null)
                         continue;
 
                     // Нормализуем координаты для найденного чанка
-                    neighborX = getLocalCoord(neighborX);
-                    neighborZ = getLocalCoord(neighborZ);
+                    neighborX = ChunkBase.clampToLocal(neighborX);
+                    neighborZ = ChunkBase.clampToLocal(neighborZ);
                 }else
                     // Если нет - выбрать данный чанк
                     neighborChunk = chunk;
 
                 // Координата Y соседнего блока
                 neighborY = y + normal.y;
-                if(neighborY < 0 || neighborY > HEIGHT_IDX)
+                if(neighborY < 0 || neighborY > ChunkBase.HEIGHT_IDX)
                     continue;
 
                 // Узнать уровень освещенности соседнего блока

@@ -1,27 +1,27 @@
 package minecraftose.main.chunk.storage;
 
-import minecraftose.main.chunk.LevelChunk;
+import minecraftose.main.chunk.ChunkBase;
 import minecraftose.main.chunk.ChunkUtils;
 
 public class Heightmap{
     
-    private final LevelChunk chunk;
+    private final ChunkBase chunk;
     private final HeightmapType type;
     private final short[] values;
 
-    public Heightmap(LevelChunk chunk, HeightmapType type){
+    public Heightmap(ChunkBase chunk, HeightmapType type){
         this.chunk = chunk;
         this.type = type;
-        this.values = new short[ChunkUtils.AREA];
+        this.values = new short[ChunkBase.AREA];
     }
     
-    public Heightmap(LevelChunk chunk, HeightmapType type, short[] values){
+    public Heightmap(ChunkBase chunk, HeightmapType type, short[] values){
         this.chunk = chunk;
         this.type = type;
         this.values = values;
     }
     
-    public LevelChunk getChunk(){
+    public ChunkBase getChunk(){
         return chunk;
     }
     
@@ -55,14 +55,14 @@ public class Heightmap{
     }
     
     public void update(int lx, int lz){
-        int height = ChunkUtils.HEIGHT;
+        int height = ChunkBase.HEIGHT;
         for(height--; type.isOpaque.test(chunk.getBlockProps(lx, height, lz)) && height >= 0; height--);
         setHeight(lx, lz, height);
     }
     
     public void update(){
-        for(int lx = 0; lx < ChunkUtils.SIZE; lx++)
-            for(int lz = 0; lz < ChunkUtils.SIZE; lz++)
+        for(int lx = 0; lx < ChunkBase.SIZE; lx++)
+            for(int lz = 0; lz < ChunkBase.SIZE; lz++)
                 update(lx, lz);
     }
 

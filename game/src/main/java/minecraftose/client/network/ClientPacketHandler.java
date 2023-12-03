@@ -6,7 +6,7 @@ import jpize.math.vecmath.vector.Vec3f;
 import jpize.net.security.KeyAES;
 import jpize.net.tcp.packet.PacketHandler;
 import minecraftose.client.Minecraft;
-import minecraftose.client.chunk.ClientChunk;
+import minecraftose.client.chunk.ChunkC;
 import minecraftose.client.entity.LocalPlayer;
 import minecraftose.client.entity.RemotePlayer;
 import minecraftose.main.chat.source.MessageSourceServer;
@@ -51,7 +51,7 @@ public class ClientPacketHandler implements PacketHandler{
         // Load another level
         if(!packet.levelName.equals(localPlayer.getLevel().getConfiguration().getName())){
             minecraft.createClientLevel(packet.levelName);
-            minecraft.getLevel().getChunkManager().startLoadChunks();
+            // minecraft.getLevel().getChunkProvider().startLoadChunks(); //: deprecated method
             localPlayer.setLevel(minecraft.getLevel());
         }
 
@@ -73,7 +73,7 @@ public class ClientPacketHandler implements PacketHandler{
         minecraft.getTime().setTicks(packet.gameTime);
         minecraft.getPlayer().setLevel(minecraft.getLevel());
         minecraft.getPlayer().getPosition().set(packet.position);
-        minecraft.getLevel().getChunkManager().startLoadChunks();
+        // minecraft.getLevel().getChunkProvider().startLoadChunks(); //: deprecated method
 
         connectionHandler.sendPacket(new C2SPacketRenderDistance(minecraft.getOptions().getRenderDistance()));
     }
@@ -116,7 +116,7 @@ public class ClientPacketHandler implements PacketHandler{
     }
 
     public void lightUpdate(S2CPacketLightUpdate packet){
-        final ClientChunk chunk = minecraft.getLevel().getChunkManager().getChunk(packet.position.x, packet.position.z);
+        final ChunkC chunk = minecraft.getLevel().getChunkProvider().getChunk(packet.position.x, packet.position.z);
         if(chunk == null)
             return;
 
@@ -152,7 +152,7 @@ public class ClientPacketHandler implements PacketHandler{
     }
 
     public void chunk(S2CPacketChunk packet){
-        minecraft.getLevel().getChunkManager().receivedChunk(packet);
+        minecraft.getLevel().getChunkProvider().putChunk(packet.getChunk(minecraft.getLevel()));
     }
 
     public void chatMessage(S2CPacketChatMessage packet){

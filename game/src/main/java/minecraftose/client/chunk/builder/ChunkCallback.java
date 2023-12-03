@@ -1,9 +1,9 @@
 package minecraftose.client.chunk.builder;
 
-import minecraftose.client.chunk.ClientChunk;
+import minecraftose.main.chunk.ChunkBase;
 
 public interface ChunkCallback{
 
-    void invoke(ClientChunk chunk, int lx, int lz);
+    void invoke(ChunkBase chunk, int lx, int lz);
 
 }

@@ -11,7 +11,7 @@ import minecraftose.main.network.packet.s2c.game.S2CPacketBlockUpdate;
 import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
 import minecraftose.server.command.ServerCommandDispatcher;
-import minecraftose.server.level.ServerLevel;
+import minecraftose.server.level.LevelS;
 
 public class SCommandSetBlock{
 
@@ -41,7 +41,7 @@ public class SCommandSetBlock{
 
         // Set block
         final CommandSource source = context.getSource();
-        final ServerLevel level = source.getLevel();
+        final LevelS level = source.getLevel();
         level.setBlock(x, y, z, block);
 
         context.getSource().tryToGetServer().getPlayerList().broadcastPacket(new S2CPacketBlockUpdate(x, y, z, block.getDefaultData()));

@@ -11,8 +11,7 @@ import jpize.math.vecmath.matrix.Matrix4f;
 import jpize.math.vecmath.vector.Vec3f;
 import minecraftose.client.control.camera.PlayerCamera;
 
-import static minecraftose.main.chunk.ChunkUtils.HEIGHT;
-import static minecraftose.main.chunk.ChunkUtils.SIZE;
+import static minecraftose.main.chunk.ChunkBase.*;
 
 public class ChunkBorderRenderer implements Disposable{
     

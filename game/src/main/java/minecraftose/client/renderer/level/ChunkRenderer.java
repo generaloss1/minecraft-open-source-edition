@@ -7,16 +7,15 @@ import jpize.gl.glenum.GlTarget;
 import jpize.graphics.texture.Texture;
 import jpize.graphics.util.Shader;
 import jpize.graphics.util.color.Color;
-import minecraftose.client.chunk.ClientChunk;
+import minecraftose.client.chunk.ChunkC;
 import minecraftose.client.control.camera.PlayerCamera;
-import minecraftose.client.level.ClientLevel;
+import minecraftose.client.level.LevelC;
 import minecraftose.client.options.Options;
+import minecraftose.main.chunk.ChunkBase;
 import minecraftose.main.time.GameTime;
 import jpize.util.Disposable;
 
 import java.util.Collection;
-
-import static minecraftose.main.chunk.ChunkUtils.SIZE;
 
 public class ChunkRenderer implements Disposable{
     
@@ -52,13 +51,13 @@ public class ChunkRenderer implements Disposable{
     
     private void renderMeshes(PlayerCamera camera){
         // Level
-        final ClientLevel level = levelRenderer.getGameRenderer().getMinecraft().getLevel();
+        final LevelC level = levelRenderer.getGameRenderer().getMinecraft().getLevel();
         if(level == null)
             return;
 
         // Chunks
-        final Collection<ClientChunk> chunks =
-            level.getChunkManager().getAllChunks() // Get all chunks
+        final Collection<ChunkC> chunks =
+            level.getChunkProvider().getChunks().getChunks() // Get all chunks
             .stream().filter(camera::isChunkSeen).toList(); // Frustum culling
 
         // Rendered chunks for the info panel
@@ -69,13 +68,13 @@ public class ChunkRenderer implements Disposable{
 
 
         // Update translation matrix
-        for(ClientChunk chunk: chunks)
+        for(ChunkC chunk: chunks)
             chunk.updateTranslationMatrix(camera);
 
         // Render custom blocks
         Gl.disable(GlTarget.CULL_FACE);
         shader.bind();
-        for(ClientChunk chunk: chunks){
+        for(ChunkC chunk: chunks){
             shader.setUniform("u_model", chunk.getTranslationMatrix());
             chunk.getMeshStack().getCustom().render();
 
@@ -89,7 +88,7 @@ public class ChunkRenderer implements Disposable{
         Gl.enable(GlTarget.CULL_FACE);
 
         // Render solid blocks
-        for(ClientChunk chunk: chunks){
+        for(ChunkC chunk: chunks){
             shader.setUniform("u_model", chunk.getTranslationMatrix());
             chunk.getMeshStack().getSolid().render();
 
@@ -103,7 +102,7 @@ public class ChunkRenderer implements Disposable{
 
         // Render translucent blocks
         //Gl.disable(GlTarget.CULL_FACE);
-        for(ClientChunk chunk: chunks){
+        for(ChunkC chunk: chunks){
             shader.setUniform("u_model", chunk.getTranslationMatrix());
             chunk.getMeshStack().getTranslucent().render();
 
@@ -131,7 +130,7 @@ public class ChunkRenderer implements Disposable{
         shader.setUniform("u_view", camera.getView());
         shader.setUniform("u_atlas", blockAtlas);
         
-        shader.setUniform("u_renderDistanceBlocks", (options.getRenderDistance() - 1) * SIZE);
+        shader.setUniform("u_renderDistanceBlocks", (options.getRenderDistance() - 1) * ChunkBase.SIZE);
         shader.setUniform("u_fogEnabled", options.isFogEnabled());
         shader.setUniform("u_fogColor", fogColor);
         shader.setUniform("u_fogStart", fogStart);
@@ -143,7 +142,7 @@ public class ChunkRenderer implements Disposable{
         packedShader.setUniform("u_view", camera.getView());
         packedShader.setUniform("u_atlas", blockAtlas);
 
-        packedShader.setUniform("u_renderDistanceBlocks", (options.getRenderDistance() - 1) * SIZE);
+        packedShader.setUniform("u_renderDistanceBlocks", (options.getRenderDistance() - 1) * ChunkBase.SIZE);
         packedShader.setUniform("u_fogEnabled", options.isFogEnabled());
         packedShader.setUniform("u_fogColor", fogColor);
         packedShader.setUniform("u_fogStart", fogStart);

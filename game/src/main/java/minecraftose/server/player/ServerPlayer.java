@@ -15,21 +15,21 @@ import minecraftose.main.network.packet.s2c.game.S2CPacketPlaySound;
 import minecraftose.main.network.packet.s2c.game.S2CPacketTeleportPlayer;
 import minecraftose.main.text.Component;
 import minecraftose.server.Server;
-import minecraftose.server.level.ServerLevel;
+import minecraftose.server.level.LevelS;
 import minecraftose.server.network.ServerPlayerGameConnection;
 
 public class ServerPlayer extends Player{
     
     private final Server server;
-    private final ServerPlayerGameConnection connectionAdapter;
+    private final ServerPlayerGameConnection connection;
     private final PlayerInventory inventory;
     
     private int renderDistance;
 
-    public ServerPlayer(ServerLevel level, TcpConnection connection, String name){
+    public ServerPlayer(LevelS level, TcpConnection connection, String name){
         super(level, name);
         this.server = level.getServer();
-        this.connectionAdapter = new ServerPlayerGameConnection(this, connection);
+        this.connection = new ServerPlayerGameConnection(this, connection);
         this.renderDistance = server.getConfiguration().getMaxRenderDistance(); //: 0
         this.inventory = new PlayerInventory();
     }
@@ -39,8 +39,8 @@ public class ServerPlayer extends Player{
     }
 
     @Override
-    public ServerLevel getLevel(){
-        return (ServerLevel) super.getLevel();
+    public LevelS getLevel(){
+        return (LevelS) super.getLevel();
     }
 
     public void playSound(Sound sound, float volume, float pitch){
@@ -85,7 +85,7 @@ public class ServerPlayer extends Player{
 
 
     public void disconnect(){
-        getConnectionAdapter().getConnection().close();
+        getConnection().disconnect();
     }
     
     public void sendToChat(Component message){
@@ -97,12 +97,12 @@ public class ServerPlayer extends Player{
     }
     
     
-    public ServerPlayerGameConnection getConnectionAdapter(){
-        return connectionAdapter;
+    public ServerPlayerGameConnection getConnection(){
+        return connection;
     }
     
     public void sendPacket(IPacket<?> packet){
-        connectionAdapter.sendPacket(packet);
+        connection.sendPacket(packet);
     }
     
     public int getRenderDistance(){

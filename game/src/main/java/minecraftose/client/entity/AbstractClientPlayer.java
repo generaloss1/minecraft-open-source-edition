@@ -7,7 +7,7 @@ import minecraftose.client.Minecraft;
 import minecraftose.client.entity.model.PlayerModel;
 import minecraftose.client.time.var.TickFloat;
 import minecraftose.main.entity.Player;
-import minecraftose.client.level.ClientLevel;
+import minecraftose.client.level.LevelC;
 
 public class AbstractClientPlayer extends Player{
 
@@ -18,7 +18,7 @@ public class AbstractClientPlayer extends Player{
     protected final EulerAngles lastRotation, lerpRotation;
     protected final TickFloat bobbing, modelBobbing;
 
-    public AbstractClientPlayer(Minecraft minecraft, ClientLevel level, String name){
+    public AbstractClientPlayer(Minecraft minecraft, LevelC level, String name){
         super(level, name);
         this.minecraft = minecraft;
 
@@ -41,8 +41,8 @@ public class AbstractClientPlayer extends Player{
     }
 
     @Override
-    public ClientLevel getLevel(){
-        return (ClientLevel) level;
+    public LevelC getLevel(){
+        return (LevelC) level;
     }
 
     @Override

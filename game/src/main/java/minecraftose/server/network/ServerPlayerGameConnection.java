@@ -11,8 +11,7 @@ import minecraftose.main.audio.SoundGroup;
 import minecraftose.main.audio.SoundType;
 import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.block.BlockSetType;
-import minecraftose.main.chunk.ChunkUtils;
-import minecraftose.main.chunk.storage.ChunkPos;
+import minecraftose.main.chunk.ChunkBase;
 import minecraftose.main.chunk.storage.HeightmapType;
 import minecraftose.main.command.source.CommandServerPlayerSource;
 import minecraftose.main.entity.Entity;
@@ -24,8 +23,9 @@ import minecraftose.main.network.packet.s2c.game.*;
 import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
 import minecraftose.server.Server;
-import minecraftose.server.chunk.ServerChunk;
-import minecraftose.server.level.ServerLevel;
+import minecraftose.server.level.ChunkRequestPull;
+import minecraftose.server.level.chunk.ChunkS;
+import minecraftose.server.level.LevelS;
 import minecraftose.server.player.ServerPlayer;
 
 public class ServerPlayerGameConnection implements PacketHandler{
@@ -47,8 +47,8 @@ public class ServerPlayerGameConnection implements PacketHandler{
         return player;
     }
 
-    public TcpConnection getConnection(){
-        return connection;
+    public void disconnect(){
+        connection.close();
     }
     
     public void sendPacket(IPacket<?> packet){
@@ -74,17 +74,15 @@ public class ServerPlayerGameConnection implements PacketHandler{
         }
     }
     
-    public void chunkRequest(C2SPacketChunkRequest packet){
-        final ServerLevel level = player.getLevel();
-        
-        level.getChunkManager().requestedChunk(
-            player,
-            new ChunkPos(packet.chunkX, packet.chunkZ)
-        );
+    public void chunkRequest(C2SPacketChunkRequest packet){ //: deprecated chunks request from client
+        // final LevelS level = player.getLevel();
+
+        // final ChunkRequestPull chunkRequestPull = level.getChunkProvider().getChunkRequestPull();
+        // chunkRequestPull.require(player, packet.packedChunkPos);
     }
     
     public void playerBlockSet(C2SPacketPlayerBlockSet packet){
-        final ServerLevel level = player.getLevel();
+        final LevelS level = player.getLevel();
         final BlockProps oldBlock = level.getBlockProps(packet.x, packet.y, packet.z);
         final int oldHeightLight = level.getHeight(HeightmapType.LIGHT_SURFACE, packet.x, packet.z);
 
@@ -128,9 +126,9 @@ public class ServerPlayerGameConnection implements PacketHandler{
         }
 
         // Process light
-        final ServerChunk chunk = level.getBlockChunk(packet.x, packet.z);
-        final int lx = ChunkUtils.getLocalCoord(packet.x);
-        final int lz = ChunkUtils.getLocalCoord(packet.z);
+        final ChunkS chunk = level.getBlockChunk(packet.x, packet.z);
+        final int lx = ChunkBase.clampToLocal(packet.x);
+        final int lz = ChunkBase.clampToLocal(packet.z);
 
         if(block.isLightTranslucent())
             level.getSkyLight().destroyBlockUpdate(chunk, heightLight, lx, packet.y, lz);

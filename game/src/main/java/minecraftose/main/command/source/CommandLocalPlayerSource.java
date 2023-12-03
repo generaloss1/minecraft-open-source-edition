@@ -2,7 +2,7 @@ package minecraftose.main.command.source;
 
 import jpize.math.vecmath.vector.Vec3f;
 import minecraftose.client.entity.LocalPlayer;
-import minecraftose.client.level.ClientLevel;
+import minecraftose.client.level.LevelC;
 import minecraftose.main.chat.source.MessageSourceClient;
 import minecraftose.main.text.Component;
 
@@ -26,7 +26,7 @@ public class CommandLocalPlayerSource extends CommandSource{
 
     @Override
     @SuppressWarnings("unchecked")
-    public ClientLevel getLevel(){
+    public LevelC getLevel(){
         return player.getLevel();
     }
 

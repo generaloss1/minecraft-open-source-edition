@@ -5,7 +5,7 @@ import minecraftose.main.biome.Biome;
 import minecraftose.main.block.Block;
 import minecraftose.main.item.BlockItem;
 import minecraftose.main.item.Item;
-import minecraftose.server.worldgen.ChunkGenerator;
+import minecraftose.server.level.gen.ChunkGenerator;
 
 public class Registry{
 

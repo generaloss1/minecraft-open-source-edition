@@ -3,13 +3,14 @@ package minecraftose.client.chunk.builder;
 import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.block.model.BlockModel;
-import minecraftose.client.chunk.ClientChunk;
+import minecraftose.client.chunk.ChunkC;
 import minecraftose.client.chunk.mesh.ChunkMesh;
 import minecraftose.client.chunk.mesh.ChunkMeshStack;
-import minecraftose.client.level.ClientChunkManager;
+import minecraftose.client.level.ChunkProviderC;
 import minecraftose.main.biome.Biome;
 import minecraftose.main.block.ChunkBlockData;
-import minecraftose.main.chunk.LevelChunkSection;
+import minecraftose.main.chunk.ChunkBase;
+import minecraftose.main.chunk.ChunkSection;
 import minecraftose.main.chunk.storage.Heightmap;
 import minecraftose.main.chunk.storage.HeightmapType;
 import jpize.util.time.Stopwatch;
@@ -21,25 +22,25 @@ import static minecraftose.main.chunk.ChunkUtils.*;
 
 public class ChunkBuilder{
 
-    private final ClientChunkManager chunkManager;
+    private final ChunkProviderC chunkProvider;
 
-    public ChunkBuilder(ClientChunkManager chunkManager){
-        this.chunkManager = chunkManager;
+    public ChunkBuilder(ChunkProviderC chunkProvider){
+        this.chunkProvider = chunkProvider;
     }
 
-    public ClientChunkManager getChunkManager(){
-        return chunkManager;
+    public ChunkProviderC getChunkProvider(){
+        return chunkProvider;
     }
 
 
-    public ClientChunk chunk;
+    public ChunkC chunk;
     public ChunkMesh solidMesh, customMesh, translucentMesh;
     public Biome currentBiome;
 
     public double buildTime;
     public int verticesNum;
 
-    private ClientChunk[] neighborChunks;
+    private ChunkBase[] neighborChunks;
 
     private final AtomicInteger state = new AtomicInteger();
 
@@ -49,16 +50,12 @@ public class ChunkBuilder{
     }
 
 
-    public boolean build(ClientChunk chunk){
+    public boolean build(ChunkC chunk){
         final Stopwatch timer = new Stopwatch().start();
 
         // Init
         this.chunk = chunk;
-        this.neighborChunks = new ClientChunk[]{ // Rows - X, Columns - Z
-            chunk.getNeighborChunk(-1, -1), chunk.getNeighborChunk(0, -1) , chunk.getNeighborChunk(1, -1),
-            chunk.getNeighborChunk(-1,  0), chunk                         , chunk.getNeighborChunk(1,  0),
-            chunk.getNeighborChunk(-1,  1), chunk.getNeighborChunk(0,  1) , chunk.getNeighborChunk(1,  1)
-        };
+        this.neighborChunks = chunk.getNeighborChunks();
 
         // Get Meshes
         final ChunkMeshStack meshStack = chunk.getMeshStack();
@@ -69,26 +66,26 @@ public class ChunkBuilder{
         // Build
         final Heightmap heightmapSurface = chunk.getHeightMap(HeightmapType.SURFACE);
 
-        final LevelChunkSection[] sections = chunk.getSections();
+        final ChunkSection[] sections = chunk.getSections();
 
-        if(!chunk.isEmpty())
-            for(int lx = 0; lx < SIZE; lx++){
+        //if(!chunk.isEmpty())
+            for(int lx = 0; lx < ChunkBase.SIZE; lx++){
                 state.incrementAndGet();
-                for(int lz = 0; lz < SIZE; lz++){
+                for(int lz = 0; lz < ChunkBase.SIZE; lz++){
 
                     currentBiome = chunk.getBiomes().getBiome(lx, lz);
                     final int height = heightmapSurface.getHeight(lx, lz) + 1;
-
                     for(int y = 0; y < height; y++){
-                        final int sectionIndex = getSectionIndex(y);
+
+                        final int sectionIndex = ChunkBase.getSectionIndex(y);
                         if(sections[sectionIndex] == null)
-                            y += SIZE;
+                            y += ChunkBase.SIZE;
 
                         final short blockData = chunk.getBlockState(lx, y, lz);
                         final BlockProps block = ChunkBlockData.getProps(blockData);
                         if(block.isEmpty())
                             continue;
-                        
+
                         final BlockModel model = block.getModel();
                         if(model != null)
                             model.build(this, block, lx, y, lz);
@@ -104,12 +101,11 @@ public class ChunkBuilder{
 
         // Time
         buildTime = timer.getMillis();
-
         return true;
     }
     
     public boolean isGenSolidFace(int lx, int y, int lz, int normalX, int normalY, int normalZ, BlockProps block){
-        if(isOutOfBounds(y))
+        if(ChunkBase.isOutOfBounds(y))
             return true;
 
         final BlockProps neighbor = getBlockProps(lx + normalX, y + normalY, lz + normalZ);
@@ -126,23 +122,23 @@ public class ChunkBuilder{
         int signX = 0;
         int signZ = 0;
 
-        if(lx > SIZE_IDX){
+        if(lx > ChunkBase.SIZE_IDX){
             signX = 1;
-            lx -= SIZE;
+            lx -= ChunkBase.SIZE;
         }else if(lx < 0){
             signX = -1;
-            lx += SIZE;
+            lx += ChunkBase.SIZE;
         }
 
-        if(lz > SIZE_IDX){
+        if(lz > ChunkBase.SIZE_IDX){
             signZ = 1;
-            lz -= SIZE;
+            lz -= ChunkBase.SIZE;
         }else if(lz < 0){
             signZ = -1;
-            lz += SIZE;
+            lz += ChunkBase.SIZE;
         }
 
-        final ClientChunk chunk = neighborChunks[(signZ + 1) * 3 + (signX + 1)];
+        final ChunkBase chunk = neighborChunks[(signZ + 1) * 3 + (signX + 1)];
         if(chunk != null)
             chunkCallback.invoke(chunk, lx, lz);
     }

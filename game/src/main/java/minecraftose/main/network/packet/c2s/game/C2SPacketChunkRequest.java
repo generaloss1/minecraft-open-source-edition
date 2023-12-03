@@ -1,6 +1,7 @@
 package minecraftose.main.network.packet.c2s.game;
 
 import jpize.net.tcp.packet.IPacket;
+import minecraftose.main.chunk.storage.ChunkPos;
 import minecraftose.server.network.ServerPlayerGameConnection;
 import jpize.util.io.JpizeInputStream;
 import jpize.util.io.JpizeOutputStream;
@@ -15,26 +16,23 @@ public class C2SPacketChunkRequest extends IPacket<ServerPlayerGameConnection>{
         super(PACKET_ID);
     }
     
-    public int chunkX, chunkZ;
+    public long packedChunkPos;
     
-    public C2SPacketChunkRequest(int chunkX, int chunkZ){
+    public C2SPacketChunkRequest(long packedChunkPos){
         this();
         
-        this.chunkX = chunkX;
-        this.chunkZ = chunkZ;
+        this.packedChunkPos = packedChunkPos;
     }
     
     
     @Override
     public void write(JpizeOutputStream stream) throws IOException{
-        stream.writeInt(chunkX);
-        stream.writeInt(chunkZ);
+        stream.writeLong(packedChunkPos);
     }
     
     @Override
     public void read(JpizeInputStream stream) throws IOException{
-        chunkX = stream.readInt();
-        chunkZ = stream.readInt();
+        packedChunkPos = stream.readLong();
     }
     
     @Override

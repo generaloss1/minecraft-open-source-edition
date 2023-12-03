@@ -9,7 +9,7 @@ import minecraftose.client.Minecraft;
 import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.control.PlayerInput;
-import minecraftose.client.level.ClientLevel;
+import minecraftose.client.level.LevelC;
 import minecraftose.main.Dir;
 import minecraftose.main.audio.Sound;
 import minecraftose.main.audio.SoundGroup;
@@ -17,7 +17,6 @@ import minecraftose.main.audio.SoundType;
 import minecraftose.main.inventory.PlayerInventory;
 import minecraftose.main.item.ItemStack;
 import minecraftose.main.item.Items;
-import org.w3c.dom.ls.LSOutput;
 
 public class LocalPlayer extends AbstractClientPlayer{
 
@@ -28,7 +27,7 @@ public class LocalPlayer extends AbstractClientPlayer{
     protected float jumpHeight;
     protected Stopwatch stepTimer;
 
-    public LocalPlayer(Minecraft minecraft, ClientLevel level, String name){
+    public LocalPlayer(Minecraft minecraft, LevelC level, String name){
         super(minecraft, level, name);
 
         this.input = new PlayerInput(this);

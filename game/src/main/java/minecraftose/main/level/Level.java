@@ -4,7 +4,7 @@ import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.BlockProps;
 import minecraftose.main.Tickable;
 import minecraftose.main.block.ChunkBlockData;
-import minecraftose.main.chunk.LevelChunk;
+import minecraftose.main.chunk.ChunkBase;
 import minecraftose.main.chunk.storage.HeightmapType;
 import minecraftose.main.entity.Entity;
 
@@ -82,8 +82,8 @@ public abstract class Level implements Tickable{
     
     public abstract LevelConfiguration getConfiguration();
     
-    public abstract ChunkManager getChunkManager();
+    public abstract ChunkHolder<?> getChunkProvider();
 
-    public abstract LevelChunk getBlockChunk(int blockX, int blockZ);
+    public abstract ChunkBase getBlockChunk(int blockX, int blockZ);
 
 }

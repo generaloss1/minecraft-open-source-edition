@@ -15,6 +15,7 @@ import minecraftose.client.time.var.TickFloat;
 import minecraftose.main.Dir;
 import minecraftose.main.Tickable;
 import minecraftose.main.block.ChunkBlockData;
+import minecraftose.main.chunk.ChunkBase;
 import minecraftose.main.chunk.ChunkUtils;
 import minecraftose.main.level.Level;
 
@@ -186,13 +187,13 @@ public abstract class Entity implements Tickable{
         final Vec3f max = aabb.getMax();
 
         final int beginX = Maths.floor(min.x - 1 + Math.min(0, velocity.x));
-        final int beginY = Math.max(0, Math.min(ChunkUtils.HEIGHT_IDX,
+        final int beginY = Math.max(0, Math.min(ChunkBase.HEIGHT_IDX,
             Maths.floor(min.y - 1 + Math.min(0, velocity.y))
         ));
         final int beginZ = Maths.floor(min.z - 1 + Math.min(0, velocity.z));
 
         final int endX = Maths.ceil(max.x + 1 + Math.max(0, velocity.x));
-        final int endY = Math.max(0, Math.min(ChunkUtils.HEIGHT,
+        final int endY = Math.max(0, Math.min(ChunkBase.HEIGHT,
             Maths.ceil(max.y + 1 + Math.max(0, velocity.y))
         ));
         final int endZ = Maths.ceil(max.z + 1 + Math.max(0, velocity.z));

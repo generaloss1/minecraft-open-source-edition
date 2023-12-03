@@ -1,13 +1,12 @@
 package minecraftose.main.network.packet.s2c.game;
 
 import jpize.net.tcp.packet.IPacket;
-import minecraftose.client.chunk.ClientChunk;
-import minecraftose.client.level.ClientLevel;
+import minecraftose.client.chunk.ChunkC;
+import minecraftose.client.level.LevelC;
 import minecraftose.client.network.ClientPacketHandler;
 import minecraftose.main.biome.Biome;
-import minecraftose.main.chunk.ChunkUtils;
-import minecraftose.main.chunk.LevelChunk;
-import minecraftose.main.chunk.LevelChunkSection;
+import minecraftose.main.chunk.ChunkBase;
+import minecraftose.main.chunk.ChunkSection;
 import minecraftose.main.chunk.storage.ChunkPos;
 import minecraftose.main.chunk.storage.Heightmap;
 import minecraftose.main.chunk.storage.HeightmapType;
@@ -19,15 +18,13 @@ import minecraftose.main.registry.Registry;
 import java.io.IOException;
 import java.util.*;
 
-import static minecraftose.main.chunk.ChunkUtils.AREA;
-
 public class S2CPacketChunk extends IPacket<ClientPacketHandler>{
     
     public static final int PACKET_ID = 2;
     
     
     private ChunkPos position;
-    private LevelChunkSection[] sections;
+    private ChunkSection[] sections;
     private int highestSectionIndex;
     private Collection<Heightmap> heightmapsToWrite;
     private Map<HeightmapType, short[]> readHeightmaps;
@@ -39,10 +36,10 @@ public class S2CPacketChunk extends IPacket<ClientPacketHandler>{
         readHeightmaps = new HashMap<>();
     }
     
-    public S2CPacketChunk(LevelChunk chunk){
+    public S2CPacketChunk(ChunkBase chunk){
         super(PACKET_ID);
         
-        position = chunk.getPosition();
+        position = chunk.pos();
         sections = chunk.getSections();
         highestSectionIndex = chunk.getHighestSectionIndex();
         heightmapsToWrite = chunk.getHeightmaps();
@@ -50,8 +47,8 @@ public class S2CPacketChunk extends IPacket<ClientPacketHandler>{
     }
     
     
-    public ClientChunk getChunk(ClientLevel level){
-        final ClientChunk chunk = new ClientChunk(level, position);
+    public ChunkC getChunk(LevelC level){
+        final ChunkC chunk = new ChunkC(level, position);
         chunk.setSections(sections, highestSectionIndex);
         chunk.setHeightmaps(readHeightmaps);
         chunk.updateMaxY();
@@ -88,7 +85,7 @@ public class S2CPacketChunk extends IPacket<ClientPacketHandler>{
     }
     
     private void writeSection(JpizeOutputStream stream, int sectionIndex) throws IOException{
-        final LevelChunkSection section = sections[sectionIndex];
+        final ChunkSection section = sections[sectionIndex];
         
         stream.writeByte(sectionIndex); // index
         stream.writeShort(section.blocksNum); // blocks num
@@ -117,7 +114,7 @@ public class S2CPacketChunk extends IPacket<ClientPacketHandler>{
         
         if(sectionsNum == 0)
             return;
-        sections = new LevelChunkSection[16];
+        sections = new ChunkSection[16];
         
         // Sections data
         for(int i = 0; i < sectionsNum; i++)
@@ -129,7 +126,7 @@ public class S2CPacketChunk extends IPacket<ClientPacketHandler>{
             readHeightmap(stream);
 
         // Biomes
-        biomes = new Biome[AREA];
+        biomes = new Biome[ChunkBase.AREA];
         for(int i = 0; i < biomes.length; i++)
             biomes[i] = Registry.biome.get(stream.readByte());
     }
@@ -138,9 +135,9 @@ public class S2CPacketChunk extends IPacket<ClientPacketHandler>{
         final byte sectionIndex = stream.readByte(); // index
         final short blocksNum = stream.readShort(); // blocks num
         final short[] blocks = stream.readShortArray(); // blocks data
-        final byte[] light = stream.readNBytes(ChunkUtils.VOLUME); // light data
+        final byte[] light = stream.readNBytes(ChunkBase.VOLUME); // light data
         
-        final LevelChunkSection section = new LevelChunkSection(
+        final ChunkSection section = new ChunkSection(
             new SectionPos(position.x, sectionIndex, position.z),
             blocks,
             light

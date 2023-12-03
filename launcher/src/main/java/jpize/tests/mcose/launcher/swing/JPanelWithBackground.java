@@ -13,7 +13,7 @@ public class JPanelWithBackground extends JPanel{
         try{
             backgroundImage = ImageIO.read(Objects.requireNonNull(JPanelWithBackground.class.getResourceAsStream(fileName)));
         }catch(Exception e){
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

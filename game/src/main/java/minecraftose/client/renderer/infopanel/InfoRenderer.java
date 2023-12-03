@@ -12,12 +12,14 @@ import minecraftose.client.chunk.builder.ChunkBuilder;
 import minecraftose.client.control.BlockRayCast;
 import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.entity.LocalPlayer;
-import minecraftose.client.level.ClientLevel;
+import minecraftose.client.level.LevelC;
 import minecraftose.client.options.KeyMapping;
 import minecraftose.client.options.Options;
 import minecraftose.client.renderer.GameRenderer;
 import minecraftose.client.renderer.text.TextComponentBatch;
+import minecraftose.main.chunk.ChunkBase;
 import minecraftose.main.chunk.ChunkUtils;
+import minecraftose.main.chunk.storage.ChunkPos;
 import minecraftose.main.modification.loader.Modification;
 import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
@@ -95,11 +97,11 @@ public class InfoRenderer implements Disposable{
         
         final Options options = minecraft.getOptions();
         
-        final ClientLevel level = minecraft.getLevel();
+        final LevelC level = minecraft.getLevel();
         if(level == null)
             return;
 
-        final ChunkBuilder chunkBuilder = level.getChunkManager().getChunkBuilders()[0];
+        final ChunkBuilder chunkBuilder = level.getChunkProvider().getBuilder().getChunkBuilder();
         final GameTime time = minecraft.getTime();
         
         final LocalPlayer player = minecraft.getPlayer();
@@ -157,17 +159,17 @@ public class InfoRenderer implements Disposable{
         // Chunk Relative
         info(new Component()
             .color(TextColor.RED).text("Local").reset().text(": ")
-            .color(TextColor.RED  ).text(ChunkUtils.getLocalCoord(playerPos.xFloor()) + " ")
-            .color(TextColor.GREEN).text(ChunkUtils.getLocalCoord(playerPos.yFloor()) + " ")
-            .color(TextColor.AQUA ).text(ChunkUtils.getLocalCoord(playerPos.zFloor()))
+            .color(TextColor.RED  ).text(ChunkBase.clampToLocal(playerPos.xFloor()) + " ")
+            .color(TextColor.GREEN).text(ChunkBase.clampToLocal(playerPos.yFloor()) + " ")
+            .color(TextColor.AQUA ).text(ChunkBase.clampToLocal(playerPos.zFloor()))
         );
         
         // Chunk Coordinates
         info(new Component()
             .color(TextColor.RED).text("Chunk").reset().text(": ")
-            .color(TextColor.RED  ).text(    ChunkUtils.getChunkPos(playerPos.xFloor()) + " ")
-            .color(TextColor.GREEN).text(ChunkUtils.getSectionIndex(playerPos.yFloor()) + " ")
-            .color(TextColor.AQUA ).text(    ChunkUtils.getChunkPos(playerPos.zFloor()))
+            .color(TextColor.RED  ).text(      ChunkPos.fromGlobal(playerPos.xFloor()) + " ")
+            .color(TextColor.GREEN).text(ChunkBase.getSectionIndex(playerPos.yFloor()) + " ")
+            .color(TextColor.AQUA ).text(      ChunkPos.fromGlobal(playerPos.zFloor()))
         );
         
         // Level
@@ -196,7 +198,7 @@ public class InfoRenderer implements Disposable{
             .color(TextColor.YELLOW).text("rendered").color(TextColor.BLUE).text("/").color(TextColor.ORANGE).text("total").color(TextColor.BLUE).text(")").reset().text(": ")
             .color(TextColor.YELLOW).text(gameRenderer.getWorldRenderer().getChunkRenderer().getRenderedChunks())
             .color(TextColor.BLUE).text("/")
-            .color(TextColor.ORANGE).text(level.getChunkManager().getAllChunks().size())
+            .color(TextColor.ORANGE).text(level.getChunkProvider().getChunks().getChunks().size())
         );
         
         // Chunk Build Time
@@ -244,10 +246,10 @@ public class InfoRenderer implements Disposable{
         );
 
         // info("Threads:");
-        // if(serverWorld != null) info("chunk find tps: " + serverWorld.getChunkManager().findTps.get());
-        // if(serverWorld != null) info("chunk load tps: " + serverWorld.getChunkManager().loadTps.get());
-        // info("chunk build tps: " + level.getChunkManager().buildTps.get());
-        // info("chunk check tps: " + level.getChunkManager().checkTps.get());
+        // if(serverWorld != null) info("chunk find tps: " + serverWorld.getChunkProvider().findTps.get());
+        // if(serverWorld != null) info("chunk load tps: " + serverWorld.getChunkProvider().loadTps.get());
+        // info("chunk build tps: " + level.getChunkProvider().buildTps.get());
+        // info("chunk check tps: " + level.getChunkProvider().checkTps.get());
         // info("Light time (I/D): " + WorldLight.increaseTime + " ms, " + WorldLight.decreaseTime + " ms");
         // Vec3i imaginaryPos = rayCast.getImaginaryBlockPosition();
         // Vec3i selectedPos = rayCast.getSelectedBlockPosition();

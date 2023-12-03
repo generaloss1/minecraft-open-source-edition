@@ -5,7 +5,7 @@ import minecraftose.main.text.Component;
 import minecraftose.main.command.CommandContext;
 import minecraftose.server.command.ServerCommandDispatcher;
 import minecraftose.main.command.builder.Commands;
-import minecraftose.server.level.ServerLevel;
+import minecraftose.server.level.LevelS;
 import minecraftose.server.player.ServerPlayer;
 
 public class SCommandSpawn{
@@ -21,7 +21,7 @@ public class SCommandSpawn{
         // Player
         final ServerPlayer sender = context.getSource().asServerPlayerSource().getPlayer();
         // Spawn position
-        final ServerLevel level = sender.getLevel();
+        final LevelS level = sender.getLevel();
         final Vec3f spawnPosition = level.getSpawnPosition();
         // Teleport
         sender.teleport(spawnPosition);

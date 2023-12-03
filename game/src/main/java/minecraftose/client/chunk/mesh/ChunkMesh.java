@@ -81,7 +81,6 @@ public class ChunkMesh implements Disposable{
         Jpize.execSync(() -> vbo.setData(verticesArray, GlBufUsage.DYNAMIC_DRAW));
         verticesList.clear();
 
-
         final int[] verticesPackedArray = new int[verticesPackedList.size()];
         for(int i = 0; i < verticesPackedList.size(); i++)
             verticesPackedArray[i] = verticesPackedList.get(i);

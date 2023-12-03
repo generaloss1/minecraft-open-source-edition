@@ -2,8 +2,8 @@ package minecraftose.main.network.packet.s2c.game;
 
 import jpize.net.tcp.packet.IPacket;
 import minecraftose.client.network.ClientPacketHandler;
-import minecraftose.main.chunk.ChunkUtils;
-import minecraftose.main.chunk.LevelChunkSection;
+import minecraftose.main.chunk.ChunkBase;
+import minecraftose.main.chunk.ChunkSection;
 import minecraftose.main.chunk.storage.SectionPos;
 import jpize.util.io.JpizeInputStream;
 import jpize.util.io.JpizeOutputStream;
@@ -21,7 +21,7 @@ public class S2CPacketLightUpdate extends IPacket<ClientPacketHandler>{
     public SectionPos position;
     public byte[] light;
 
-    public S2CPacketLightUpdate(LevelChunkSection section){
+    public S2CPacketLightUpdate(ChunkSection section){
         this();
         position = section.getPosition();
         light = section.light;
@@ -37,7 +37,7 @@ public class S2CPacketLightUpdate extends IPacket<ClientPacketHandler>{
     @Override
     public void read(JpizeInputStream stream) throws IOException{
         position = new SectionPos(stream.readVec3i());
-        light = stream.readNBytes(ChunkUtils.VOLUME);
+        light = stream.readNBytes(ChunkBase.VOLUME);
     }
 
     @Override

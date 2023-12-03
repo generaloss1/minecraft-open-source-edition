@@ -7,7 +7,7 @@ import minecraftose.main.network.packet.s2c.game.*;
 import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
 import minecraftose.server.Server;
-import minecraftose.server.level.ServerLevel;
+import minecraftose.server.level.LevelS;
 import minecraftose.server.network.ServerPlayerGameConnection;
 
 import java.util.Collection;
@@ -44,7 +44,7 @@ public class PlayerList{
     
     public void addNewPlayer(String name, TcpConnection connection){
         // Get level & Spawn position
-        final ServerLevel level;
+        final LevelS level;
         final Vec3f spawnPosition;
         
         final OfflinePlayer offlinePlayer = getOfflinePlayer(name);
@@ -64,13 +64,13 @@ public class PlayerList{
         
         // Add ServerPlayer to list
         final ServerPlayer serverPlayer = new ServerPlayer(level, connection, name);
-        server.getConnectionManager().setHandlerForConnection(connection, serverPlayer.getConnectionAdapter());
+        server.getConnectionManager().setHandlerForConnection(connection, serverPlayer.getConnection());
         serverPlayer.teleport(level, spawnPosition);
         
         playerMap.put(name, serverPlayer);
         
         // Send packets to player
-        final ServerPlayerGameConnection connectionAdapter = serverPlayer.getConnectionAdapter();
+        final ServerPlayerGameConnection connectionAdapter = serverPlayer.getConnection();
         
         connection.send(new S2CPacketSpawnInfo(level.getConfiguration().getName(), spawnPosition, server.getGameTime().getTicks())); // spawn init info
         connection.send(new S2CPacketAbilities(false)); // abilities
@@ -81,7 +81,7 @@ public class PlayerList{
         
         // Load chunks for player
         level.addEntity(serverPlayer);
-        level.getChunkManager().loadInitChunkForPlayer(serverPlayer);
+        level.getChunkProvider().getLoader().loadChunkForPlayer(serverPlayer);
 
         // Send to all player-connection-event packet
         broadcastPacketExcept(new S2CPacketSpawnPlayer(serverPlayer), serverPlayer);
@@ -115,13 +115,13 @@ public class PlayerList{
                 player.sendPacket(packet);
     }
 
-    public void broadcastPacketLevel(ServerLevel level, IPacket<?> packet){
+    public void broadcastPacketLevel(LevelS level, IPacket<?> packet){
         for(ServerPlayer player: playerMap.values())
             if(player.getLevel() == level)
                 player.sendPacket(packet);
     }
 
-    public void broadcastPacketLevelExcept(ServerLevel level, IPacket<?> packet, ServerPlayer except){
+    public void broadcastPacketLevelExcept(LevelS level, IPacket<?> packet, ServerPlayer except){
         for(ServerPlayer player: playerMap.values())
             if(player.getLevel() == level && player != except)
                 player.sendPacket(packet);

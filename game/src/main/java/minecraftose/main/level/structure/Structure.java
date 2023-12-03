@@ -5,14 +5,14 @@ import jpize.math.Maths;
 import jpize.math.vecmath.vector.Vec2f;
 import jpize.math.vecmath.vector.Vec3i;
 import minecraftose.client.block.ClientBlock;
-import minecraftose.server.level.ServerLevel;
+import minecraftose.server.level.LevelS;
 import jpize.util.io.JpizeInputStream;
 
 import java.io.IOException;
 
 public class Structure{
 
-    public static void circleFilledXZ(ServerLevel level, int x, int y, int z, float radius, ClientBlock block){
+    public static void circleFilledXZ(LevelS level, int x, int y, int z, float radius, ClientBlock block){
         final int intRadius = Maths.ceil(radius);
         for(int i = 0; i < intRadius; i++){
             for(int j = 0; j < intRadius; j++){
@@ -27,7 +27,7 @@ public class Structure{
         }
     }
 
-    public static void circleXZ(ServerLevel level, int x, int y, int z, float radius, ClientBlock block){
+    public static void circleXZ(LevelS level, int x, int y, int z, float radius, ClientBlock block){
         final int intRadius = Maths.ceil(radius);
         for(int i = 0; i < intRadius; i++){
             for(int j = 0; j < intRadius; j++){
@@ -43,7 +43,7 @@ public class Structure{
         }
     }
 
-    public static void loadTo(ServerLevel level, String name, int x, int y, int z){
+    public static void loadTo(LevelS level, String name, int x, int y, int z){
         // File
         final Resource file = Resource.internal("struct/" + name + ".struct");
         try(final JpizeInputStream inStream = file.jpizeIn()){
@@ -59,7 +59,7 @@ public class Structure{
                     }
 
         }catch(IOException e){
-            e.printStackTrace();
+            throw new Error(e);
         }
     }
 

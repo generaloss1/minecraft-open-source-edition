@@ -1,6 +1,7 @@
 package minecraftose.main.biome.chunk;
 
 import minecraftose.main.biome.Biome;
+import minecraftose.main.chunk.ChunkBase;
 
 import java.util.Arrays;
 
@@ -11,7 +12,7 @@ public class BiomeMap{
     protected final Biome[] biomes;
 
     public BiomeMap(){
-        this.biomes = new Biome[AREA];
+        this.biomes = new Biome[ChunkBase.AREA];
         Arrays.fill(biomes, Biome.VOID);
     }
 
