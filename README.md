@@ -13,4 +13,4 @@ OS supported: **Windows**, **Linux**
 
 * * *
 ## Bugs and Feedback
-For bugs, questions and discussions please use the [GitHub Issues](https://github.com/GeneralPashon/Minecraft-Open-Source-Edition/issues).
+For bugs, questions and discussions please use the [GitHub Issues](https://github.com/GeneralPashon/minecraft-open-source-edition/issues).
