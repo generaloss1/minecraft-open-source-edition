@@ -112,7 +112,7 @@ public class PlayerCamera extends PerspectiveCamera {
         final BlockProps block = level.getBlockProps(position.xFloor(), position.yFloor(), position.zFloor());
         inWater = block.getID() == ClientBlocks.WATER.getID();
 
-        super.rotation().setRotation(-angles.yaw, -angles.pitch, -angles.roll);
+        super.rotation().setRotation(-angles.yaw + 90, -angles.pitch, -angles.roll);
     }
 
     private void bobView(float t){

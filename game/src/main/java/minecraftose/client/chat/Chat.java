@@ -101,6 +101,7 @@ public class Chat{
         historyPointer--;
         
         textProcessor.setLine(history.get(historyPointer));
+        textProcessor.setEndX();
     }
     
     public void historyDown(){
