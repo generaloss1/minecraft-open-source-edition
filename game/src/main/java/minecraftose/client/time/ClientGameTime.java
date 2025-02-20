@@ -15,12 +15,12 @@ public class ClientGameTime extends GameTime{
     @Override
     public void tick(){
         super.tick();
-        dtCounter.count();
+        dtCounter.update();
         this.prevTickPointMillis = System.currentTimeMillis();
     }
 
 
-    public float getDt(){
+    public float getDeltaTime(){
         return dtCounter.get();
     }
 
@@ -33,7 +33,7 @@ public class ClientGameTime extends GameTime{
     }
 
     public float getTickLerpFactor(){
-        return getMillisLerpFactor() / MILLIS_IN_SECOND / getDt();
+        return getMillisLerpFactor() / MILLIS_IN_SECOND / getDeltaTime();
     }
 
     public float getLerpSeconds(){

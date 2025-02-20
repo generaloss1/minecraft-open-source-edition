@@ -1,7 +1,7 @@
 package minecraftose.main.network;
 
-import jpize.math.Maths;
 import jpize.util.StringUtils;
+import jpize.util.math.Maths;
 
 public class PlayerProfile{
     

@@ -1,15 +1,16 @@
 package minecraftose.client.options;
 
-import jpize.Jpize;
-import jpize.sdl.input.Key;
-import jpize.util.file.Resource;
-import jpize.util.file.ResourceExt;
+import jpize.app.Jpize;
+import jpize.glfw.Glfw;
+import jpize.glfw.input.Key;
+import jpize.util.io.FastReader;
+import jpize.util.res.FileResource;
+import jpize.util.res.Resource;
 import minecraftose.client.Minecraft;
 import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.main.SharedConstants;
-import jpize.util.io.FastReader;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public class Options{
 
 
     private final Minecraft minecraft;
-    private final ResourceExt fileResource;
+    private final FileResource fileResource;
     
     private String host = DEFAULT_HOST;
     private final Map<KeyMapping, Key> keyMappings;
@@ -50,15 +51,13 @@ public class Options{
         this.minecraft = minecraft;
 
         this.keyMappings = new HashMap<>();
-        this.fileResource = Resource.external(gameDirPath + "options.txt");
+        this.fileResource = Resource.file(gameDirPath + "options.txt");
         this.fileResource.create();
     }
     
 
     public void load(){
-        final FastReader reader = fileResource.reader();
-
-        try{
+        try(FastReader reader = fileResource.reader()){
             while(reader.hasNext()){
                 final String[] parts = reader.nextLine().split(" : ");
                 if(parts.length != 2)
@@ -107,7 +106,7 @@ public class Options{
     }
 
     public void save(){
-        final PrintStream out = fileResource.writer();
+        final PrintWriter out = fileResource.writer();
         
         out.println("remote.host : " + host);
         out.println("graphics.fieldOfView : " + fieldOfView);
@@ -177,10 +176,10 @@ public class Options{
 
     public void setMaxFrameRate(int maxFrameRate){
         this.maxFrameRate = maxFrameRate;
-        minecraft.getFpsSync().setTPS(maxFrameRate);
+        minecraft.getFpsSync().setRate(maxFrameRate);
 
         minecraft.getFpsSync().enable(maxFrameRate > 0 && maxFrameRate < UNLIMITED_FPS_THRESHOLD);
-        Jpize.setVsync(maxFrameRate == 0);
+        Glfw.enableVSync(maxFrameRate == 0);
     }
 
 
@@ -190,7 +189,7 @@ public class Options{
 
     public void setFullscreen(boolean fullscreen){
         this.fullscreen = fullscreen;
-        Jpize.window().setFullscreenDesktop(fullscreen);
+        Jpize.window().setFullscreen(fullscreen);
     }
 
 

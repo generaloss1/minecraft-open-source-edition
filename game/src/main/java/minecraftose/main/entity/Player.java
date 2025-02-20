@@ -23,9 +23,9 @@ public class Player extends Entity{
     }
     
     public void setSprinting(boolean sprinting){
-        if(sprinting && isCollidedTo(getRotation().getDirection().mul(1, 0, 1)))
-            this.sprinting = false;
-        else
+        // if(sprinting && isCollidedTo(getRotation().getDirection(new Vec3f()).mul(1, 0, 1)))
+        //     this.sprinting = false;
+        // else
             this.sprinting = sprinting;
     }
     
@@ -35,7 +35,7 @@ public class Player extends Entity{
     
     public void setSneaking(boolean sneaking){
         this.sneaking = sneaking;
-        aabb.getBoundingBox().getMax().y = sneaking ? 1.5F : 1.8F;
+        aabb.box().max().y = sneaking ? 1.5F : 1.8F;
     }
     
     public boolean isFlyEnabled(){

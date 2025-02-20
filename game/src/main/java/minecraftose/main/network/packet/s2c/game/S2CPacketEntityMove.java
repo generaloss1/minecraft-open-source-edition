@@ -1,30 +1,24 @@
 package minecraftose.main.network.packet.s2c.game;
 
-import jpize.math.util.EulerAngles;
-import jpize.math.vecmath.vector.Vec3f;
-import jpize.net.tcp.packet.IPacket;
-import jpize.physic.utils.Velocity3f;
+import jpize.util.math.EulerAngles;
+import jpize.util.math.vector.Vec3f;
 import minecraftose.client.network.ClientPacketHandler;
 import minecraftose.server.player.ServerPlayer;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
 
 import java.io.IOException;
 import java.util.UUID;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.net.packet.NetPacket;
 
-public class S2CPacketEntityMove extends IPacket<ClientPacketHandler>{
+public class S2CPacketEntityMove extends NetPacket<ClientPacketHandler>{
 
-    public static final int PACKET_ID = 9;
-
-    public S2CPacketEntityMove(){
-        super(PACKET_ID);
-    }
-
+    public S2CPacketEntityMove(){}
 
     public UUID uuid;
     public Vec3f position;
     public EulerAngles rotation;
-    public Velocity3f velocity;
+    public Vec3f velocity;
 
     public S2CPacketEntityMove(ServerPlayer serverPlayer){
         this();
@@ -36,7 +30,7 @@ public class S2CPacketEntityMove extends IPacket<ClientPacketHandler>{
 
 
     @Override
-    public void write(JpizeOutputStream stream) throws IOException{
+    public void write(ExtDataOutputStream stream) throws IOException{
         stream.writeUUID(uuid);
         stream.writeVec3f(position);
         stream.writeEulerAngles(rotation);
@@ -44,11 +38,11 @@ public class S2CPacketEntityMove extends IPacket<ClientPacketHandler>{
     }
 
     @Override
-    public void read(JpizeInputStream stream) throws IOException{
+    public void read(ExtDataInputStream stream) throws IOException{
         uuid = stream.readUUID();
         position = stream.readVec3f();
         rotation = stream.readEulerAngles();
-        velocity = new Velocity3f(stream.readVec3f());
+        velocity = new Vec3f(stream.readVec3f());
     }
 
     @Override

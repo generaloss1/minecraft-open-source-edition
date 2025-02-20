@@ -1,12 +1,11 @@
 package minecraftose.client.control;
 
-import jpize.math.Mathc;
-import jpize.math.Maths;
-import jpize.math.vecmath.matrix.Matrix4f;
-import jpize.math.vecmath.vector.Vec3f;
-import jpize.math.vecmath.vector.Vec3i;
-import jpize.physic.Ray3f;
-import jpize.physic.utils.Intersector;
+import jpize.util.math.Mathc;
+import jpize.util.math.Maths;
+import jpize.util.math.geometry.Ray3f;
+import jpize.util.math.matrix.Matrix4f;
+import jpize.util.math.vector.Vec3f;
+import jpize.util.math.vector.Vec3i;
 import minecraftose.client.Minecraft;
 import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.ClientBlocks;
@@ -62,12 +61,12 @@ public class BlockRayCast{
         
         // Update ray
         final LocalPlayer player = minecraft.getPlayer();
-        ray.dir().set(player.getRotation().getDirection());
+        ray.direction().set(player.getRotation().getDirection(new Vec3f()));
         ray.origin().set(player.getLerpPosition().copy().add(0, player.getEyeHeight(), 0));
         
         // Get pos, dir, len
         final Vec3f pos = ray.origin();
-        final Vec3f dir = ray.dir();
+        final Vec3f dir = ray.direction();
         
         // ...
         final Vec3i step = new Vec3i(
@@ -81,9 +80,9 @@ public class BlockRayCast{
             step.z / dir.z
         );
         final Vec3f tMax = new Vec3f(
-            Math.min(length / 2, Maths.abs((Math.max(step.x, 0) - Maths.frac(pos.x)) / dir.x)),
-            Math.min(length / 2, Maths.abs((Math.max(step.y, 0) - Maths.frac(pos.y)) / dir.y)),
-            Math.min(length / 2, Maths.abs((Math.max(step.z, 0) - Maths.frac(pos.z)) / dir.z))
+            Math.min(length / 2, Math.abs((Math.max(step.x, 0) - Maths.frac(pos.x)) / dir.x)),
+            Math.min(length / 2, Math.abs((Math.max(step.y, 0) - Maths.frac(pos.y)) / dir.y)),
+            Math.min(length / 2, Math.abs((Math.max(step.z, 0) - Maths.frac(pos.z)) / dir.z))
         );
         
         selectedBlock.set(pos.xFloor(), pos.yFloor(), pos.zFloor());
@@ -130,8 +129,8 @@ public class BlockRayCast{
                     break;
                 }else{
                     final BlockCursor shape = block.getCursor();
-                    blockMatrix.toTranslated(selectedBlock);
-                    if(Intersector.isRayIntersectQuadMesh(ray, blockMatrix, shape.getVertices(), shape.getQuadIndices())){
+                    blockMatrix.setTranslate(selectedBlock);
+                    if(Ray3f.intersectQuadMesh(ray, blockMatrix, shape.getVertices(), shape.getQuadIndices())){
                         selectedFace = Dir.fromNormal(faceNormal.x, faceNormal.y, faceNormal.z);
                         selectedBlockProps = block;
                         imaginarySelectedBlock.set(selectedBlock).add(selectedFace.getNormal());

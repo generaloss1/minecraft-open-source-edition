@@ -1,9 +1,9 @@
 package minecraftose.server.player;
 
-import jpize.math.util.EulerAngles;
-import jpize.math.vecmath.vector.Vec3f;
-import jpize.net.tcp.TcpConnection;
-import jpize.net.tcp.packet.IPacket;
+import jpize.util.math.EulerAngles;
+import jpize.util.math.vector.Vec3f;
+import jpize.util.net.packet.NetPacket;
+import jpize.util.net.tcp.TCPConnection;
 import minecraftose.main.audio.Sound;
 import minecraftose.main.entity.Entity;
 import minecraftose.main.entity.Player;
@@ -26,7 +26,7 @@ public class ServerPlayer extends Player{
     
     private int renderDistance;
 
-    public ServerPlayer(LevelS level, TcpConnection connection, String name){
+    public ServerPlayer(LevelS level, TCPConnection connection, String name){
         super(level, name);
         this.server = level.getServer();
         this.connection = new ServerPlayerGameConnection(this, connection);
@@ -101,7 +101,7 @@ public class ServerPlayer extends Player{
         return connection;
     }
     
-    public void sendPacket(IPacket<?> packet){
+    public void sendPacket(NetPacket<?> packet){
         connection.sendPacket(packet);
     }
     

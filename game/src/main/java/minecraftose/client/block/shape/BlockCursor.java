@@ -1,12 +1,13 @@
 package minecraftose.client.block.shape;
 
-import jpize.util.Disposable;
+
 import jpize.gl.tesselation.GlPrimitive;
 import jpize.gl.type.GlType;
-import jpize.graphics.mesh.IndexedMesh;
-import jpize.gl.vertex.GlVertexAttr;
+import jpize.gl.vertex.GlVertAttr;
+import jpize.util.Disposable;
+import jpize.util.mesh.IndexedMesh;
 
-public class BlockCursor implements Disposable{
+public class BlockCursor implements Disposable {
     
     public final static BlockCursor SOLID = new SolidBlockCursor();
     public final static BlockCursor GRASS = new GrassBlockCursor();
@@ -21,10 +22,10 @@ public class BlockCursor implements Disposable{
         this.vertices = vertices;
         this.quadIndices = quadIndices;
 
-        this.mesh = new IndexedMesh(new GlVertexAttr(3, GlType.FLOAT));
+        this.mesh = new IndexedMesh(new GlVertAttr(3, GlType.FLOAT));
         this.mesh.setMode(GlPrimitive.LINES);
-        this.mesh.getBuffer().setData(vertices);
-        this.mesh.getIndexBuffer().setData(lineIndices);
+        this.mesh.vertices().setData(vertices);
+        this.mesh.indices().setData(lineIndices);
     }
 
     public float[] getVertices(){

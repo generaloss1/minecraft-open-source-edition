@@ -1,6 +1,6 @@
 package minecraftose.client.chunk.builder;
 
-import jpize.graphics.util.color.Color;
+import jpize.util.color.Color;
 import minecraftose.main.biome.Biome;
 
 public class BiomeMix{
@@ -18,44 +18,44 @@ public class BiomeMix{
         final Color color = new Color(0, 0, 0);
         int n = 0;
         if(biome0 != null){
-            color.add3(biome0.grassColor);
+            color.addRGB(biome0.grassColor);
             n++;
         }
         if(biome1 != null){
-            color.add3(biome1.grassColor);
+            color.addRGB(biome1.grassColor);
             n++;
         }
         if(biome2 != null){
-            color.add3(biome2.grassColor);
+            color.addRGB(biome2.grassColor);
             n++;
         }
         if(biome3 != null){
-            color.add3(biome3.grassColor);
+            color.addRGB(biome3.grassColor);
             n++;
         }
-        return color.div3(n);
+        return color.divRGB(n);
     }
 
     public Color getWaterColor(){
         final Color color = new Color(0, 0, 0);
         int n = 0;
         if(biome0 != null){
-            color.add3(biome0.waterColor);
+            color.addRGB(biome0.waterColor);
             n++;
         }
         if(biome1 != null){
-            color.add3(biome1.waterColor);
+            color.addRGB(biome1.waterColor);
             n++;
         }
         if(biome2 != null){
-            color.add3(biome2.waterColor);
+            color.addRGB(biome2.waterColor);
             n++;
         }
         if(biome3 != null){
-            color.add3(biome3.waterColor);
+            color.addRGB(biome3.waterColor);
             n++;
         }
-        return color.div3(n);
+        return color.divRGB(n);
     }
 
 }

@@ -1,6 +1,6 @@
 package minecraftose.client.block.vanilla;
 
-import jpize.graphics.texture.Region;
+import jpize.util.region.Region;
 import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.model.BlockModel;
 import minecraftose.client.block.model.Face;

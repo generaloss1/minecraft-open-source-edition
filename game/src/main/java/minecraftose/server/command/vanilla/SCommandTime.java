@@ -1,12 +1,12 @@
 package minecraftose.server.command.vanilla;
 
-import jpize.math.Maths;
-import minecraftose.main.time.GameTime;
+import jpize.util.math.Maths;
 import minecraftose.main.command.CommandContext;
-import minecraftose.server.command.ServerCommandDispatcher;
 import minecraftose.main.command.argument.CommandArg;
 import minecraftose.main.command.argument.CommandArgTime;
 import minecraftose.main.command.builder.Commands;
+import minecraftose.main.time.GameTime;
+import minecraftose.server.command.ServerCommandDispatcher;
 
 public class SCommandTime{
     

@@ -1,20 +1,17 @@
 package minecraftose.main.network.packet.s2c.game;
 
-import jpize.math.vecmath.vector.Vec3f;
-import jpize.net.tcp.packet.IPacket;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
+import jpize.util.math.vector.Vec3f;
 import minecraftose.client.network.ClientPacketHandler;
 
 import java.io.IOException;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.net.packet.NetPacket;
 
-public class S2CPacketPlayerVelocity extends IPacket<ClientPacketHandler>{
+public class S2CPacketPlayerVelocity extends NetPacket<ClientPacketHandler>{
 
-    public static final int PACKET_ID = 27;
-
-    public S2CPacketPlayerVelocity(){
-        super(PACKET_ID);
-    }
+    
+    public S2CPacketPlayerVelocity(){}
 
 
     public Vec3f velocity;
@@ -26,12 +23,12 @@ public class S2CPacketPlayerVelocity extends IPacket<ClientPacketHandler>{
 
 
     @Override
-    public void write(JpizeOutputStream stream) throws IOException{
+    public void write(ExtDataOutputStream stream) throws IOException{
         stream.writeVec3f(velocity);
     }
 
     @Override
-    public void read(JpizeInputStream stream) throws IOException{
+    public void read(ExtDataInputStream stream) throws IOException{
         velocity = stream.readVec3f();
     }
 

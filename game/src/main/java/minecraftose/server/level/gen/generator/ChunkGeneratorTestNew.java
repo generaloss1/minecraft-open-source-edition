@@ -1,8 +1,8 @@
 package minecraftose.server.level.gen.generator;
 
-import jpize.math.Mathc;
-import jpize.math.Maths;
-import jpize.math.util.JpizeRandom;
+import jpize.util.math.ExtRandom;
+import jpize.util.math.Mathc;
+import jpize.util.math.Maths;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.main.biome.Biome;
 import minecraftose.main.biome.chunk.BiomeMap;
@@ -10,14 +10,14 @@ import minecraftose.main.chunk.ChunkBase;
 import minecraftose.main.chunk.storage.Heightmap;
 import minecraftose.main.chunk.storage.HeightmapType;
 import minecraftose.main.registry.Registry;
-import minecraftose.server.level.chunk.ChunkS;
 import minecraftose.server.level.LevelS;
+import minecraftose.server.level.chunk.ChunkS;
+import minecraftose.server.level.gen.ChunkGenerator;
 import minecraftose.server.level.gen.decoration.*;
 import minecraftose.server.level.gen.decoration.old.*;
-import minecraftose.server.level.gen.generator.testnew.NoiseOctavesAlpha;
-import minecraftose.server.level.gen.ChunkGenerator;
 import minecraftose.server.level.gen.generator.testnew.BiomeVC;
 import minecraftose.server.level.gen.generator.testnew.GenLayerVC;
+import minecraftose.server.level.gen.generator.testnew.NoiseOctavesAlpha;
 
 import java.util.Random;
 
@@ -29,7 +29,7 @@ public class ChunkGeneratorTestNew extends ChunkGenerator{
     public static int seaLevel = 128;
     public static final int seed = 1023123436;
 
-    private final JpizeRandom random;
+    private final ExtRandom random;
 
     private final GenLayerVC noiseFieldModifier;
     private final NoiseOctavesAlpha noiseGen1;
@@ -37,7 +37,7 @@ public class ChunkGeneratorTestNew extends ChunkGenerator{
     private final NoiseOctavesAlpha noiseGen3;
     private final NoiseOctavesAlpha noiseGen4;
     private final NoiseOctavesAlpha noiseGen5;
-    private NoiseOctavesAlpha noiseGen6;
+    private final NoiseOctavesAlpha noiseGen6;
     private final Random rand;
     private double[] noiseArray;
     private double[] noise3;
@@ -61,7 +61,7 @@ public class ChunkGeneratorTestNew extends ChunkGenerator{
 
         this.noiseFieldModifier = GenLayerVC.genNoiseFieldModifier(seed, -80);
 
-        this.random = new JpizeRandom();
+        this.random = new ExtRandom();
         random.setSeed(seed);
     }
 
@@ -102,14 +102,14 @@ public class ChunkGeneratorTestNew extends ChunkGenerator{
 
                     // Interpolation of 2x2x2 into 4x8x4
 
-                    double lower_lefttop = this.noiseArray[((x + 0) * zSize + z + 0) * ySize + y + 0];
-                    double lower_leftbottom = this.noiseArray[((x + 0) * zSize + z + 1) * ySize + y + 0];
-                    double lower_righttop = this.noiseArray[((x + 1) * zSize + z + 0) * ySize + y + 0];
-                    double lower_rightbottom = this.noiseArray[((x + 1) * zSize + z + 1) * ySize + y + 0];
+                    double lower_lefttop = this.noiseArray[((x) * zSize + z) * ySize + y];
+                    double lower_leftbottom = this.noiseArray[((x) * zSize + z + 1) * ySize + y];
+                    double lower_righttop = this.noiseArray[((x + 1) * zSize + z) * ySize + y];
+                    double lower_rightbottom = this.noiseArray[((x + 1) * zSize + z + 1) * ySize + y];
 
-                    double dy_lefttop = (this.noiseArray[((x + 0) * zSize + z + 0) * ySize + y + 1] - lower_lefttop) * yLerp;
-                    double dy_leftbottom = (this.noiseArray[((x + 0) * zSize + z + 1) * ySize + y + 1] - lower_leftbottom) * yLerp;
-                    double dy_righttop = (this.noiseArray[((x + 1) * zSize + z + 0) * ySize + y + 1] - lower_righttop) * yLerp;
+                    double dy_lefttop = (this.noiseArray[((x) * zSize + z) * ySize + y + 1] - lower_lefttop) * yLerp;
+                    double dy_leftbottom = (this.noiseArray[((x) * zSize + z + 1) * ySize + y + 1] - lower_leftbottom) * yLerp;
+                    double dy_righttop = (this.noiseArray[((x + 1) * zSize + z) * ySize + y + 1] - lower_righttop) * yLerp;
                     double dy_rightbottom = (this.noiseArray[((x + 1) * zSize + z + 1) * ySize + y + 1] - lower_rightbottom) * yLerp;
 
                     for(int dy = 0; dy < 8; ++dy){
@@ -177,7 +177,7 @@ public class ChunkGeneratorTestNew extends ChunkGenerator{
                 final Biome biome = biomes.getBiome(lx, lz);
 
                 chunk.setBlock(lx, height, lz, biome.topBlock);
-                for(int i = 1; i < random.random(3, 5); i++)
+                for(int i = 1; i < random.nextInt(3, 5); i++)
                     chunk.setBlock(lx, height - i, lz, biome.fillerBlock);
             }
         }
@@ -303,7 +303,6 @@ public class ChunkGeneratorTestNew extends ChunkGenerator{
 					}*/
 
                     result = 2D * noise1[posIndex] + (noise2[posIndex] / 512D + (this.noise3[posIndex] / 10.0D + 1.0D) / 8.0D) * noisemodfactor;
-                    ;
                     //result = noise1var;
 
                     result -= theheight;
@@ -351,48 +350,48 @@ public class ChunkGeneratorTestNew extends ChunkGenerator{
 
                 if(biome == Biome.DESERT){
 
-                    if(random.randomBoolean(0.008) && !prevCactusGen){
+                    if(random.nextBoolean(0.008) && !prevCactusGen){
                         Cactus.generate(level, x, height + 1, z, random);
                         prevCactusGen = true;
-                    }else if(random.randomBoolean(0.00001))
+                    }else if(random.nextBoolean(0.00001))
                         DesertPyramid.generate(level, x, height - 1, z, random);
-                    else if(random.randomBoolean(0.00005))
+                    else if(random.nextBoolean(0.00005))
                         MiniPyramid.generate(level, x, height, z, random);
 
                 }else if(biome == Biome.FOREST){
 
-                    if(random.randomBoolean(0.03)){
-                        if(random.randomBoolean(0.7))
-                            OldGenOakTree.generate(level, random.getRandom(), x, height + 1, z);
+                    if(random.nextBoolean(0.03)){
+                        if(random.nextBoolean(0.7))
+                            OldGenOakTree.generate(level, random, x, height + 1, z);
                         else
-                            OldGenBirchTree.generate(level, random.getRandom(), x, height + 1, z);
-                    }else if(random.randomBoolean(0.00002))
+                            OldGenBirchTree.generate(level, random, x, height + 1, z);
+                    }else if(random.nextBoolean(0.00002))
                         House.generate(level, x, height, z, random);
 
                 }else if(biome == Biome.TAIGA){
 
-                    if(random.randomBoolean(0.02))
-                        OldGenTaigaTree2.generate(level, random.getRandom(), x, height + 1, z);
-                    else if(random.randomBoolean(0.02))
-                        OldGenTaigaTree1.generate(level, random.getRandom(), x, height + 1, z);
+                    if(random.nextBoolean(0.02))
+                        OldGenTaigaTree2.generate(level, random, x, height + 1, z);
+                    else if(random.nextBoolean(0.02))
+                        OldGenTaigaTree1.generate(level, random, x, height + 1, z);
 
-                    else if(random.randomBoolean(0.00005))
+                    else if(random.nextBoolean(0.00005))
                         Tower.generate(level, x, height, z, random);
 
                 }else if(biome == Biome.SNOWY_TAIGA){
 
-                    if(random.randomBoolean(0.02))
-                        OldGenTaigaTree2.generate(level, random.getRandom(), x, height + 1, z);
-                    else if(random.randomBoolean(0.02))
-                        OldGenTaigaTree1.generate(level, random.getRandom(), x, height + 1, z);
+                    if(random.nextBoolean(0.02))
+                        OldGenTaigaTree2.generate(level, random, x, height + 1, z);
+                    else if(random.nextBoolean(0.02))
+                        OldGenTaigaTree1.generate(level, random, x, height + 1, z);
 
-                    else if(random.randomBoolean(0.00008))
+                    else if(random.nextBoolean(0.00008))
                         Tower.generate(level, x, height, z, random);
 
                 }
 
-                if(random.randomBoolean(0.00001))
-                    OldGenDungeons.generate(level, random.getRandom(), x, height - 5, z);
+                if(random.nextBoolean(0.00001))
+                    OldGenDungeons.generate(level, random, x, height - 5, z);
 
             }
         }

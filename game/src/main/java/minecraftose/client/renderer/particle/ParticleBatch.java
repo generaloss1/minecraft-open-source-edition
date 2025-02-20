@@ -1,33 +1,34 @@
 package minecraftose.client.renderer.particle;
 
-import jpize.util.Disposable;
-import jpize.util.file.Resource;
-import jpize.graphics.camera.PerspectiveCamera;
 import jpize.gl.buffer.GlBufUsage;
+import jpize.gl.shader.Shader;
+import jpize.gl.tesselation.GlPrimitive;
+import jpize.gl.texture.Texture2D;
 import jpize.gl.type.GlType;
-import jpize.graphics.mesh.QuadMesh;
-import jpize.gl.vertex.GlVertexAttr;
-import jpize.graphics.texture.Region;
-import jpize.graphics.texture.Texture;
-import jpize.graphics.util.Shader;
-import jpize.graphics.util.color.Color;
-import jpize.math.vecmath.matrix.Matrix4f;
-import jpize.math.vecmath.vector.Vec3f;
+import jpize.gl.vertex.GlVertAttr;
+import jpize.util.Disposable;
+import jpize.util.camera.PerspectiveCamera;
+import jpize.util.color.Color;
+import jpize.util.math.matrix.Matrix4f;
+import jpize.util.math.vector.Vec3f;
+import jpize.util.mesh.Mesh;
+import jpize.util.region.Region;
+import jpize.util.res.Resource;
 import minecraftose.client.control.camera.PlayerCamera;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static jpize.graphics.buffer.QuadIndexBuffer.QUAD_INDICES;
-import static jpize.graphics.buffer.QuadIndexBuffer.QUAD_VERTICES;
+import static jpize.gl.buffer.QuadIndexBuffer.QUAD_INDICES;
+import static jpize.gl.buffer.QuadIndexBuffer.QUAD_VERTICES;
 
-public class ParticleBatch implements Disposable{
+public class ParticleBatch implements Disposable {
     
     final CopyOnWriteArrayList<ParticleInstance> instances;
     final Shader shader;
     final Matrix4f rotateMatrix;
-    final QuadMesh mesh;
+    final Mesh mesh;
     final int size;
-    Texture lastTexture;
+    Texture2D lastTexture;
     final Color currentColor;
     final float[] vertices;
     int vertexIndex, particleIndex;
@@ -35,18 +36,18 @@ public class ParticleBatch implements Disposable{
     public ParticleBatch(int size){
         this.size = size;
         this.instances = new CopyOnWriteArrayList<>();
-        this.shader = new Shader(Resource.internal("shader/level/particle/particle-batch.vert"), Resource.internal("shader/level/particle/particle-batch.frag"));
+        this.shader = new Shader(Resource.internal("/shader/level/particle/particle-batch.vert"), Resource.internal("/shader/level/particle/particle-batch.frag"));
         // Matrices
         this.rotateMatrix = new Matrix4f();
         // Buffer
-        this.mesh = new QuadMesh(
-                size,
-                new GlVertexAttr(3, GlType.FLOAT), // pos3
-                new GlVertexAttr(4, GlType.FLOAT), // col4
-                new GlVertexAttr(2, GlType.FLOAT)  // uv2
+        this.mesh = new Mesh(
+            new GlVertAttr(3, GlType.FLOAT), // pos3
+            new GlVertAttr(4, GlType.FLOAT), // col4
+            new GlVertAttr(2, GlType.FLOAT)  // uv2
         );
+        mesh.setMode(GlPrimitive.QUADS);
         // Vertices array
-        this.vertices = new float[QUAD_VERTICES * size * mesh.getBuffer().getVertexSize()];
+        this.vertices = new float[QUAD_VERTICES * size * mesh.vertices().getVertexSize()];
         // Color
         this.currentColor = new Color();
     }
@@ -80,7 +81,7 @@ public class ParticleBatch implements Disposable{
             flush();
         
         // Texture
-        final Texture texture = instance.getParticle().texture;
+        final Texture2D texture = instance.getParticle().texture;
         if(texture != lastTexture){
             flush();
             lastTexture = texture;
@@ -89,10 +90,10 @@ public class ParticleBatch implements Disposable{
         
         // Color
         currentColor.set(instance.color);
-        currentColor.setA(currentColor.a() * instance.getAlpha());
+        currentColor.setAlpha(currentColor.alpha * instance.getAlpha());
         
         // Matrix
-        rotateMatrix.toRotatedZ(instance.rotation).mul(new Matrix4f().toLookAt(camera.getRotation().getDirection()));
+        rotateMatrix.setRotationZ(instance.rotation).mul(new Matrix4f().setLookAlong(camera.getDirection()));
         
         // Setup vertices
         final Vec3f v0 = new Vec3f(0, -0.5,  0.5) .mulMat4(rotateMatrix) .mul(instance.size) .add(instance.position);
@@ -110,17 +111,17 @@ public class ParticleBatch implements Disposable{
     }
     
     private void addVertex(float x, float y, float z, float u, float v){
-        final int pointer = vertexIndex * mesh.getBuffer().getVertexSize();
+        final int pointer = vertexIndex * mesh.vertices().getVertexSize();
         
         // pos3
         vertices[pointer    ] = x;
         vertices[pointer + 1] = y;
         vertices[pointer + 2] = z;
         // col4
-        vertices[pointer + 3] = currentColor.r();
-        vertices[pointer + 4] = currentColor.g();
-        vertices[pointer + 5] = currentColor.b();
-        vertices[pointer + 6] = currentColor.a();
+        vertices[pointer + 3] = currentColor.red;
+        vertices[pointer + 4] = currentColor.green;
+        vertices[pointer + 5] = currentColor.blue;
+        vertices[pointer + 6] = currentColor.alpha;
         // uv2
         vertices[pointer + 7] = u;
         vertices[pointer + 8] = v;
@@ -130,17 +131,17 @@ public class ParticleBatch implements Disposable{
     
     private void setup(PlayerCamera camera){
         shader.bind();
-        shader.setUniform("u_projection", camera.getProjection());
-        shader.setUniform("u_skyBrightness", camera.getMinecraft().getRenderer().getWorldRenderer().getSkyRenderer().getSkyBrightness());
-        shader.setUniform("u_view", camera.getImaginaryView());
+        shader.uniform("u_projection", camera.getProjection());
+        shader.uniform("u_skyBrightness", camera.getMinecraft().getRenderer().getWorldRenderer().getSkyRenderer().getSkyBrightness());
+        shader.uniform("u_view", camera.getImaginaryView());
     }
     
     private void flush(){
         if(lastTexture == null)
             return;
         
-        shader.setUniform("u_texture", lastTexture);
-        mesh.getBuffer().setData(vertices, GlBufUsage.STREAM_DRAW);
+        shader.uniform("u_texture", lastTexture);
+        mesh.vertices().setData(vertices, GlBufUsage.STREAM_DRAW);
         mesh.render(particleIndex * QUAD_INDICES);
         
         vertexIndex = 0;

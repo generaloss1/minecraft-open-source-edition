@@ -1,20 +1,21 @@
 package minecraftose.server.level.light;
 
-import jpize.math.vecmath.vector.Vec2i;
-import jpize.math.vecmath.vector.Vec3i;
+import jpize.util.math.vector.Vec2i;
+import jpize.util.math.vector.Vec3i;
 import minecraftose.client.block.BlockProps;
 import minecraftose.main.Dir;
 import minecraftose.main.chunk.ChunkBase;
+import minecraftose.main.chunk.ChunkUtils;
 import minecraftose.main.chunk.storage.ChunkPos;
 import minecraftose.main.chunk.storage.Heightmap;
 import minecraftose.main.chunk.storage.HeightmapType;
 import minecraftose.main.network.packet.s2c.game.S2CPacketLightUpdate;
-import minecraftose.server.level.chunk.ChunkS;
 import minecraftose.server.level.LevelS;
+import minecraftose.server.level.chunk.ChunkS;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static minecraftose.main.chunk.ChunkUtils.*;
+import static minecraftose.main.chunk.ChunkUtils.MAX_LIGHT_LEVEL;
 
 public class LevelSkyLight{
 
@@ -319,7 +320,7 @@ public class LevelSkyLight{
             neighborZ = lz + normal.z;
 
             if(neighborX > ChunkBase.SIZE_IDX || neighborZ > ChunkBase.SIZE_IDX || neighborX < 0 || neighborZ < 0){
-                neighborChunk = getNeighborChunk(chunk, normal.x, normal.z);
+                neighborChunk = ChunkUtils.getNeighborChunk(chunk, normal.x, normal.z);
                 if(neighborChunk == null)
                     continue;
 

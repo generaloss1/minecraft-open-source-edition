@@ -1,14 +1,14 @@
 package minecraftose.server.command.vanilla;
 
-import jpize.math.vecmath.vector.Vec3f;
-import minecraftose.main.text.Component;
+import jpize.util.math.vector.Vec3f;
 import minecraftose.main.command.CommandContext;
-import minecraftose.server.Server;
-import minecraftose.server.command.ServerCommandDispatcher;
 import minecraftose.main.command.argument.CommandArg;
 import minecraftose.main.command.argument.CommandArgPlayer;
 import minecraftose.main.command.argument.CommandArgPosition;
 import minecraftose.main.command.builder.Commands;
+import minecraftose.main.text.Component;
+import minecraftose.server.Server;
+import minecraftose.server.command.ServerCommandDispatcher;
 import minecraftose.server.player.ServerPlayer;
 
 public class SCommandTeleport{

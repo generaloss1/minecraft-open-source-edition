@@ -1,26 +1,25 @@
 package minecraftose.client.network;
 
-import jpize.Jpize;
-import jpize.net.security.KeyAES;
-import jpize.net.tcp.TcpClient;
-import jpize.net.tcp.TcpConnection;
-import jpize.net.tcp.TcpListener;
-import jpize.net.tcp.packet.IPacket;
-import jpize.net.tcp.packet.PacketDispatcher;
+import jpize.app.Jpize;
+import jpize.util.net.packet.NetPacket;
+import jpize.util.net.packet.NetPacketDispatcher;
+import jpize.util.net.tcp.TCPClient;
+import jpize.util.net.tcp.TCPConnection;
+import jpize.util.security.AESKey;
 import minecraftose.client.Minecraft;
 import minecraftose.main.network.packet.s2c.game.*;
 import minecraftose.main.network.packet.s2c.login.S2CPacketEncryptStart;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class ClientConnection implements TcpListener{
+public class ClientConnection {
 
     private final Minecraft minecraft;
 
-    private final TcpClient tcpClient;
-    private TcpConnection tcpConnection;
+    private final TCPClient tcpClient;
+    private TCPConnection tcpConnection;
 
-    private final PacketDispatcher dispatcher;
+    private final NetPacketDispatcher dispatcher;
     private final ClientPacketHandler handler;
     private final ConcurrentLinkedQueue<byte[]> receivedPacketsQueue;
 
@@ -29,7 +28,7 @@ public class ClientConnection implements TcpListener{
     public ClientConnection(Minecraft minecraft){
         this.minecraft = minecraft;
         this.handler = new ClientPacketHandler(this);
-        this.dispatcher = new PacketDispatcher();
+        this.dispatcher = new NetPacketDispatcher();
         this.receivedPacketsQueue = new ConcurrentLinkedQueue<>();
         registerPackets();
 
@@ -44,7 +43,10 @@ public class ClientConnection implements TcpListener{
         thread.setDaemon(true);
         thread.start();
 
-        this.tcpClient = new TcpClient(this);
+        this.tcpClient = new TCPClient()
+                .setOnConnect(this::connected)
+                .setOnDisconnect(this::disconnected)
+                .setOnReceive(this::received);
     }
     
     public Minecraft getMinecraft(){
@@ -54,35 +56,32 @@ public class ClientConnection implements TcpListener{
 
     public void connect(String address, int port){
         tcpClient.connect(address, port);
-        tcpConnection.setTcpNoDelay(true);
+        tcpConnection.options().setTcpNoDelay(true);
     }
 
     public void disconnect(){
         tcpClient.disconnect();
     }
 
-    public void sendPacket(IPacket<?> packet){
+    public void sendPacket(NetPacket<?> packet){
         tcpConnection.send(packet);
         txCounter++;
     }
 
-    public void encode(KeyAES encodeKey){
+    public void encode(AESKey encodeKey){
         tcpConnection.encode(encodeKey);
     }
 
 
-    @Override
-    public void received(byte[] bytes, TcpConnection sender){
+    public void received(TCPConnection sender, byte[] bytes){
         receivedPacketsQueue.add(bytes);
     }
     
-    @Override
-    public void connected(TcpConnection connection){
+    public void connected(TCPConnection connection){
         this.tcpConnection = connection;
     }
     
-    @Override
-    public void disconnected(TcpConnection connection){
+    public void disconnected(TCPConnection connection){
         Jpize.exit();
     }
 
@@ -90,10 +89,8 @@ public class ClientConnection implements TcpListener{
     public void handlePackets(){
         while(!receivedPacketsQueue.isEmpty()){
             final byte[] bytes = receivedPacketsQueue.poll();
-
-            final boolean handled = dispatcher.handlePacket(bytes, handler);
-            if(handled)
-                rxCounter++;
+            dispatcher.readPacket(bytes, handler);
+            rxCounter += dispatcher.handlePackets();
         }
     }
 
@@ -115,24 +112,26 @@ public class ClientConnection implements TcpListener{
 
 
     private void registerPackets(){
-        dispatcher.register(S2CPacketAbilities.PACKET_ID, S2CPacketAbilities.class);
-        dispatcher.register(S2CPacketBlockUpdate.PACKET_ID, S2CPacketBlockUpdate.class);
-        dispatcher.register(S2CPacketChatMessage.PACKET_ID, S2CPacketChatMessage.class);
-        dispatcher.register(S2CPacketChunk.PACKET_ID, S2CPacketChunk.class);
-        dispatcher.register(S2CPacketDisconnect.PACKET_ID, S2CPacketDisconnect.class);
-        dispatcher.register(S2CPacketEncryptStart.PACKET_ID, S2CPacketEncryptStart.class);
-        dispatcher.register(S2CPacketEntityMove.PACKET_ID, S2CPacketEntityMove.class);
-        dispatcher.register(S2CPacketLightUpdate.PACKET_ID, S2CPacketLightUpdate.class);
-        dispatcher.register(S2CPacketPlayerSneaking.PACKET_ID, S2CPacketPlayerSneaking.class);
-        dispatcher.register(S2CPacketPlaySound.PACKET_ID, S2CPacketPlaySound.class);
-        dispatcher.register(S2CPacketPong.PACKET_ID, S2CPacketPong.class);
-        dispatcher.register(S2CPacketRemoveEntity.PACKET_ID, S2CPacketRemoveEntity.class);
-        dispatcher.register(S2CPacketSpawnEntity.PACKET_ID, S2CPacketSpawnEntity.class);
-        dispatcher.register(S2CPacketSpawnInfo.PACKET_ID, S2CPacketSpawnInfo.class);
-        dispatcher.register(S2CPacketSpawnPlayer.PACKET_ID, S2CPacketSpawnPlayer.class);
-        dispatcher.register(S2CPacketTeleportPlayer.PACKET_ID, S2CPacketTeleportPlayer.class);
-        dispatcher.register(S2CPacketTime.PACKET_ID, S2CPacketTime.class);
-        dispatcher.register(S2CPacketPlayerVelocity.PACKET_ID, S2CPacketPlayerVelocity.class);
+        dispatcher.register(
+            S2CPacketAbilities.class,
+            S2CPacketBlockUpdate.class,
+            S2CPacketChatMessage.class,
+            S2CPacketChunk.class,
+            S2CPacketDisconnect.class,
+            S2CPacketEncryptStart.class,
+            S2CPacketEntityMove.class,
+            S2CPacketLightUpdate.class,
+            S2CPacketPlayerSneaking.class,
+            S2CPacketPlaySound.class,
+            S2CPacketPong.class,
+            S2CPacketRemoveEntity.class,
+            S2CPacketSpawnEntity.class,
+            S2CPacketSpawnInfo.class,
+            S2CPacketSpawnPlayer.class,
+            S2CPacketTeleportPlayer.class,
+            S2CPacketTime.class,
+            S2CPacketPlayerVelocity.class
+        );
     }
     
 }

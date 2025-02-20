@@ -1,37 +1,38 @@
 package minecraftose.test;
 
-import jpize.io.context.JpizeApplication;
-import jpize.gl.Gl;
-import jpize.graphics.texture.pixmap.PixmapRGBA;
-import jpize.graphics.texture.Texture;
-import jpize.graphics.util.batch.TextureBatch;
-import jpize.math.Maths;
-import jpize.math.function.FastNoiseLite;
 
-public class BiomeGenerator extends JpizeApplication{
+import jpize.app.JpizeApplication;
+import jpize.gl.Gl;
+import jpize.gl.texture.Texture2D;
+import jpize.util.math.FastNoise;
+import jpize.util.math.Maths;
+import jpize.util.mesh.TextureBatch;
+import jpize.util.pixmap.PixmapRGBA;
+
+public class BiomeGenerator extends JpizeApplication {
 
     private final TextureBatch batch;
-    private Texture mapTexture;
+    private Texture2D mapTexture;
     
-    private final FastNoiseLite
+    private final FastNoise
         continentalnessNoise, erosionNoise, peaksValleysNoise, temperatureNoise, humidityNoise, randomNoise;
 
     public BiomeGenerator(){
         batch = new TextureBatch();
 
-        continentalnessNoise = new FastNoiseLite();
-        erosionNoise = new FastNoiseLite();
-        peaksValleysNoise = new FastNoiseLite();
-        temperatureNoise = new FastNoiseLite();
-        humidityNoise = new FastNoiseLite();
-        randomNoise = new FastNoiseLite();
+        continentalnessNoise = new FastNoise();
+        erosionNoise = new FastNoise();
+        peaksValleysNoise = new FastNoise();
+        temperatureNoise = new FastNoise();
+        humidityNoise = new FastNoise();
+        randomNoise = new FastNoise();
 
         continentalnessNoise.setFrequency(0.002F);
-        continentalnessNoise.setFractalType(FastNoiseLite.FractalType.FBm);
+        continentalnessNoise.setFractalType(FastNoise.FractalType.FBM);
         continentalnessNoise.setFractalOctaves(7);
 
         erosionNoise.setFrequency(0.002F);
-        erosionNoise.setFractalType(FastNoiseLite.FractalType.FBm);
+        erosionNoise.setFractalType(FastNoise.FractalType.FBM);
         erosionNoise.setFractalOctaves(5);
         randomNoise.setFrequency(1);
     }
@@ -42,25 +43,25 @@ public class BiomeGenerator extends JpizeApplication{
         
         for(int x = 0; x < map.getWidth(); x++){
             for(int y = 0; y < map.getHeight(); y++){
-                final float continentalness = continentalnessNoise.getNoise(x, y);
-                final float erosion = erosionNoise.getNoise(x, y);
+                final float continentalness = continentalnessNoise.get(x, y);
+                final float erosion = erosionNoise.get(x, y);
                 
                 
-                final float grayscale = Maths.round(Maths.map(erosion, -0.55 * Maths.Sqrt2, 0.55 * Maths.Sqrt2, 0, 1) * 5) / 5F;
+                final float grayscale = Maths.round(Maths.map(erosion, -0.55 * Maths.SQRT2, 0.55 * Maths.SQRT2, 0, 1) * 5) / 5F;
                 
                 map.setPixel(x, y, grayscale, grayscale, grayscale, 1);
             }
         }
         
-        mapTexture = new Texture(map);
+        mapTexture = new Texture2D(map);
     }
     
     
     public void render(){
         Gl.clearColorBuffer();
-        batch.begin();
+        batch.setup();
         batch.draw(mapTexture, 0, 0, 1280, 1280);
-        batch.end();
+        batch.render();
     }
     
 }

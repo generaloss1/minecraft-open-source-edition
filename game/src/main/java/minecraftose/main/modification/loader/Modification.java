@@ -1,6 +1,7 @@
 package minecraftose.main.modification.loader;
 
-import jpize.util.file.Resource;
+
+import jpize.util.res.Resource;
 
 import java.lang.reflect.Method;
 import java.net.URLClassLoader;
@@ -24,7 +25,7 @@ public class Modification{
         this.id = id;
         this.version = version;
         this.description = description;
-        this.icon = Resource.internal(iconPath, classLoader.getClass());
+        this.icon = Resource.internal(classLoader.getClass(), iconPath);
         
         this.entryPoints = new HashMap<>();
         for(Map.Entry<ModEntryPointType, Class<?>> entryPoint: entryPointMap.entrySet())

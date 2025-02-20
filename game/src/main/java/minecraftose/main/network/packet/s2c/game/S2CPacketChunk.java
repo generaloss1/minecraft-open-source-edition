@@ -1,6 +1,5 @@
 package minecraftose.main.network.packet.s2c.game;
 
-import jpize.net.tcp.packet.IPacket;
 import minecraftose.client.chunk.ChunkC;
 import minecraftose.client.level.LevelC;
 import minecraftose.client.network.ClientPacketHandler;
@@ -11,18 +10,16 @@ import minecraftose.main.chunk.storage.ChunkPos;
 import minecraftose.main.chunk.storage.Heightmap;
 import minecraftose.main.chunk.storage.HeightmapType;
 import minecraftose.main.chunk.storage.SectionPos;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
 import minecraftose.main.registry.Registry;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.net.packet.NetPacket;
 
 import java.io.IOException;
 import java.util.*;
 
-public class S2CPacketChunk extends IPacket<ClientPacketHandler>{
-    
-    public static final int PACKET_ID = 2;
-    
-    
+public class S2CPacketChunk extends NetPacket<ClientPacketHandler>{
+
     private ChunkPos position;
     private ChunkSection[] sections;
     private int highestSectionIndex;
@@ -30,15 +27,11 @@ public class S2CPacketChunk extends IPacket<ClientPacketHandler>{
     private Map<HeightmapType, short[]> readHeightmaps;
     private Biome[] biomes;
     
-    public S2CPacketChunk(){
-        super(PACKET_ID);
-        
+    public S2CPacketChunk(){    
         readHeightmaps = new HashMap<>();
     }
     
-    public S2CPacketChunk(ChunkBase chunk){
-        super(PACKET_ID);
-        
+    public S2CPacketChunk(ChunkBase chunk){    
         position = chunk.pos();
         sections = chunk.getSections();
         highestSectionIndex = chunk.getHighestSectionIndex();
@@ -58,7 +51,7 @@ public class S2CPacketChunk extends IPacket<ClientPacketHandler>{
     
     
     @Override
-    public void write(JpizeOutputStream stream) throws IOException{
+    public void write(ExtDataOutputStream stream) throws IOException{
         // Chunk position
         stream.writeInt(position.x);
         stream.writeInt(position.z);
@@ -84,7 +77,7 @@ public class S2CPacketChunk extends IPacket<ClientPacketHandler>{
             stream.writeByte(biome.ID);
     }
     
-    private void writeSection(JpizeOutputStream stream, int sectionIndex) throws IOException{
+    private void writeSection(ExtDataOutputStream stream, int sectionIndex) throws IOException{
         final ChunkSection section = sections[sectionIndex];
         
         stream.writeByte(sectionIndex); // index
@@ -93,7 +86,7 @@ public class S2CPacketChunk extends IPacket<ClientPacketHandler>{
         stream.write(section.light); // light data
     }
     
-    private void writeHeightmap(JpizeOutputStream stream, Heightmap heightmap) throws IOException{
+    private void writeHeightmap(ExtDataOutputStream stream, Heightmap heightmap) throws IOException{
         stream.writeByte(heightmap.getType().ordinal());
         stream.writeShortArray(heightmap.getValues());
     }
@@ -101,7 +94,7 @@ public class S2CPacketChunk extends IPacket<ClientPacketHandler>{
     
     
     @Override
-    public void read(JpizeInputStream stream) throws IOException{
+    public void read(ExtDataInputStream stream) throws IOException{
         // Chunk position
         position = new ChunkPos(
             stream.readInt(),
@@ -131,7 +124,7 @@ public class S2CPacketChunk extends IPacket<ClientPacketHandler>{
             biomes[i] = Registry.biome.get(stream.readByte());
     }
     
-    private void readSection(JpizeInputStream stream) throws IOException{
+    private void readSection(ExtDataInputStream stream) throws IOException{
         final byte sectionIndex = stream.readByte(); // index
         final short blocksNum = stream.readShort(); // blocks num
         final short[] blocks = stream.readShortArray(); // blocks data
@@ -146,7 +139,7 @@ public class S2CPacketChunk extends IPacket<ClientPacketHandler>{
         sections[sectionIndex] = section;
     }
     
-    private void readHeightmap(JpizeInputStream stream) throws IOException{
+    private void readHeightmap(ExtDataInputStream stream) throws IOException{
         final HeightmapType type = HeightmapType.values()[stream.readByte()];
         final short[] values = stream.readShortArray();
         

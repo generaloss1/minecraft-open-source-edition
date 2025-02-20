@@ -1,9 +1,11 @@
 package minecraftose.server.command.vanilla;
 
-import jpize.util.file.Resource;
-import jpize.math.vecmath.vector.Vec3f;
-import jpize.math.vecmath.vector.Vec3i;
-import jpize.util.file.ResourceExt;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.math.vector.Vec3f;
+import jpize.util.math.vector.Vec3i;
+import jpize.util.res.FileResource;
+import jpize.util.res.Resource;
 import minecraftose.main.command.CommandContext;
 import minecraftose.main.command.argument.CommandArg;
 import minecraftose.main.command.builder.Commands;
@@ -14,8 +16,6 @@ import minecraftose.main.text.TextColor;
 import minecraftose.server.command.ServerCommandDispatcher;
 import minecraftose.server.level.LevelS;
 import minecraftose.server.player.PlayerList;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
 
 import java.io.IOException;
 
@@ -69,12 +69,12 @@ public class SCommandStructure{
         final Vec3i end = context.getArg(1).asPosition().getPosition().floor().castInt();
         final String name = context.getArg(2).asWord().getWord();
 
-        final Vec3i start = begin.min(end);
+        final Vec3i start = Vec3i.minComps(new Vec3i(), begin, end);
         final Vec3i size = begin.copy().sub(end).abs().add(1);
 
         // File
-        final ResourceExt file = Resource.external("structures/" + name + ".struct");
-        try(final JpizeOutputStream outStream = file.jpizeOut()){
+        final FileResource file = Resource.file("structures/" + name + ".struct");
+        try(final ExtDataOutputStream outStream = file.outStreamExt()){
 
             // Write
             outStream.writeVec3i(size);
@@ -103,8 +103,8 @@ public class SCommandStructure{
         final Vec3i start = new Vec3i(position.xFloor(), position.yRound(), position.zFloor());
 
         // File
-        final Resource file = Resource.external("structures/" + name + ".struct");
-        try(final JpizeInputStream inStream = file.jpizeIn()){
+        final Resource file = Resource.file("structures/" + name + ".struct");
+        try(final ExtDataInputStream inStream = file.inStreamExt()){
 
             // Read
             final Vec3i size = inStream.readVec3i();

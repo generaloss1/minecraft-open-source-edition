@@ -1,8 +1,8 @@
 package minecraftose.client.entity.model;
 
-import jpize.math.util.EulerAngles;
-import jpize.math.vecmath.matrix.Matrix4f;
-import jpize.math.vecmath.vector.Vec3f;
+import jpize.util.math.EulerAngles;
+import jpize.util.math.matrix.Matrix4f;
+import jpize.util.math.vector.Vec3f;
 import minecraftose.client.control.camera.PlayerCamera;
 
 public class Pose{
@@ -24,35 +24,35 @@ public class Pose{
     }
     
     public void updateMatrices(PlayerCamera camera, Pose initial){
-        translateMatrix.toTranslated(position);
-        scaleMatrix.toScaled(scale);
+        translateMatrix.setTranslate(position);
+        scaleMatrix.setScale(scale);
         
         poseModelMatrix
             .identity()
         
             .mul(initial.poseModelMatrix)
-            .mul(translateMatrix).mul(scaleMatrix).mul(rotation.toMatrix())
+            .mul(translateMatrix).mul(scaleMatrix).mul(new Matrix4f().setRotation(rotation))
         ;
         
         modelMatrix
-            .set(new Matrix4f().toTranslated(-camera.getX(), 0, -camera.getZ()))
+            .set(new Matrix4f().setTranslate(-camera.getX(), 0, -camera.getZ()))
             .mul(poseModelMatrix);
     }
     
     public void updateMatrices(PlayerCamera camera, Pose initial, Pose parent){
-        translateMatrix.toTranslated(position);
-        scaleMatrix.toScaled(scale);
+        translateMatrix.setTranslate(position);
+        scaleMatrix.setScale(scale);
         
         poseModelMatrix
             .identity()
             
             .mul(parent.poseModelMatrix)
             .mul(initial.poseModelMatrix)
-            .mul(translateMatrix).mul(scaleMatrix).mul(rotation.toMatrix())
+            .mul(translateMatrix).mul(scaleMatrix).mul(new Matrix4f().setRotation(rotation))
         ;
         
         modelMatrix
-            .set(new Matrix4f().toTranslated(-camera.getX(), 0, -camera.getZ()))
+            .set(new Matrix4f().setTranslate(-camera.getX(), 0, -camera.getZ()))
             .mul(poseModelMatrix);
     }
     

@@ -1,6 +1,5 @@
 package minecraftose.main.chunk.storage;
 
-import minecraftose.main.chunk.ChunkUtils;
 import minecraftose.main.chunk.ChunkBase;
 
 import java.util.Objects;

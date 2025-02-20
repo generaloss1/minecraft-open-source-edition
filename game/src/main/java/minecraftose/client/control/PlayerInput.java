@@ -1,30 +1,31 @@
 package minecraftose.client.control;
 
-import jpize.graphics.camera.controller.Rotation3DController;
-import jpize.sdl.input.Key;
+import jpize.glfw.input.Key;
+import jpize.util.input.RotationInput;
+import jpize.util.math.EulerAngles;
+import jpize.util.time.Stopwatch;
 import minecraftose.client.Minecraft;
-import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.control.camera.HorizontalMoveController;
+import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.entity.LocalPlayer;
 import minecraftose.client.level.LevelC;
 import minecraftose.client.options.KeyMapping;
 import minecraftose.client.options.Options;
 import minecraftose.main.Tickable;
 import minecraftose.main.network.packet.c2s.game.C2SPacketPlayerSneaking;
-import jpize.util.time.Stopwatch;
 
 public class PlayerInput implements Tickable{
 
     private final LocalPlayer player;
 
-    private final Rotation3DController rotation;
+    private final RotationInput rotation;
     private final HorizontalMoveController horizontalMove;
     private final Stopwatch prevJumpTime;
     
     public PlayerInput(LocalPlayer player){
         this.player = player;
 
-        this.rotation = new Rotation3DController();
+        this.rotation = new RotationInput(new EulerAngles());
         // this.rotation.setSmoothness(0);
         this.rotation.setSpeed(player.getMinecraft().getOptions().getMouseSensitivity());
 
@@ -49,36 +50,35 @@ public class PlayerInput implements Tickable{
         final Options options = minecraft.getOptions();
 
         // Rotation
-        rotation.update();
-        player.getRotation().set(rotation.getRotation());
+        player.getRotation().set(rotation.getTarget());
 
         // Horizontal motion
         horizontalMove.update();
 
-        if(Key.X.isDown()){
+        if(Key.X.down()){
             player.setWalkSpeedFactor(10);
             player.setJumpHeightFactor(10);
-        }else if(Key.X.isReleased()){
+        }else if(Key.X.up()){
             player.setWalkSpeedFactor(1);
             player.setJumpHeightFactor(1);
         }
 
-        if(options.getKey(KeyMapping.SPRINT).isPressed() && options.getKey(KeyMapping.FORWARD).isPressed() ||
-            options.getKey(KeyMapping.SPRINT).isPressed() && options.getKey(KeyMapping.FORWARD).isDown())
+        if(options.getKey(KeyMapping.SPRINT).pressed() && options.getKey(KeyMapping.FORWARD).pressed() ||
+            options.getKey(KeyMapping.SPRINT).pressed() && options.getKey(KeyMapping.FORWARD).down())
             player.setSprinting(true);
-        else if(options.getKey(KeyMapping.FORWARD).isReleased())
+        else if(options.getKey(KeyMapping.FORWARD).up())
             player.setSprinting(false);
 
-        if(options.getKey(KeyMapping.SNEAK).isDown()){
+        if(options.getKey(KeyMapping.SNEAK).down()){
             player.setSneaking(true);
             minecraft.getConnection().sendPacket(new C2SPacketPlayerSneaking(player));
-        }else if(options.getKey(KeyMapping.SNEAK).isReleased()){
+        }else if(options.getKey(KeyMapping.SNEAK).up()){
             player.setSneaking(false);
             minecraft.getConnection().sendPacket(new C2SPacketPlayerSneaking(player));
         }
 
         // Jump, Sprint, Sneak
-        if(options.getKey(KeyMapping.JUMP).isDown()){
+        if(options.getKey(KeyMapping.JUMP).down()){
             player.setJumping(true);
 
             // Activate Flying
@@ -87,26 +87,26 @@ public class PlayerInput implements Tickable{
                     player.setFlying(!player.isFlying());
                 prevJumpTime.stop().reset().start();
             }
-        }else if(options.getKey(KeyMapping.JUMP).isReleased())
+        }else if(options.getKey(KeyMapping.JUMP).up())
             player.setJumping(false);
 
         // Toggle perspective
         final PlayerCamera camera = minecraft.getCamera();
 
-        if(options.getKey(KeyMapping.TOGGLE_PERSPECTIVE).isDown())
+        if(options.getKey(KeyMapping.TOGGLE_PERSPECTIVE).down())
             camera.nextPerspective();
 
         // Boost
-        if(Key.Y.isDown())
+        if(Key.Y.down())
             player.getVelocity().mul(2, 1.4, 2);
-        if(Key.H.isDown())
-            player.getVelocity().add(camera.getRotation().getDirection().mul(2));
+        if(Key.H.down())
+            player.getVelocity().add(camera.getDirection().mul(2));
     }
 
     public void tick(){ }
     
     
-    public Rotation3DController getRotation(){
+    public RotationInput getRotation(){
         return rotation;
     }
 

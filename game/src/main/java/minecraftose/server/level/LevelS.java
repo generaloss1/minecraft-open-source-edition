@@ -1,7 +1,7 @@
 package minecraftose.server.level;
 
-import jpize.math.vecmath.vector.Vec2f;
-import jpize.math.vecmath.vector.Vec3f;
+import jpize.util.math.vector.Vec2f;
+import jpize.util.math.vector.Vec3f;
 import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.main.audio.Sound;
@@ -16,7 +16,7 @@ import minecraftose.server.level.light.LevelBlockLight;
 import minecraftose.server.level.light.LevelSkyLight;
 import minecraftose.server.player.ServerPlayer;
 
-import static minecraftose.main.chunk.ChunkUtils.*;
+import static minecraftose.main.chunk.ChunkUtils.MAX_LIGHT_LEVEL;
 
 public class LevelS extends Level{
 
@@ -154,7 +154,7 @@ public class LevelS extends Level{
     
     public Vec3f getSpawnPosition(){
         final Vec2f spawn = getConfiguration().getWorldSpawn();
-        final int spawnY = getHeight(HeightmapType.SURFACE, spawn.xf(), spawn.yf()) + 1;
+        final int spawnY = getHeight(HeightmapType.SURFACE, spawn.xFloor(), spawn.yFloor()) + 1;
         return new Vec3f(spawn.x, spawnY, spawn.y);
     }
 

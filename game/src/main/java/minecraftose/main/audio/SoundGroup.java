@@ -1,6 +1,7 @@
 package minecraftose.main.audio;
 
-import jpize.math.Maths;
+
+import jpize.util.math.Maths;
 
 public class SoundGroup{
 

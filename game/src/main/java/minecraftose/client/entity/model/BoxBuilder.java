@@ -1,13 +1,14 @@
 package minecraftose.client.entity.model;
 
+
 import jpize.gl.type.GlType;
-import jpize.graphics.mesh.IndexedMesh;
-import jpize.gl.vertex.GlVertexAttr;
+import jpize.gl.vertex.GlVertAttr;
+import jpize.util.mesh.IndexedMesh;
 
 public class BoxBuilder{
     
     private final IndexedMesh mesh;
-    private float[] vertices;
+    private final float[] vertices;
     private int vertexPointer;
     private final float x1, y1, z1, x2, y2, z2;
     
@@ -20,11 +21,11 @@ public class BoxBuilder{
         this.z2 = z2;
         
         mesh = new IndexedMesh(
-                new GlVertexAttr(3, GlType.FLOAT),
-                new GlVertexAttr(4, GlType.FLOAT),
-                new GlVertexAttr(2, GlType.FLOAT)
+                new GlVertAttr(3, GlType.FLOAT),
+                new GlVertAttr(4, GlType.FLOAT),
+                new GlVertAttr(2, GlType.FLOAT)
         );
-        vertices = new float[4 * 6 * mesh.getBuffer().getVertexSize()];
+        vertices = new float[4 * 6 * mesh.vertices().getVertexSize()];
     }
     
     public BoxBuilder nx(float r, float g, float b, float a, float u1, float v1, float u2, float v2){
@@ -94,7 +95,7 @@ public class BoxBuilder{
         };
         */
 
-        int p = vertexPointer * mesh.getBuffer().getVertexSize();
+        int p = vertexPointer * mesh.vertices().getVertexSize();
         
         vertices[p    ] = x;
         vertices[p + 1] = y;
@@ -112,15 +113,15 @@ public class BoxBuilder{
     }
     
     public IndexedMesh end(){
-        mesh.getBuffer().setData(vertices);
-        mesh.getIndexBuffer().setData(new int[]{
+        mesh.vertices().setData(vertices);
+        mesh.indices().setData(
             0 , 1 , 2 ,  2 , 3 , 0 , // -x
             4 , 5 , 6 ,  6 , 7 , 4 , // +x
             8 , 9 , 10,  10, 11, 8 , // -y
             12, 13, 14,  14, 15, 12, // +y
             16, 17, 18,  18, 19, 16, // -z
-            20, 21, 22,  22, 23, 20, // +z
-        });
+            20, 21, 22,  22, 23, 20  // +z
+        );
         
         return mesh;
     }

@@ -1,6 +1,6 @@
 package minecraftose.client.chunk;
 
-import jpize.math.vecmath.matrix.Matrix4f;
+import jpize.util.math.matrix.Matrix4f;
 import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.chunk.mesh.ChunkMeshStack;
@@ -38,7 +38,7 @@ public class ChunkC extends ChunkBase{
     public void updateTranslationMatrix(PlayerCamera camera){
         final float relativeChunkX = position.globalX() - camera.getX();
         final float relativeChunkZ = position.globalZ() - camera.getZ();
-        translationMatrix.toTranslated(relativeChunkX, 0, relativeChunkZ);
+        translationMatrix.setTranslate(relativeChunkX, 0, relativeChunkZ);
     }
 
 

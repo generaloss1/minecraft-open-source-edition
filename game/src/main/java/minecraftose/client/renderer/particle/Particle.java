@@ -1,8 +1,9 @@
 package minecraftose.client.renderer.particle;
 
-import jpize.graphics.texture.Texture;
-import jpize.graphics.util.color.Color;
-import jpize.math.vecmath.vector.Vec3f;
+
+import jpize.gl.texture.Texture2D;
+import jpize.util.color.Color;
+import jpize.util.math.vector.Vec3f;
 
 import java.util.function.Function;
 
@@ -11,7 +12,7 @@ public class Particle{
     public static final Function<Float, Float> DEFAULT_ALPHA_FUNC = time -> 1F;
     
     
-    protected Texture texture;
+    protected Texture2D texture;
     protected ParticleCallback initialSetup;
     protected Function<Float, Float> alphaFunc;
     protected ParticleCallback onAnimate;
@@ -24,7 +25,7 @@ public class Particle{
     }
     
     
-    public Particle texture(Texture texture){
+    public Particle texture(Texture2D texture){
         this.texture = texture;
         return this;
     }

@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class JPanelWithBackground extends JPanel{
 
-    private Image backgroundImage;
+    private final Image backgroundImage;
 
     public JPanelWithBackground(String fileName){
         try{

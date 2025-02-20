@@ -1,6 +1,6 @@
 package minecraftose.main.time;
 
-import jpize.math.Maths;
+import jpize.util.math.Maths;
 import minecraftose.main.Tickable;
 
 public class GameTime implements Tickable{

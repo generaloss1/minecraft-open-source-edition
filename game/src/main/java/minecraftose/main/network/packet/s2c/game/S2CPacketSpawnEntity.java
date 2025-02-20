@@ -1,24 +1,20 @@
 package minecraftose.main.network.packet.s2c.game;
 
-import jpize.math.util.EulerAngles;
-import jpize.math.vecmath.vector.Vec3f;
-import jpize.net.tcp.packet.IPacket;
+import jpize.util.math.EulerAngles;
+import jpize.util.math.vector.Vec3f;
 import minecraftose.client.network.ClientPacketHandler;
 import minecraftose.main.entity.Entity;
 import minecraftose.main.entity.EntityType;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
 
 import java.io.IOException;
 import java.util.UUID;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.net.packet.NetPacket;
 
-public class S2CPacketSpawnEntity extends IPacket<ClientPacketHandler>{
+public class S2CPacketSpawnEntity extends NetPacket<ClientPacketHandler>{
 
-    public static final int PACKET_ID = 14;
-
-    public S2CPacketSpawnEntity(){
-        super(PACKET_ID);
-    }
+    public S2CPacketSpawnEntity(){}
     
     public EntityType<?> type;
     public UUID uuid;
@@ -35,7 +31,7 @@ public class S2CPacketSpawnEntity extends IPacket<ClientPacketHandler>{
 
 
     @Override
-    public void write(JpizeOutputStream stream) throws IOException{
+    public void write(ExtDataOutputStream stream) throws IOException{
         stream.writeInt(type.getID());
         stream.writeUTF(uuid.toString());
         stream.writeVec3f(position);
@@ -43,7 +39,7 @@ public class S2CPacketSpawnEntity extends IPacket<ClientPacketHandler>{
     }
 
     @Override
-    public void read(JpizeInputStream stream) throws IOException{
+    public void read(ExtDataInputStream stream) throws IOException{
         type = EntityType.fromEntityID(stream.readInt());
         uuid = UUID.fromString(stream.readUTF());
         position = stream.readVec3f();

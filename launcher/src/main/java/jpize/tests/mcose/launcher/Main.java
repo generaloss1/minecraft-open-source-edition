@@ -1,7 +1,5 @@
 package jpize.tests.mcose.launcher;
 
-import jpize.Jpize;
-import jpize.io.context.ContextBuilder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,16 +11,8 @@ public class Main{
     private static final String title = "MCOSE Launcher";
 
     public static void main(String[] args){
-        // runJPize();
         // runCli();
         runJFrame();
-    }
-
-    private static void runJPize(){
-        ContextBuilder.newContext(width, height, title)
-            .register().setAdapter(new McOseLauncherJpize());
-
-        Jpize.runContexts();
     }
 
     private static void runCli(){

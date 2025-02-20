@@ -1,25 +1,25 @@
 package minecraftose.server.network;
 
-import jpize.net.security.KeyAES;
-import jpize.net.tcp.TcpConnection;
-import jpize.net.tcp.packet.PacketHandler;
+import jpize.util.net.tcp.TCPConnection;
+import jpize.util.security.AESKey;
 import minecraftose.main.network.PlayerProfile;
-import minecraftose.main.network.packet.s2c.game.S2CPacketDisconnect;
-import minecraftose.main.network.packet.s2c.login.S2CPacketEncryptStart;
+import minecraftose.main.network.packet.PacketHandler;
 import minecraftose.main.network.packet.c2s.login.C2SPacketAuth;
 import minecraftose.main.network.packet.c2s.login.C2SPacketEncryptEnd;
 import minecraftose.main.network.packet.c2s.login.C2SPacketLogin;
+import minecraftose.main.network.packet.s2c.game.S2CPacketDisconnect;
+import minecraftose.main.network.packet.s2c.login.S2CPacketEncryptStart;
 import minecraftose.server.Server;
 
-public class PlayerLoginConnection implements PacketHandler{
+public class PlayerLoginConnection implements PacketHandler {
     
     private final Server server;
-    private final TcpConnection connection;
+    private final TCPConnection connection;
     
     private String profileName;
     private int versionID;
     
-    public PlayerLoginConnection(Server server, TcpConnection connection){
+    public PlayerLoginConnection(Server server, TCPConnection connection){
         this.server = server;
         this.connection = connection;
     }
@@ -48,7 +48,7 @@ public class PlayerLoginConnection implements PacketHandler{
     }
     
     public void encryptEnd(C2SPacketEncryptEnd packet){
-        final KeyAES decryptedClientKey = new KeyAES(server.getConnectionManager().getRsaKey().decrypt(packet.encryptedClientKey));
+        final AESKey decryptedClientKey = new AESKey(server.getConnectionManager().getRsaKey().decrypt(packet.encryptedClientKey));
         connection.encode(decryptedClientKey);
     }
     

@@ -1,6 +1,7 @@
 package minecraftose.main.text;
 
-import jpize.graphics.util.color.Color;
+
+import jpize.util.color.Color;
 
 import java.util.ArrayList;
 import java.util.List;

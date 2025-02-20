@@ -1,19 +1,16 @@
 package minecraftose.main.network.packet.s2c.game;
 
-import jpize.net.tcp.packet.IPacket;
 import minecraftose.client.network.ClientPacketHandler;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
 
 import java.io.IOException;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.net.packet.NetPacket;
 
-public class S2CPacketTime extends IPacket<ClientPacketHandler>{
+public class S2CPacketTime extends NetPacket<ClientPacketHandler>{
     
-    public static final int PACKET_ID = 22;
-    
-    public S2CPacketTime(){
-        super(PACKET_ID);
-    }
+        
+    public S2CPacketTime(){}
     
     
     public long gameTimeTicks;
@@ -25,12 +22,12 @@ public class S2CPacketTime extends IPacket<ClientPacketHandler>{
     
     
     @Override
-    public void write(JpizeOutputStream stream) throws IOException{
+    public void write(ExtDataOutputStream stream) throws IOException{
         stream.writeLong(gameTimeTicks);
     }
     
     @Override
-    public void read(JpizeInputStream stream) throws IOException{
+    public void read(ExtDataInputStream stream) throws IOException{
         gameTimeTicks = stream.readLong();
     }
 

@@ -1,6 +1,6 @@
 package minecraftose.server.command.vanilla;
 
-import jpize.math.vecmath.vector.Vec3f;
+import jpize.util.math.vector.Vec3f;
 import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.main.command.CommandContext;

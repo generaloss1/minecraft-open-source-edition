@@ -1,25 +1,25 @@
 package minecraftose.server;
 
-import jpize.net.tcp.TcpServer;
+import jpize.util.net.tcp.TCPServer;
+import jpize.util.time.TickGenerator;
+import jpize.util.time.Tickable;
 import minecraftose.main.text.Component;
 import minecraftose.main.time.GameTime;
 import minecraftose.server.command.ServerCommandDispatcher;
 import minecraftose.server.level.LevelManager;
 import minecraftose.server.level.LevelS;
+import minecraftose.server.level.gen.generator.ChunkGeneratorDefault;
 import minecraftose.server.network.ServerConnectionManager;
 import minecraftose.server.player.PlayerList;
 import minecraftose.server.player.ServerPlayer;
-import jpize.util.time.TickGenerator;
-import jpize.util.time.Tickable;
-import minecraftose.server.level.gen.generator.ChunkGeneratorDefault;
 import minecraftose.server.time.ServerGameTime;
 
 import java.util.Collection;
 
-public abstract class Server implements Tickable{
+public abstract class Server implements Tickable {
     
     private final ServerConfiguration configuration;
-    private final TcpServer tcpServer;
+    private final TCPServer tcpServer;
     private final ServerConnectionManager connectionManager;
     private final PlayerList playerList;
     private final LevelManager levelManager;
@@ -30,8 +30,11 @@ public abstract class Server implements Tickable{
         this.configuration = new ServerConfiguration();
         
         this.connectionManager = new ServerConnectionManager(this);
-        this.tcpServer = new TcpServer(connectionManager);
-        
+        this.tcpServer = new TCPServer()
+                .setOnConnect(connectionManager::connected)
+                .setOnDisconnect(connectionManager::disconnected)
+                .setOnReceive(connectionManager::received);
+
         this.playerList = new PlayerList(this);
         this.levelManager = new LevelManager(this);
         this.commandDispatcher = new ServerCommandDispatcher(this);

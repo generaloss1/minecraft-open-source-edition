@@ -1,9 +1,9 @@
 package minecraftose.client.entity.model;
 
-import jpize.Jpize;
-import jpize.math.Mathc;
-import jpize.math.Maths;
-import jpize.math.vecmath.vector.Vec3f;
+import jpize.app.Jpize;
+import jpize.util.math.Mathc;
+import jpize.util.math.Maths;
+import jpize.util.math.vector.Vec3f;
 import minecraftose.client.Minecraft;
 import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.entity.AbstractClientPlayer;
@@ -116,7 +116,7 @@ public class PlayerModel extends HumanoidModel{
         final Options options = minecraft.getOptions();
         final PlayerCamera camera = minecraft.getCamera();
         if(options.isFirstPersonModel() && camera.getPerspective().isFirstPerson()){
-            final Vec3f offset = player.getRotation().getDirectionHorizontal().mul(-4 * w);
+            final Vec3f offset = player.getRotation().getDirectionHorizontal(new Vec3f()).mul(-4 * w);
             torso.getPosition().add(offset);
             head.setShow(false);
         }else
@@ -125,7 +125,7 @@ public class PlayerModel extends HumanoidModel{
         if(Float.isNaN(player.getLerpRotation().yaw) || Float.isNaN(torso.getRotation().yaw))
             return;
 
-        torso.getRotation().yaw += (-player.getLerpRotation().yaw - torso.getRotation().yaw) * Jpize.getDt() * 6;
+        torso.getRotation().yaw += (-player.getLerpRotation().yaw - torso.getRotation().yaw) * Jpize.getDeltaTime() * 6;
 
         head.getRotation().yaw = -player.getLerpRotation().yaw;
         head.getRotation().pitch = player.getLerpRotation().pitch;
@@ -137,9 +137,9 @@ public class PlayerModel extends HumanoidModel{
             torso.getRotation().pitch = -30;
             torso.getPosition().add(0, -w * 2, 0);
             head.getPosition().add(
-                3 * w * Mathc.cos(-torso.getRotation().yaw * Maths.ToRad),
+                3 * w * Mathc.cos(-torso.getRotation().yaw * Maths.TO_RAD),
                 -w * 3,
-                3 * w * Mathc.sin(-torso.getRotation().yaw * Maths.ToRad)
+                3 * w * Mathc.sin(-torso.getRotation().yaw * Maths.TO_RAD)
             );
         }else{
             torso.getRotation().pitch = 0;

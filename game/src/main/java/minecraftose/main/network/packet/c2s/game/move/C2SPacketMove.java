@@ -1,26 +1,22 @@
 package minecraftose.main.network.packet.c2s.game.move;
 
-import jpize.math.vecmath.vector.Vec3f;
-import jpize.net.tcp.packet.IPacket;
+import jpize.util.math.vector.Vec3f;
 import minecraftose.client.entity.LocalPlayer;
 import minecraftose.server.network.ServerPlayerGameConnection;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
-import jpize.physic.utils.Velocity3f;
 
 import java.io.IOException;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.net.packet.NetPacket;
 
-public class C2SPacketMove extends IPacket<ServerPlayerGameConnection>{
+public class C2SPacketMove extends NetPacket<ServerPlayerGameConnection>{
     
-    public static final int PACKET_ID = 9;
-    
-    public C2SPacketMove(){
-        super(PACKET_ID);
-    }
+        
+    public C2SPacketMove(){}
     
     
     public Vec3f position;
-    public Velocity3f velocity;
+    public Vec3f velocity;
     
     public C2SPacketMove(LocalPlayer localPlayer){
         this();
@@ -30,15 +26,15 @@ public class C2SPacketMove extends IPacket<ServerPlayerGameConnection>{
     
     
     @Override
-    public void write(JpizeOutputStream stream) throws IOException{
+    public void write(ExtDataOutputStream stream) throws IOException{
         stream.writeVec3f(position);
         stream.writeVec3f(velocity);
     }
     
     @Override
-    public void read(JpizeInputStream stream) throws IOException{
+    public void read(ExtDataInputStream stream) throws IOException{
         position = stream.readVec3f();
-        velocity = new Velocity3f(stream.readVec3f());
+        velocity = new Vec3f(stream.readVec3f());
     }
     
     @Override

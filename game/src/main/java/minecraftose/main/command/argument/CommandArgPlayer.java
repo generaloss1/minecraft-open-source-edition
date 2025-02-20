@@ -1,9 +1,9 @@
 package minecraftose.main.command.argument;
 
-import minecraftose.server.player.ServerPlayer;
+import minecraftose.main.command.source.CommandSource;
 import minecraftose.main.network.PlayerProfile;
 import minecraftose.server.Server;
-import minecraftose.main.command.source.CommandSource;
+import minecraftose.server.player.ServerPlayer;
 
 public class CommandArgPlayer extends CommandArg{
     

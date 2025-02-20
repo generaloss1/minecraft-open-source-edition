@@ -1,13 +1,13 @@
 package minecraftose.client.entity;
 
-import jpize.Jpize;
-import jpize.math.util.EulerAngles;
-import jpize.math.vecmath.vector.Vec3f;
+import jpize.app.Jpize;
+import jpize.util.math.EulerAngles;
+import jpize.util.math.vector.Vec3f;
 import minecraftose.client.Minecraft;
 import minecraftose.client.entity.model.PlayerModel;
+import minecraftose.client.level.LevelC;
 import minecraftose.client.time.var.TickFloat;
 import minecraftose.main.entity.Player;
-import minecraftose.client.level.LevelC;
 
 public class AbstractClientPlayer extends Player{
 
@@ -32,7 +32,7 @@ public class AbstractClientPlayer extends Player{
         this.lerpRotation = new EulerAngles();
 
         // Player model
-        Jpize.execSync(() -> this.model = new PlayerModel(this));
+        Jpize.syncExecutor().exec(() -> this.model = new PlayerModel(this));
     }
 
 
@@ -56,11 +56,11 @@ public class AbstractClientPlayer extends Player{
 
         // View Bobbing
         if(super.onGround.value())
-            bobbing.add((Math.min(0.1F, super.velocity.lenXZ()) - bobbing.value()) * 0.4F);
+            bobbing.add((Math.min(0.1F, super.velocity.lenh()) - bobbing.value()) * 0.4F);
         else
             bobbing.sub(bobbing.value() * 0.4F);
         // Model bobbing
-        modelBobbing.add((Math.min(0.1F, super.velocity.lenXZ()) - modelBobbing.value()) * 0.4F);
+        modelBobbing.add((Math.min(0.1F, super.velocity.lenh()) - modelBobbing.value()) * 0.4F);
     }
     
     public PlayerModel getModel(){

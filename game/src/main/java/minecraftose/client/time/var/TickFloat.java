@@ -1,6 +1,7 @@
 package minecraftose.client.time.var;
 
-import jpize.math.Maths;
+
+import jpize.util.math.Maths;
 
 public class TickFloat{
 

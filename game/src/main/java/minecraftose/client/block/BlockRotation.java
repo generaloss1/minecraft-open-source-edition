@@ -1,7 +1,8 @@
 package minecraftose.client.block;
 
-import jpize.math.vecmath.matrix.Matrix4f;
-import jpize.math.vecmath.vector.Vec3i;
+
+import jpize.util.math.matrix.Matrix4f;
+import jpize.util.math.vector.Vec3i;
 
 public enum BlockRotation{
 
@@ -17,11 +18,11 @@ public enum BlockRotation{
         this.matrix = new Matrix4f();
 
         if(x == 1)
-            matrix.toRotatedX(90);
+            matrix.setRotationX(90);
         else if(y == 1)
-            matrix.toRotatedY(90);
+            matrix.setRotationY(90);
         else if(z == 1)
-            matrix.toRotatedZ(90);
+            matrix.setRotationZ(90);
     }
 
     public Vec3i getAxis(){

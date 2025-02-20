@@ -1,7 +1,7 @@
 package minecraftose.server.level;
 
-import jpize.math.vecmath.vector.Vec2f;
-import jpize.math.vecmath.vector.Vec3f;
+import jpize.util.math.vector.Vec2f;
+import jpize.util.math.vector.Vec3f;
 import jpize.util.time.TickGenerator;
 import minecraftose.main.chunk.ChunkBase;
 import minecraftose.main.chunk.storage.ChunkPos;
@@ -11,8 +11,6 @@ import minecraftose.server.player.ServerPlayer;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class ChunkLoaderS{
 
@@ -79,7 +77,7 @@ public class ChunkLoaderS{
         // Load spawn chunks
         if(frontiers.isEmpty()){
             final Vec2f spawn = level.getConfiguration().getWorldSpawn();
-            ensureFrontier(ChunkPos.pack(spawn.xf(),spawn.yf()));
+            ensureFrontier(ChunkPos.pack(spawn.xFloor(),spawn.yFloor()));
         }
 
         // Load players chunks
@@ -128,8 +126,8 @@ public class ChunkLoaderS{
 
     public static float gridDistToChunk(int chunkX, int chunkZ, float x, float z){
         return Vec2f.len(
-            chunkX + 0.5 - x / ChunkBase.SIZE,
-            chunkZ + 0.5 - z / ChunkBase.SIZE
+            chunkX + 0.5F - x / ChunkBase.SIZE,
+            chunkZ + 0.5F - z / ChunkBase.SIZE
         );
     }
 

@@ -1,18 +1,19 @@
 package minecraftose.test;
 
-import jpize.Jpize;
+import jpize.app.Jpize;
+import jpize.app.JpizeApplication;
 import jpize.gl.Gl;
-import jpize.graphics.util.batch.TextureBatch;
-import jpize.io.context.JpizeApplication;
-import jpize.physic.utils.Velocity2f;
-import jpize.sdl.input.Key;
+import jpize.glfw.input.Key;
+import jpize.glfw.input.MouseBtn;
+import jpize.util.math.vector.Vec2f;
+import jpize.util.mesh.TextureBatch;
 import jpize.util.time.TickGenerator;
 import jpize.util.time.Tickable;
 import minecraftose.client.time.ClientGameTime;
 import minecraftose.client.time.var.TickFloat;
 import minecraftose.main.time.GameTime;
 
-public class LerpTest extends JpizeApplication implements Tickable{
+public class LerpTest extends JpizeApplication implements Tickable {
 
     public static final int SIZE = 70;
 
@@ -23,7 +24,7 @@ public class LerpTest extends JpizeApplication implements Tickable{
 
     TickFloat x = new TickFloat();
     TickFloat y = new TickFloat();
-    Velocity2f velocity = new Velocity2f();
+    Vec2f velocity = new Vec2f();
 
     public void init(){
         tickGen.startAsync(this);
@@ -35,11 +36,11 @@ public class LerpTest extends JpizeApplication implements Tickable{
         velocity.mul(0.95);
 
         float speed = 5F;
-        if(Key.W.isPressed()) velocity.y += speed;
-        if(Key.A.isPressed()) velocity.x -= speed;
-        if(Key.S.isPressed()) velocity.y -= speed;
-        if(Key.D.isPressed()) velocity.x += speed;
-        if(Jpize.isTouched()){
+        if(Key.W.pressed()) velocity.y += speed;
+        if(Key.A.pressed()) velocity.x -= speed;
+        if(Key.S.pressed()) velocity.y -= speed;
+        if(Key.D.pressed()) velocity.x += speed;
+        if(MouseBtn.LEFT.pressed()){
             velocity.add(
                     (Jpize.getX() - x.value()) / 10,
                     (Jpize.getY() - y.value()) / 10
@@ -70,17 +71,17 @@ public class LerpTest extends JpizeApplication implements Tickable{
 
     public void render(){
         Gl.clearColorBuffer();
-        batch.begin();
+        batch.setup();
 
         float t = time.getTickLerpFactor();
-        batch.drawRect(0.4, 0, 0, 1, x.value(), y.value(), SIZE, SIZE);
-        batch.drawRect(0, 1, 0, 0.75, x.getLerp(t), y.getLerp(t), SIZE, SIZE);
+        batch.drawRect(x.value(), y.value(), SIZE, SIZE, 0.4, 0, 0, 1);
+        batch.drawRect(x.getLerp(t), y.getLerp(t), SIZE, SIZE, 0, 1, 0, 0.75);
 
-        batch.end();
+        batch.render();
     }
 
     public void update(){
-        if(Key.ESCAPE.isDown())
+        if(Key.ESCAPE.down())
             Jpize.exit();
         System.out.println(Jpize.getX());
     }

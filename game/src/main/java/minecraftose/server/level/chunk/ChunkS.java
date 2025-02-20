@@ -1,7 +1,7 @@
 package minecraftose.server.level.chunk;
 
-import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.BlockProps;
+import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.chunk.ChunkBase;

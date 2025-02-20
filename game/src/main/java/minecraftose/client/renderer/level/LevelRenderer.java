@@ -1,22 +1,21 @@
 package minecraftose.client.renderer.level;
 
-import jpize.Jpize;
-import jpize.util.file.Resource;
+import jpize.app.Jpize;
 import jpize.gl.Gl;
 import jpize.gl.glenum.GlTarget;
-import jpize.graphics.texture.Texture;
-import jpize.graphics.util.Framebuffer2D;
-import jpize.graphics.util.Framebuffer3D;
-import jpize.graphics.util.Shader;
-import jpize.graphics.util.batch.TextureBatch;
-import jpize.graphics.util.color.Color;
+import jpize.gl.shader.Shader;
+import jpize.gl.tesselation.Framebuffer2D;
+import jpize.gl.tesselation.Framebuffer3D;
+import jpize.gl.texture.Texture2D;
+import jpize.util.Disposable;
+import jpize.util.color.Color;
+import jpize.util.mesh.TextureBatch;
+import jpize.util.res.Resource;
 import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.renderer.GameRenderer;
 import minecraftose.client.renderer.particle.ParticleBatch;
-import jpize.util.Disposable;
-import jpize.util.Resizable;
 
-public class LevelRenderer implements Disposable, Resizable{
+public class LevelRenderer implements Disposable {
 
     private final GameRenderer gameRenderer;
     
@@ -34,7 +33,7 @@ public class LevelRenderer implements Disposable, Resizable{
     // Postprocessing
     private final TextureBatch batch;
     private final Framebuffer2D batchFramebuffer;
-    private final Texture cursorTexture;
+    private final Texture2D cursorTexture;
     private final Shader postShader;
     private final Framebuffer3D postFramebuffer;
     private final Color screenColor;
@@ -56,8 +55,8 @@ public class LevelRenderer implements Disposable, Resizable{
         // Postprocessing
         this.batch = new TextureBatch();
         this.batchFramebuffer = new Framebuffer2D();
-        this.cursorTexture = new Texture("texture/gui/cursor.png");
-        this.postShader = new Shader(Resource.internal("shader/post.vert"), Resource.internal("shader/post.frag"));
+        this.cursorTexture = new Texture2D("/texture/gui/cursor.png");
+        this.postShader = new Shader(Resource.internal("/shader/post.vert"), Resource.internal("/shader/post.frag"));
         this.postFramebuffer = new Framebuffer3D();
         this.screenColor = new Color();
 
@@ -78,7 +77,7 @@ public class LevelRenderer implements Disposable, Resizable{
 
         // Set water color is camera in water
         if(camera.isInWater())
-            screenColor.set3(0.4, 0.6, 1);
+            screenColor.set(0.4, 0.6, 1);
         else
             screenColor.reset();
         
@@ -103,16 +102,16 @@ public class LevelRenderer implements Disposable, Resizable{
         // Render cursor
         // batchFramebuffer.begin();
         // {
-            batch.begin();
+            batch.setup();
             final float cursorSize = Jpize.getHeight() / 48F;
             batch.draw(cursorTexture, Jpize.getWidth() / 2F - cursorSize / 2, Jpize.getHeight() / 2F - cursorSize / 2, cursorSize, cursorSize);
-            batch.end();
+            batch.render();
         // }
         // batchFramebuffer.end();
         // postShader.bind();
-        // postShader.setUniform("u_frame", postFramebuffer.getFrameTexture());
-        // postShader.setUniform("u_batch", batchFramebuffer.getFrameTexture());
-        // postShader.setUniform("u_color", screenColor);
+        // postShader.uniform("u_frame", postFramebuffer.getFrameTexture());
+        // postShader.uniform("u_batch", batchFramebuffer.getFrameTexture());
+        // postShader.uniform("u_color", screenColor);
         // ScreenQuad.render();
         
         // Render Vignette
@@ -120,7 +119,6 @@ public class LevelRenderer implements Disposable, Resizable{
     }
     
     
-    @Override
     public void resize(int width, int height){
         // Postprocessing
         postFramebuffer.resize(width, height);

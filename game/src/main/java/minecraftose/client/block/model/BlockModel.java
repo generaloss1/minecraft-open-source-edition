@@ -1,14 +1,14 @@
 package minecraftose.client.block.model;
 
-import jpize.graphics.texture.Region;
-import jpize.graphics.util.color.Color;
-import jpize.graphics.util.color.IColor;
+import jpize.util.color.AbstractColor;
+import jpize.util.color.Color;
+import jpize.util.region.Region;
 import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.BlockRotation;
 import minecraftose.client.chunk.builder.BiomeMix;
+import minecraftose.client.chunk.builder.ChunkBuilder;
 import minecraftose.client.chunk.mesh.ChunkMesh;
 import minecraftose.client.chunk.mesh.ChunkMeshType;
-import minecraftose.client.chunk.builder.ChunkBuilder;
 import minecraftose.main.Dir;
 import minecraftose.main.biome.Biome;
 
@@ -107,7 +107,7 @@ public class BlockModel{
     }
 
 
-    public BlockModel nxFace(Region region, IColor color, byte faceData){
+    public BlockModel nxFace(Region region, AbstractColor color, byte faceData){
         nxFaces.add(
                 new Face(Quad.getNxQuad(), region, color)
                 .setFaceData(faceData)
@@ -115,7 +115,7 @@ public class BlockModel{
         return this;
     }
 
-    public BlockModel pxFace(Region region, IColor color, byte faceData){
+    public BlockModel pxFace(Region region, AbstractColor color, byte faceData){
         pxFaces.add(
                 new Face(Quad.getPxQuad(), region, color)
                 .setFaceData(faceData)
@@ -123,7 +123,7 @@ public class BlockModel{
         return this;
     }
 
-    public BlockModel nyFace(Region region, IColor color, byte faceData){
+    public BlockModel nyFace(Region region, AbstractColor color, byte faceData){
         nyFaces.add(
                 new Face(Quad.getNyQuad(), region, color)
                 .setFaceData(faceData)
@@ -131,7 +131,7 @@ public class BlockModel{
         return this;
     }
 
-    public BlockModel pyFace(Region region, IColor color, byte faceData){
+    public BlockModel pyFace(Region region, AbstractColor color, byte faceData){
         pyFaces.add(
                 new Face(Quad.getPyQuad(), region, color)
                 .setFaceData(faceData)
@@ -139,7 +139,7 @@ public class BlockModel{
         return this;
     }
 
-    public BlockModel nzFace(Region region, IColor color, byte faceData){
+    public BlockModel nzFace(Region region, AbstractColor color, byte faceData){
         nzFaces.add(
                 new Face(Quad.getNzQuad(), region, color)
                 .setFaceData(faceData)
@@ -147,7 +147,7 @@ public class BlockModel{
         return this;
     }
 
-    public BlockModel pzFace(Region region, IColor color, byte faceData){
+    public BlockModel pzFace(Region region, AbstractColor color, byte faceData){
         pzFaces.add(
                 new Face(Quad.getPzQuad(), region, color)
                 .setFaceData(faceData)
@@ -181,32 +181,32 @@ public class BlockModel{
     }
 
 
-    public BlockModel nxFace(Region region, IColor color){
+    public BlockModel nxFace(Region region, AbstractColor color){
         return nxFace(region, color, (byte) 0);
     }
 
-    public BlockModel pxFace(Region region, IColor color){
+    public BlockModel pxFace(Region region, AbstractColor color){
         return pxFace(region, color, (byte) 0);
     }
 
-    public BlockModel nyFace(Region region, IColor color){
+    public BlockModel nyFace(Region region, AbstractColor color){
         return nyFace(region, color, (byte) 0);
     }
 
-    public BlockModel pyFace(Region region, IColor color){
+    public BlockModel pyFace(Region region, AbstractColor color){
         return pyFace(region, color, (byte) 0);
     }
 
-    public BlockModel nzFace(Region region, IColor color){
+    public BlockModel nzFace(Region region, AbstractColor color){
         return nzFace(region, color, (byte) 0);
     }
 
-    public BlockModel pzFace(Region region, IColor color){
+    public BlockModel pzFace(Region region, AbstractColor color){
         return pzFace(region, color, (byte) 0);
     }
 
 
-    public BlockModel allFaces(Region region, IColor color, byte faceData){
+    public BlockModel allFaces(Region region, AbstractColor color, byte faceData){
         nxFace(region, color, faceData);
         pxFace(region, color, faceData);
         nyFace(region, color, faceData);
@@ -216,7 +216,7 @@ public class BlockModel{
         return this;
     }
 
-    public BlockModel allFaces(Region region, IColor color){
+    public BlockModel allFaces(Region region, AbstractColor color){
         return allFaces(region, color, (byte) 0);
     }
 
@@ -224,7 +224,7 @@ public class BlockModel{
         return allFaces(region, Color.WHITE, faceData);
     }
 
-    public BlockModel sideXZFaces(Region region, IColor color, byte faceData){
+    public BlockModel sideXZFaces(Region region, AbstractColor color, byte faceData){
         nxFace(region, color, faceData);
         pxFace(region, color, faceData);
         nzFace(region, color, faceData);
@@ -232,7 +232,7 @@ public class BlockModel{
         return this;
     }
 
-    public BlockModel sideXZFaces(Region region, IColor color){
+    public BlockModel sideXZFaces(Region region, AbstractColor color){
         return sideXZFaces(region, color, (byte) 0);
     }
 
@@ -240,7 +240,7 @@ public class BlockModel{
         return sideXZFaces(region, Color.WHITE, faceData);
     }
 
-    public BlockModel sideXYFaces(Region region, IColor color){
+    public BlockModel sideXYFaces(Region region, AbstractColor color){
         nxFace(region, color);
         pxFace(region, color);
         nyFace(region, color);
@@ -248,7 +248,7 @@ public class BlockModel{
         return this;
     }
 
-    public BlockModel sideZYFaces(Region region, IColor color){
+    public BlockModel sideZYFaces(Region region, AbstractColor color){
         nzFace(region, color);
         pzFace(region, color);
         nyFace(region, color);
@@ -256,19 +256,19 @@ public class BlockModel{
         return this;
     }
 
-    public BlockModel xFaces(Region region, IColor color){
+    public BlockModel xFaces(Region region, AbstractColor color){
         nxFace(region, color);
         pxFace(region, color);
         return this;
     }
 
-    public BlockModel yFaces(Region region, IColor color){
+    public BlockModel yFaces(Region region, AbstractColor color){
         nyFace(region, color);
         pyFace(region, color);
         return this;
     }
 
-    public BlockModel zFaces(Region region, IColor color){
+    public BlockModel zFaces(Region region, AbstractColor color){
         nzFace(region, color);
         pzFace(region, color);
         return this;
@@ -328,8 +328,8 @@ public class BlockModel{
     }
 
 
-    public IColor pickFaceColor(Face face, Biome biome){
-        final IColor color;
+    public AbstractColor pickFaceColor(Face face, Biome biome){
+        final AbstractColor color;
         if(face.isGrassColoring())
             color = biome.grassColor;
         else if(face.isWaterColoring())
@@ -340,8 +340,8 @@ public class BlockModel{
         return color;
     }
 
-    public IColor pickFaceColor(Face face, BiomeMix biome){
-        final IColor color;
+    public AbstractColor pickFaceColor(Face face, BiomeMix biome){
+        final AbstractColor color;
         if(face.isGrassColoring())
             color = biome.getGrassColor();
         else if(face.isWaterColoring())
@@ -358,7 +358,7 @@ public class BlockModel{
         final float skyLight = 1.000F;//(float) builder.chunk.getSkyLight(lx, y, lz) / MAX_LIGHT_LEVEL;
         final float blockLight = (float) builder.chunk.getBlockLight(lx, y, lz) / MAX_LIGHT_LEVEL;
         for(Face face: faces){
-            final IColor color = pickFaceColor(face, builder.currentBiome);
+            final AbstractColor color = pickFaceColor(face, builder.currentBiome);
             face.putFloats(builder.customMesh,  lx, y, lz,  color, color, color, color,  1, 1, 1, 1,  skyLight, skyLight, skyLight, skyLight,  blockLight, blockLight, blockLight, blockLight);
         }
 
@@ -404,10 +404,10 @@ public class BlockModel{
         final float ao3 = builder.getAO(x-1, y-1, z,  x-1, y, z-1,  x-1, y-1, z-1,  x-1, y  , z  ) * shadow;
         final float ao4 = builder.getAO(x-1, y+1, z,  x-1, y, z-1,  x-1, y+1, z-1,  x-1, y  , z  ) * shadow;
 
-        final IColor col1 = pickFaceColor(face, biomes1);
-        final IColor col2 = pickFaceColor(face, biomes2);
-        final IColor col3 = pickFaceColor(face, biomes3);
-        final IColor col4 = pickFaceColor(face, biomes4);
+        final AbstractColor col1 = pickFaceColor(face, biomes1);
+        final AbstractColor col2 = pickFaceColor(face, biomes2);
+        final AbstractColor col3 = pickFaceColor(face, biomes3);
+        final AbstractColor col4 = pickFaceColor(face, biomes4);
 
         final ChunkMesh mesh =
             (meshType == ChunkMeshType.TRANSLUCENT) ?
@@ -440,10 +440,10 @@ public class BlockModel{
         final float ao3 = builder.getAO(x+1, y-1, z,  x+1, y, z+1,  x+1, y-1, z+1,  x+1, y  , z  ) * shadow;
         final float ao4 = builder.getAO(x+1, y+1, z,  x+1, y, z+1,  x+1, y+1, z+1,  x+1, y  , z  ) * shadow;
 
-        final IColor col1 = pickFaceColor(face, biomes1);
-        final IColor col2 = pickFaceColor(face, biomes2);
-        final IColor col3 = pickFaceColor(face, biomes3);
-        final IColor col4 = pickFaceColor(face, biomes4);
+        final AbstractColor col1 = pickFaceColor(face, biomes1);
+        final AbstractColor col2 = pickFaceColor(face, biomes2);
+        final AbstractColor col3 = pickFaceColor(face, biomes3);
+        final AbstractColor col4 = pickFaceColor(face, biomes4);
 
         final ChunkMesh mesh =
             (meshType == ChunkMeshType.TRANSLUCENT) ?
@@ -476,10 +476,10 @@ public class BlockModel{
         final float ao3 = builder.getAO(x-1, y-1, z,  x, y-1, z-1,  x-1, y-1, z-1,  x  , y-1, z  ) * shadow;
         final float ao4 = builder.getAO(x-1, y-1, z,  x, y-1, z+1,  x-1, y-1, z+1,  x  , y-1, z  ) * shadow;
 
-        final IColor col1 = pickFaceColor(face, biomes1);
-        final IColor col2 = pickFaceColor(face, biomes2);
-        final IColor col3 = pickFaceColor(face, biomes3);
-        final IColor col4 = pickFaceColor(face, biomes4);
+        final AbstractColor col1 = pickFaceColor(face, biomes1);
+        final AbstractColor col2 = pickFaceColor(face, biomes2);
+        final AbstractColor col3 = pickFaceColor(face, biomes3);
+        final AbstractColor col4 = pickFaceColor(face, biomes4);
 
         final ChunkMesh mesh =
             (meshType == ChunkMeshType.TRANSLUCENT) ?
@@ -512,10 +512,10 @@ public class BlockModel{
         final float ao3 = builder.getAO(x-1, y+1, z,  x, y+1, z+1,  x-1, y+1, z+1,  x  , y+1, z  ) * shadow;
         final float ao4 = builder.getAO(x-1, y+1, z,  x, y+1, z-1,  x-1, y+1, z-1,  x  , y+1, z  ) * shadow;
 
-        final IColor col1 = pickFaceColor(face, biomes1);
-        final IColor col2 = pickFaceColor(face, biomes2);
-        final IColor col3 = pickFaceColor(face, biomes3);
-        final IColor col4 = pickFaceColor(face, biomes4);
+        final AbstractColor col1 = pickFaceColor(face, biomes1);
+        final AbstractColor col2 = pickFaceColor(face, biomes2);
+        final AbstractColor col3 = pickFaceColor(face, biomes3);
+        final AbstractColor col4 = pickFaceColor(face, biomes4);
 
         final ChunkMesh mesh =
             (meshType == ChunkMeshType.TRANSLUCENT) ?
@@ -548,10 +548,10 @@ public class BlockModel{
         final float ao3 = builder.getAO(x+1, y, z-1,  x, y-1, z-1,  x+1, y-1, z-1,  x  , y  , z-1) * shadow;
         final float ao4 = builder.getAO(x+1, y, z-1,  x, y+1, z-1,  x+1, y+1, z-1,  x  , y  , z-1) * shadow;
 
-        final IColor col1 = pickFaceColor(face, biomes1);
-        final IColor col2 = pickFaceColor(face, biomes2);
-        final IColor col3 = pickFaceColor(face, biomes3);
-        final IColor col4 = pickFaceColor(face, biomes4);
+        final AbstractColor col1 = pickFaceColor(face, biomes1);
+        final AbstractColor col2 = pickFaceColor(face, biomes2);
+        final AbstractColor col3 = pickFaceColor(face, biomes3);
+        final AbstractColor col4 = pickFaceColor(face, biomes4);
 
         final ChunkMesh mesh =
             (meshType == ChunkMeshType.TRANSLUCENT) ?
@@ -584,10 +584,10 @@ public class BlockModel{
         final float ao3 = builder.getAO(x-1, y, z+1,  x, y-1, z+1,  x-1, y-1, z+1,  x  , y  , z+1) * shadow;
         final float ao4 = builder.getAO(x-1, y, z+1,  x, y+1, z+1,  x-1, y+1, z+1,  x  , y  , z+1) * shadow;
 
-        final IColor col1 = pickFaceColor(face, biomes1);
-        final IColor col2 = pickFaceColor(face, biomes2);
-        final IColor col3 = pickFaceColor(face, biomes3);
-        final IColor col4 = pickFaceColor(face, biomes4);
+        final AbstractColor col1 = pickFaceColor(face, biomes1);
+        final AbstractColor col2 = pickFaceColor(face, biomes2);
+        final AbstractColor col3 = pickFaceColor(face, biomes3);
+        final AbstractColor col4 = pickFaceColor(face, biomes4);
 
         final ChunkMesh mesh =
             (meshType == ChunkMeshType.TRANSLUCENT) ?

@@ -1,29 +1,32 @@
 package minecraftose.client.resources;
 
-import jpize.graphics.texture.pixmap.PixmapIO;
+
+import jpize.audio.al.buffer.AlBuffer;
+import jpize.audio.util.AlMusic;
+import jpize.gl.texture.Texture2D;
 import jpize.util.Disposable;
-import jpize.audio.sound.AudioBuffer;
-import jpize.audio.io.AudioLoader;
-import jpize.util.file.Resource;
-import jpize.graphics.texture.pixmap.PixmapRGBA;
-import jpize.graphics.texture.Region;
-import jpize.graphics.texture.Texture;
-import jpize.graphics.texture.atlas.TextureAtlas;
+import jpize.util.atlas.TextureAtlas;
+import jpize.util.pixmap.PixmapIO;
+import jpize.util.pixmap.PixmapRGBA;
+import jpize.util.region.Region;
+import jpize.util.res.Resource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GameResources implements Disposable{
+public class GameResources implements Disposable {
 
     private final TextureAtlas<String> blockAtlas;
     private final List<Resource> blocksToLoadList;
 
-    private final Map<Integer, AudioBuffer> soundList;
+    private final Map<Integer, AlBuffer> soundList;
 
     public GameResources(){
         this.blockAtlas = new TextureAtlas<>();
+        this.blockAtlas.enablePaddingFilling(true);
+        this.blockAtlas.setPadding(0);
         this.blocksToLoadList = new ArrayList<>();
 
         this.soundList = new HashMap<>();
@@ -39,7 +42,7 @@ public class GameResources implements Disposable{
             blockAtlas.put(name, pixmap);
         }
 
-        blockAtlas.generate(32 * 16, 32 * 16);
+        blockAtlas.build(32 * 16, 32 * 16);
     }
 
 
@@ -48,21 +51,21 @@ public class GameResources implements Disposable{
     }
 
     public void registerBlockRegion(String path, String name){
-        registerBlockRegion(Resource.internal(path + name + ".png"));
+        registerBlockRegion(Resource.internal("/" + path + name + ".png"));
     }
 
     public Region getBlockRegion(String name){
         return blockAtlas.getRegion(name);
     }
 
-    public Texture getBlocks(){
+    public Texture2D getBlocks(){
         return blockAtlas.getTexture();
     }
 
 
     public void registerSound(int ID, Resource resource){
-        final AudioBuffer buffer = new AudioBuffer();
-        AudioLoader.load(buffer, resource);
+        final AlBuffer buffer = new AlBuffer();
+        buffer.load(resource);
         soundList.put(ID, buffer);
     }
 
@@ -70,7 +73,7 @@ public class GameResources implements Disposable{
         registerSound(ID, Resource.internal(path));
     }
 
-    public AudioBuffer getSound(Integer soundID){
+    public AlBuffer getSound(Integer soundID){
         return soundList.get(soundID);
     }
 
@@ -79,7 +82,7 @@ public class GameResources implements Disposable{
 
     }
 
-    public AudioBuffer getMusic(String musicID){
+    public AlMusic getMusic(String musicID){
         return null;
     }
 
@@ -89,7 +92,7 @@ public class GameResources implements Disposable{
         blocksToLoadList.clear();
         blockAtlas.getTexture().dispose();
 
-        for(AudioBuffer audio: soundList.values())
+        for(AlBuffer audio: soundList.values())
             audio.dispose();
     }
 

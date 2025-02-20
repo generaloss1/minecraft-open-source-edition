@@ -27,7 +27,7 @@ void main(){
         float fogMax = u_renderDistanceBlocks;
         float dist = sqrt(fragCoord.x * fragCoord.x + fragCoord.z * fragCoord.z);
         float fogFactor = 1 - (fogMax - dist) / (fogMax - fogMin);
-        fragColor.a = 1 - clamp(pow(fogFactor, 1.3), 0, 1);
+        fragColor = mix(fragColor, u_fogColor, clamp(pow(fogFactor, 1.3), 0.0, 1.0));
     }
 
     gl_FragColor = fragColor;

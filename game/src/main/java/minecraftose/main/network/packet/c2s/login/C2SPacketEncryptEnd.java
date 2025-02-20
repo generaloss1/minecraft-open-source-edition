@@ -1,19 +1,16 @@
 package minecraftose.main.network.packet.c2s.login;
 
-import jpize.net.tcp.packet.IPacket;
 import minecraftose.server.network.PlayerLoginConnection;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
 
 import java.io.IOException;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.net.packet.NetPacket;
 
-public class C2SPacketEncryptEnd extends IPacket<PlayerLoginConnection>{
+public class C2SPacketEncryptEnd extends NetPacket<PlayerLoginConnection>{
     
-    public static final int PACKET_ID = 4;
-    
-    public C2SPacketEncryptEnd(){
-        super(PACKET_ID);
-    }
+        
+    public C2SPacketEncryptEnd(){}
     
     
     public byte[] encryptedClientKey;
@@ -25,12 +22,12 @@ public class C2SPacketEncryptEnd extends IPacket<PlayerLoginConnection>{
     
     
     @Override
-    public void write(JpizeOutputStream stream) throws IOException{
+    public void write(ExtDataOutputStream stream) throws IOException{
         stream.writeByteArray(encryptedClientKey);
     }
     
     @Override
-    public void read(JpizeInputStream stream) throws IOException{
+    public void read(ExtDataInputStream stream) throws IOException{
         encryptedClientKey = stream.readByteArray();
     }
     

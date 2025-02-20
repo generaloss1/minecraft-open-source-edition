@@ -6,10 +6,10 @@ import java.util.List;
 public class IntCache{
 
     private static int a = 256;
-    private static List b = new ArrayList();
-    private static List c = new ArrayList();
-    private static List d = new ArrayList();
-    private static List e = new ArrayList();
+    private static final List b = new ArrayList();
+    private static final List c = new ArrayList();
+    private static final List d = new ArrayList();
+    private static final List e = new ArrayList();
 
     public static synchronized int[] getIntCache(int i){
         int[] aint;

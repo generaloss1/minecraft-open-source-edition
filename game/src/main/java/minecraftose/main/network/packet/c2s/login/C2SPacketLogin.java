@@ -1,19 +1,16 @@
 package minecraftose.main.network.packet.c2s.login;
 
-import jpize.net.tcp.packet.IPacket;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.net.packet.NetPacket;
 import minecraftose.server.network.PlayerLoginConnection;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
 
 import java.io.IOException;
 
-public class C2SPacketLogin extends IPacket<PlayerLoginConnection>{
+public class C2SPacketLogin extends NetPacket<PlayerLoginConnection>{
     
-    public static final int PACKET_ID = 6;
-    
-    public C2SPacketLogin(){
-        super(PACKET_ID);
-    }
+        
+    public C2SPacketLogin(){}
     
     
     public int clientVersionID;
@@ -27,13 +24,13 @@ public class C2SPacketLogin extends IPacket<PlayerLoginConnection>{
     
     
     @Override
-    public void write(JpizeOutputStream stream) throws IOException{
+    public void write(ExtDataOutputStream stream) throws IOException{
         stream.writeInt(clientVersionID);
         stream.writeUTF(profileName);
     }
     
     @Override
-    public void read(JpizeInputStream stream) throws IOException{
+    public void read(ExtDataInputStream stream) throws IOException{
         clientVersionID = stream.readInt();
         profileName = stream.readUTF();
     }

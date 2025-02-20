@@ -1,10 +1,9 @@
 package minecraftose.server.network;
 
-import jpize.net.security.KeyRSA;
-import jpize.net.tcp.TcpConnection;
-import jpize.net.tcp.TcpListener;
-import jpize.net.tcp.packet.PacketDispatcher;
-import jpize.net.tcp.packet.PacketHandler;
+import jpize.util.net.packet.NetPacketDispatcher;
+import jpize.util.net.tcp.TCPConnection;
+import jpize.util.security.RSAKey;
+import minecraftose.main.network.packet.PacketHandler;
 import minecraftose.main.network.packet.c2s.game.*;
 import minecraftose.main.network.packet.c2s.game.move.C2SPacketMove;
 import minecraftose.main.network.packet.c2s.game.move.C2SPacketMoveAndRot;
@@ -20,18 +19,18 @@ import minecraftose.server.player.ServerPlayer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ServerConnectionManager implements TcpListener{
+public class ServerConnectionManager {
     
     private final Server server;
-    private final Map<TcpConnection, PacketHandler> handlerMap;
-    private final PacketDispatcher dispatcher;
-    private final KeyRSA rsaKey;
+    private final Map<TCPConnection, PacketHandler> handlerMap;
+    private final NetPacketDispatcher dispatcher;
+    private final RSAKey rsaKey;
     
     public ServerConnectionManager(Server server){
         this.server = server;
         this.handlerMap = new HashMap<>();
-        this.dispatcher = new PacketDispatcher();
-        this.rsaKey = new KeyRSA(1024);
+        this.dispatcher = new NetPacketDispatcher();
+        this.rsaKey = new RSAKey(1024);
         registerPackets();
     }
     
@@ -39,48 +38,48 @@ public class ServerConnectionManager implements TcpListener{
         return server;
     }
     
-    public KeyRSA getRsaKey(){
+    public RSAKey getRsaKey(){
         return rsaKey;
     }
 
 
     private void registerPackets(){
-        dispatcher.register(C2SPacketAuth.PACKET_ID, C2SPacketAuth.class);
-        dispatcher.register(C2SPacketChatMessage.PACKET_ID, C2SPacketChatMessage.class);
-        dispatcher.register(C2SPacketChunkRequest.PACKET_ID, C2SPacketChunkRequest.class);
-        dispatcher.register(C2SPacketEncryptEnd.PACKET_ID, C2SPacketEncryptEnd.class);
-        dispatcher.register(C2SPacketLogin.PACKET_ID, C2SPacketLogin.class);
-        dispatcher.register(C2SPacketMoveAndRot.PACKET_ID, C2SPacketMoveAndRot.class);
-        dispatcher.register(C2SPacketMove.PACKET_ID, C2SPacketMove.class);
-        dispatcher.register(C2SPacketRot.PACKET_ID, C2SPacketRot.class);
-        dispatcher.register(C2SPacketPing.PACKET_ID, C2SPacketPing.class);
-        dispatcher.register(C2SPacketPlayerBlockSet.PACKET_ID, C2SPacketPlayerBlockSet.class);
-        dispatcher.register(C2SPacketPlayerSneaking.PACKET_ID, C2SPacketPlayerSneaking.class);
-        dispatcher.register(C2SPacketRenderDistance.PACKET_ID, C2SPacketRenderDistance.class);
-        dispatcher.register(C2SPacketHitEntity.PACKET_ID, C2SPacketHitEntity.class);
+        dispatcher.register(
+            C2SPacketAuth.class,
+            C2SPacketChatMessage.class,
+            C2SPacketChunkRequest.class,
+            C2SPacketEncryptEnd.class,
+            C2SPacketLogin.class,
+            C2SPacketMoveAndRot.class,
+            C2SPacketMove.class,
+            C2SPacketRot.class,
+            C2SPacketPing.class,
+            C2SPacketPlayerBlockSet.class,
+            C2SPacketPlayerSneaking.class,
+            C2SPacketRenderDistance.class,
+            C2SPacketHitEntity.class
+        );
     }
     
     
-    @Override
-    public synchronized void received(byte[] bytes, TcpConnection sender){
+    public synchronized void received(TCPConnection sender, byte[] bytes){
         final PacketHandler packetHandler = handlerMap.get(sender);
         if(packetHandler == null)
             return;
 
-        dispatcher.handlePacket(bytes, packetHandler);
+        dispatcher.readPacket(bytes, packetHandler);
+        dispatcher.handlePackets();
     }
     
-    @Override
-    public void connected(TcpConnection connection){
+    public void connected(TCPConnection connection){
         setHandlerForConnection(connection, new PlayerLoginConnection(server, connection));
     }
 
-    public void setHandlerForConnection(TcpConnection connection, PacketHandler handler){
+    public void setHandlerForConnection(TCPConnection connection, PacketHandler handler){
         handlerMap.put(connection, handler);
     }
     
-    @Override
-    public void disconnected(TcpConnection connection){
+    public void disconnected(TCPConnection connection){
         final PacketHandler packetHandler = handlerMap.get(connection);
 
         if(packetHandler instanceof ServerPlayerGameConnection connectionAdapter){

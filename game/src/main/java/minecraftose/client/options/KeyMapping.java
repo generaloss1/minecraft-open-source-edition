@@ -1,7 +1,6 @@
 package minecraftose.client.options;
 
-
-import jpize.sdl.input.Key;
+import jpize.glfw.input.Key;
 
 public enum KeyMapping implements Option<Key>{
 

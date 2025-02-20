@@ -1,33 +1,32 @@
 package minecraftose.client.network;
 
-import jpize.Jpize;
-import jpize.math.Maths;
-import jpize.math.vecmath.vector.Vec3f;
-import jpize.net.security.KeyAES;
-import jpize.net.tcp.packet.PacketHandler;
+import jpize.app.Jpize;
+import jpize.util.math.Maths;
+import jpize.util.math.vector.Vec3f;
+import jpize.util.security.AESKey;
 import minecraftose.client.Minecraft;
 import minecraftose.client.chunk.ChunkC;
 import minecraftose.client.entity.LocalPlayer;
 import minecraftose.client.entity.RemotePlayer;
 import minecraftose.main.chat.source.MessageSourceServer;
 import minecraftose.main.entity.Entity;
+import minecraftose.main.network.packet.c2s.game.C2SPacketRenderDistance;
 import minecraftose.main.network.packet.c2s.login.C2SPacketAuth;
 import minecraftose.main.network.packet.c2s.login.C2SPacketEncryptEnd;
-import minecraftose.main.network.packet.c2s.game.C2SPacketRenderDistance;
 import minecraftose.main.network.packet.s2c.game.*;
 import minecraftose.main.network.packet.s2c.login.S2CPacketEncryptStart;
 import minecraftose.main.text.Component;
 
-public class ClientPacketHandler implements PacketHandler{
+public class ClientPacketHandler {
 
     private final ClientConnection connectionHandler;
     private final Minecraft minecraft;
-    private final KeyAES encryptKey;
+    private final AESKey encryptKey;
 
     public ClientPacketHandler(ClientConnection connectionHandler){
         this.connectionHandler = connectionHandler;
         this.minecraft = connectionHandler.getMinecraft();
-        this.encryptKey = new KeyAES(256);
+        this.encryptKey = new AESKey(256);
     }
 
     public Minecraft getMinecraft(){
@@ -49,7 +48,7 @@ public class ClientPacketHandler implements PacketHandler{
             return;
 
         // Load another level
-        if(!packet.levelName.equals(localPlayer.getLevel().getConfiguration().getName())){
+        if(localPlayer.getLevel() == null || !packet.levelName.equals(localPlayer.getLevel().getConfiguration().getName())){
             minecraft.createClientLevel(packet.levelName);
             // minecraft.getLevel().getChunkProvider().startLoadChunks(); //: deprecated method
             localPlayer.setLevel(minecraft.getLevel());
@@ -92,13 +91,13 @@ public class ClientPacketHandler implements PacketHandler{
     }
 
     public void pong(S2CPacketPong packet){
-        final String message = "Ping - " + String.format("%.5f", (System.nanoTime() - packet.timeNanos) / Maths.NanosInSecond) + " ms";
+        final String message = "Ping - " + String.format("%.5f", (System.nanoTime() - packet.timeNanos) / Maths.NANOS_IN_SECf) + " ms";
         minecraft.getChat().putMessage(new MessageSourceServer(), new Component().text(message));
         System.out.println("[Client]: " + message);
     }
 
     public void playSound(S2CPacketPlaySound packet){
-        Jpize.execSync(() ->
+        Jpize.syncExecutor().exec(() ->
             minecraft.getSoundPlayer().play(
                 packet.sound,
                 packet.volume, packet.pitch,

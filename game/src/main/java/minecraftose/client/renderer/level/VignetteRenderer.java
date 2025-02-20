@@ -1,30 +1,30 @@
 package minecraftose.client.renderer.level;
 
-import jpize.Jpize;
+import jpize.app.Jpize;
+import jpize.gl.texture.Texture2D;
 import jpize.util.Disposable;
-import jpize.graphics.texture.Texture;
-import jpize.graphics.util.batch.TextureBatch;
-import jpize.math.vecmath.vector.Vec3f;
+import jpize.util.math.vector.Vec3f;
+import jpize.util.mesh.TextureBatch;
 import minecraftose.client.Minecraft;
 import minecraftose.client.level.LevelC;
 
 import static minecraftose.main.chunk.ChunkUtils.MAX_LIGHT_LEVEL;
 
-public class VignetteRenderer implements Disposable{
+public class VignetteRenderer implements Disposable {
     
     final LevelRenderer levelRenderer;
-    private final Texture vignetteTexture;
+    private final Texture2D vignetteTexture;
     float vignette;
     
     public VignetteRenderer(LevelRenderer levelRenderer){
         this.levelRenderer = levelRenderer;
         
-        vignetteTexture = new Texture("texture/misc/vignette.png");
+        vignetteTexture = new Texture2D("/texture/misc/vignette.png");
     }
     
     
     public void render(TextureBatch batch){
-        batch.begin();
+        batch.setup();
         
         // Get light level
         final Minecraft minecraft = levelRenderer.getGameRenderer().getMinecraft();
@@ -42,7 +42,7 @@ public class VignetteRenderer implements Disposable{
         batch.setAlpha(vignette);
         batch.draw(vignetteTexture, 0, 0, Jpize.getWidth(), Jpize.getHeight());
         batch.resetColor();
-        batch.end();
+        batch.render();
     }
     
     @Override

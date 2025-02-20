@@ -1,9 +1,9 @@
 package minecraftose.server.level.gen.generator;
 
-import jpize.math.Mathc;
-import jpize.math.Maths;
-import jpize.math.function.FastNoiseLite;
-import jpize.math.util.JpizeRandom;
+import jpize.util.math.ExtRandom;
+import jpize.util.math.FastNoise;
+import jpize.util.math.Mathc;
+import jpize.util.math.Maths;
 import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.main.biome.Biome;
@@ -11,8 +11,8 @@ import minecraftose.main.biome.chunk.BiomeMap;
 import minecraftose.main.chunk.ChunkBase;
 import minecraftose.main.chunk.storage.Heightmap;
 import minecraftose.main.chunk.storage.HeightmapType;
-import minecraftose.server.level.chunk.ChunkS;
 import minecraftose.server.level.LevelS;
+import minecraftose.server.level.chunk.ChunkS;
 import minecraftose.server.level.gen.ChunkGenerator;
 import minecraftose.server.level.gen.decoration.*;
 import minecraftose.server.level.gen.decoration.old.*;
@@ -27,42 +27,42 @@ public class ChunkGeneratorDefault extends ChunkGenerator{
     private static final float RIVER_MIN = 0.485F;
     private static final float RIVER_MAX = 0.505F;
 
-    private final FastNoiseLite continentalnessNoise, erosionNoise, peaksValleysNoise, temperatureNoise, humidityNoise, riverNoise;
-    private final JpizeRandom random;
+    private final FastNoise continentalnessNoise, erosionNoise, peaksValleysNoise, temperatureNoise, humidityNoise, riverNoise;
+    private final ExtRandom random;
 
     public ChunkGeneratorDefault(){
-        this.continentalnessNoise = new FastNoiseLite();
-        this.erosionNoise = new FastNoiseLite();
-        this.peaksValleysNoise = new FastNoiseLite();
-        this.temperatureNoise = new FastNoiseLite();
-        this.humidityNoise = new FastNoiseLite();
-        this.riverNoise = new FastNoiseLite();
+        this.continentalnessNoise = new FastNoise();
+        this.erosionNoise = new FastNoise();
+        this.peaksValleysNoise = new FastNoise();
+        this.temperatureNoise = new FastNoise();
+        this.humidityNoise = new FastNoise();
+        this.riverNoise = new FastNoise();
 
-        this.continentalnessNoise.setFractalType(FastNoiseLite.FractalType.FBm);
+        this.continentalnessNoise.setFractalType(FastNoise.FractalType.FBM);
         this.continentalnessNoise.setFrequency(0.001F); // FIX
         this.continentalnessNoise.setFractalOctaves(7);
 
-        this.humidityNoise.setFractalType(FastNoiseLite.FractalType.FBm);
+        this.humidityNoise.setFractalType(FastNoise.FractalType.FBM);
         this.humidityNoise.setFrequency(0.0004F); // FIX
         this.humidityNoise.setFractalOctaves(7);
 
-        this.erosionNoise.setFractalType(FastNoiseLite.FractalType.FBm);
+        this.erosionNoise.setFractalType(FastNoise.FractalType.FBM);
         this.erosionNoise.setFrequency(0.004F); // FIX
         this.erosionNoise.setFractalOctaves(7);
 
-        this.peaksValleysNoise.setFractalType(FastNoiseLite.FractalType.FBm);
+        this.peaksValleysNoise.setFractalType(FastNoise.FractalType.FBM);
         this.peaksValleysNoise.setFrequency(0.02F);
         this.peaksValleysNoise.setFractalOctaves(7);
 
-        this.temperatureNoise.setFractalType(FastNoiseLite.FractalType.FBm);
+        this.temperatureNoise.setFractalType(FastNoise.FractalType.FBM);
         this.temperatureNoise.setFrequency(0.0008F); // FIX
         this.temperatureNoise.setFractalOctaves(7);
 
-        this.riverNoise.setFractalType(FastNoiseLite.FractalType.FBm);
+        this.riverNoise.setFractalType(FastNoise.FractalType.FBM);
         this.riverNoise.setFrequency(0.0009F); // FIX
         this.riverNoise.setFractalOctaves(7);
 
-        this.random = new JpizeRandom();
+        this.random = new ExtRandom();
     }
 
 
@@ -91,26 +91,26 @@ public class ChunkGeneratorDefault extends ChunkGenerator{
             for(int lz = 0; lz < ChunkBase.SIZE; lz++){
                 // Calculate base height
                 final int z = lz + baseZ;
-                final float continentalness = Mathc.pow((continentalnessNoise.getNoise(x, z) - 0.15), 3);
+                final float continentalness = Mathc.pow((continentalnessNoise.get(x, z) - 0.15), 3);
                 float height = SEA_LEVEL + continentalness * 32;
 
                 // Detail base height
                 float detail = 0;
                 for(int y = 0; y < 24; y++)
-                    detail += continentalnessNoise.getNoise(x, height + y, z) / 32;
+                    detail += continentalnessNoise.get(x, height + y, z) / 32;
 
                 height += detail * 32;
 
                 // Detail base height 2
                 detail = 0;
                 for(int y = 0; y < 24; y++)
-                    detail += erosionNoise.getNoise(x, height + y, z) / 32;
+                    detail += erosionNoise.get(x, height + y, z) / 32;
 
                 height += detail * 64;
 
                 // Search rivers around and smooth
                 if(height > SEA_LEVEL){
-                    float river = riverNoise.getNoise(x - 64, z - 64) / 2 + 0.5F;
+                    float river = riverNoise.get(x - 64, z - 64) / 2 + 0.5F;
                     if(river > RIVER_MIN && river < RIVER_MAX){
 
                         final float range = RIVER_MAX - RIVER_MIN;
@@ -126,7 +126,7 @@ public class ChunkGeneratorDefault extends ChunkGenerator{
                         for(int i = lx - transitionRadius; i <= lx + transitionRadius; i++){
                             for(int j = lz - transitionRadius; j <= lz + transitionRadius; j++){
 
-                                river = riverNoise.getNoise(i + baseX - 64, j + baseZ - 64) / 2 + 0.5F;
+                                river = riverNoise.get(i + baseX - 64, j + baseZ - 64) / 2 + 0.5F;
                                 if(river > RIVER_MIN && river < RIVER_MAX){
 
                                     final float distance = Mathc.sqrt((i - lx) * (i - lx) + (j - lz) * (j - lz));
@@ -159,10 +159,10 @@ public class ChunkGeneratorDefault extends ChunkGenerator{
             for(int lz = 0; lz < ChunkBase.SIZE; lz++){
                 final int z = lz + baseZ;
 
-                final float temperature = temperatureNoise.getNoise(x, z) / 2 + 0.5F;
+                final float temperature = temperatureNoise.get(x, z) / 2 + 0.5F;
                 final float height = heightmapSurface.getHeight(lx, lz);
-                final float humidity = humidityNoise.getNoise(x, z) / 2 + 0.5F;
-                final float river = riverNoise.getNoise(x - 64, z - 64) / 2 + 0.5F;
+                final float humidity = humidityNoise.get(x, z) / 2 + 0.5F;
+                final float river = riverNoise.get(x - 64, z - 64) / 2 + 0.5F;
 
                 final Biome biome;
                 if(river > RIVER_MIN && river < RIVER_MAX){ // RIVER
@@ -177,7 +177,7 @@ public class ChunkGeneratorDefault extends ChunkGenerator{
                     else
                         biome = Biome.SEA;
 
-                }else if(height <= SEA_LEVEL + 7 * peaksValleysNoise.getNoise(x, z)){ // BEACH
+                }else if(height <= SEA_LEVEL + 7 * peaksValleysNoise.get(x, z)){ // BEACH
                     if(temperature < 0.3)
                         biome = Biome.SNOWY_BEACH;
                     else
@@ -234,7 +234,7 @@ public class ChunkGeneratorDefault extends ChunkGenerator{
                 // SET SURFACE BLOCKS
                 chunk.setBlockFast(lx, height, lz, topBlock);
 
-                final int subsurfaceLayerHeight = random.random(2, 5);
+                final int subsurfaceLayerHeight = random.nextInt(2, 5);
                 for(int y = height - subsurfaceLayerHeight; y < height; y++)
                     chunk.setBlockFast(lx, y, lz, fillerBlock);
 
@@ -261,10 +261,10 @@ public class ChunkGeneratorDefault extends ChunkGenerator{
                 final Biome biome = biomes.getBiome(lx, lz);
 
                 if(biome == Biome.FOREST){
-                    if(random.randomBoolean(0.05))
+                    if(random.nextBoolean(0.05))
                         chunk.setBlockFast(lx, height + 1, lz, ClientBlocks.GRASS);
                 }else if(biome == Biome.TAIGA || biome == Biome.SNOWY_TAIGA){
-                    if(random.randomBoolean(0.005))
+                    if(random.nextBoolean(0.005))
                         chunk.setBlockFast(lx, height + 1, lz, ClientBlocks.GRASS);
                 }
 
@@ -307,48 +307,48 @@ public class ChunkGeneratorDefault extends ChunkGenerator{
 
                 if(biome == Biome.DESERT){
 
-                    if(random.randomBoolean(0.008) && !prevCactusGen){
+                    if(random.nextBoolean(0.008) && !prevCactusGen){
                         Cactus.generate(level, x, height + 1, z, random);
                         prevCactusGen = true;
-                    }else if(random.randomBoolean(0.00001))
+                    }else if(random.nextBoolean(0.00001))
                         DesertPyramid.generate(level, x, height - 1, z, random);
-                    else if(random.randomBoolean(0.00005))
+                    else if(random.nextBoolean(0.00005))
                         MiniPyramid.generate(level, x, height, z, random);
 
                 }else if(biome == Biome.FOREST){
 
-                    if(random.randomBoolean(0.03)){
-                        if(random.randomBoolean(0.7))
-                            OldGenOakTree.generate(level, random.getRandom(), x, height + 1, z);
+                    if(random.nextBoolean(0.03)){
+                        if(random.nextBoolean(0.7))
+                            OldGenOakTree.generate(level, random, x, height + 1, z);
                         else
-                            OldGenBirchTree.generate(level, random.getRandom(), x, height + 1, z);
-                    }else if(random.randomBoolean(0.00002))
+                            OldGenBirchTree.generate(level, random, x, height + 1, z);
+                    }else if(random.nextBoolean(0.00002))
                         House.generate(level, x, height, z, random);
 
                 }else if(biome == Biome.TAIGA){
 
-                    if(random.randomBoolean(0.02))
-                        OldGenTaigaTree2.generate(level, random.getRandom(), x, height + 1, z);
-                    else if(random.randomBoolean(0.02))
-                        OldGenTaigaTree1.generate(level, random.getRandom(), x, height + 1, z);
+                    if(random.nextBoolean(0.02))
+                        OldGenTaigaTree2.generate(level, random, x, height + 1, z);
+                    else if(random.nextBoolean(0.02))
+                        OldGenTaigaTree1.generate(level, random, x, height + 1, z);
 
-                    else if(random.randomBoolean(0.00005))
+                    else if(random.nextBoolean(0.00005))
                         Tower.generate(level, x, height, z, random);
 
                 }else if(biome == Biome.SNOWY_TAIGA){
 
-                    if(random.randomBoolean(0.02))
-                        OldGenTaigaTree2.generate(level, random.getRandom(), x, height + 1, z);
-                    else if(random.randomBoolean(0.02))
-                        OldGenTaigaTree1.generate(level, random.getRandom(), x, height + 1, z);
+                    if(random.nextBoolean(0.02))
+                        OldGenTaigaTree2.generate(level, random, x, height + 1, z);
+                    else if(random.nextBoolean(0.02))
+                        OldGenTaigaTree1.generate(level, random, x, height + 1, z);
 
-                    else if(random.randomBoolean(0.00008))
+                    else if(random.nextBoolean(0.00008))
                         Tower.generate(level, x, height, z, random);
 
                 }
 
-                if(random.randomBoolean(0.00001))
-                    OldGenDungeons.generate(level, random.getRandom(), x, height - 5, z);
+                if(random.nextBoolean(0.00001))
+                    OldGenDungeons.generate(level, random, x, height - 5, z);
 
             }
         }

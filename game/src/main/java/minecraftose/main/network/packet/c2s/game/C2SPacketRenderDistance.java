@@ -1,19 +1,16 @@
 package minecraftose.main.network.packet.c2s.game;
 
-import jpize.net.tcp.packet.IPacket;
 import minecraftose.server.network.ServerPlayerGameConnection;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
 
 import java.io.IOException;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.net.packet.NetPacket;
 
-public class C2SPacketRenderDistance extends IPacket<ServerPlayerGameConnection>{
+public class C2SPacketRenderDistance extends NetPacket<ServerPlayerGameConnection>{
     
-    public static final int PACKET_ID = 8;
-    
-    public C2SPacketRenderDistance(){
-        super(PACKET_ID);
-    }
+        
+    public C2SPacketRenderDistance(){}
     
     
     public int renderDistance;
@@ -25,12 +22,12 @@ public class C2SPacketRenderDistance extends IPacket<ServerPlayerGameConnection>
     
     
     @Override
-    public void write(JpizeOutputStream stream) throws IOException{
+    public void write(ExtDataOutputStream stream) throws IOException{
         stream.writeInt(renderDistance);
     }
     
     @Override
-    public void read(JpizeInputStream stream) throws IOException{
+    public void read(ExtDataInputStream stream) throws IOException{
         renderDistance = stream.readInt();
     }
     

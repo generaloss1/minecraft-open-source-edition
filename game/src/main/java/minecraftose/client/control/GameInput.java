@@ -1,19 +1,19 @@
 package minecraftose.client.control;
 
-import jpize.Jpize;
-import jpize.gl.tesselation.GlFace;
+import jpize.app.Jpize;
 import jpize.gl.Gl;
+import jpize.gl.tesselation.GlFace;
 import jpize.gl.tesselation.GlPolygonMode;
-import jpize.math.Maths;
-import jpize.math.vecmath.vector.Vec3f;
-import jpize.math.vecmath.vector.Vec3i;
-import jpize.physic.axisaligned.box.AABox;
-import jpize.physic.axisaligned.box.AABoxBody;
-import jpize.sdl.input.Btn;
-import jpize.sdl.input.Key;
+import jpize.glfw.input.Key;
+import jpize.glfw.input.MouseBtn;
+import jpize.util.math.Maths;
+import jpize.util.math.axisaligned.AABox;
+import jpize.util.math.axisaligned.AABoxBody;
+import jpize.util.math.vector.Vec3f;
+import jpize.util.math.vector.Vec3i;
 import minecraftose.client.Minecraft;
-import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.BlockProps;
+import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.block.shape.BlockCollide;
 import minecraftose.client.chat.Chat;
@@ -61,39 +61,39 @@ public class GameInput{
         /* Window **/
         
         // Fullscreen
-        if(Key.F11.isDown())
-            Jpize.window().toggleFullscreenDesktop();
+        if(Key.F11.down())
+            Jpize.window().toggleFullscreen();
         
         /* Chat **/
         
         final Chat chat = minecraft.getChat();
         
         if(chat.isOpened()){
-            if(Key.ENTER.isDown()){
+            if(Key.ENTER.down()){
                 chat.enter();
                 chat.close();
             }
             
-            if(Key.UP.isDown())
+            if(Key.UP.down())
                 chat.historyUp();
-            if(Key.DOWN.isDown())
+            if(Key.DOWN.down())
                 chat.historyDown();
             
-            if(Key.LCTRL.isPressed()){
-                if(Key.C.isDown())
-                    Jpize.setClipboardText(chat.getEnteringText());
-                if(Key.V.isDown())
-                    chat.getTextProcessor().insertLine(Jpize.getClipboardText());
+            if(Key.LCTRL.pressed()){
+                if(Key.C.down())
+                    Jpize.input().setClipboardString(chat.getEnteringText());
+                if(Key.V.down())
+                    chat.getTextProcessor().setLine(Jpize.input().getClipboardString());
             }
             
-            if(Key.ESCAPE.isDown())
+            if(Key.ESCAPE.down())
                 chat.close();
             
             return; // Abort subsequent control
             
-        }else if(options.getKey(KeyMapping.CHAT).isDown())
+        }else if(options.getKey(KeyMapping.CHAT).down())
             chat.open();
-        else if(options.getKey(KeyMapping.COMMAND).isDown()){
+        else if(options.getKey(KeyMapping.COMMAND).down()){
             chat.openAsCommandLine();
         }
         
@@ -103,30 +103,30 @@ public class GameInput{
             return;
 
         // F3 + ...
-        if(Key.F3.isPressed()){
+        if(Key.F3.pressed()){
             // G - Chunk border
-            if(Key.G.isDown()){
+            if(Key.G.down()){
                 minecraft.getRenderer().getWorldRenderer().getChunkBorderRenderer().toggleShow();
                 f3Plus = true;
                 return;
             }
 
             // R - Reload chunks
-            // if(Key.H.isDown()){ //: deprecated chunk reload
+            // if(Key.H.down()){ //: deprecated chunk reload
             //     minecraft.getLevel().getChunkProvider().reload();
             //     f3Plus = true;
             //     return;
             // }
 
             // C - Reload chunks
-            if(Key.C.isDown()){
+            if(Key.C.down()){
                 getMinecraft().getConnection().sendPacket(new C2SPacketChunkRequest(ChunkPos.pack(camera.chunkX(), camera.chunkZ())));
                 f3Plus = true;
                 return;
             }
 
             // F - Toggle fog
-            if(Key.F.isDown()){
+            if(Key.F.down()){
                 options.setFog(!options.isFogEnabled());
                 f3Plus = true;
                 return;
@@ -134,7 +134,7 @@ public class GameInput{
         }
 
         // Info Panel
-        if(Key.F3.isReleased()){
+        if(Key.F3.up()){
             if(!f3Plus){
                 final InfoRenderer info = minecraft.getRenderer().getInfoRenderer();
                 final ChunkInfoRenderer chunkInfo = minecraft.getRenderer().getChunkInfoRenderer();
@@ -142,7 +142,7 @@ public class GameInput{
                 info.toggleOpen();
 
                 if(info.isOpen()){
-                    if(Key.LSHIFT.isPressed())
+                    if(Key.LSHIFT.pressed())
                         chunkInfo.setOpen(true);
                 }else
                     chunkInfo.setOpen(false);
@@ -152,41 +152,41 @@ public class GameInput{
         }
 
         // Show mouse
-        if(Key.M.isDown())
+        if(Key.M.down())
             minecraft.getPlayer().getInput().getRotation().toggleEnabled();
 
         // Camera zoom
-        if(options.getKey(KeyMapping.ZOOM).isDown())
+        if(options.getKey(KeyMapping.ZOOM).down())
             camera.setZoom(10);
-        else if(options.getKey(KeyMapping.ZOOM).isPressed()){
-            camera.setZoom(camera.getZoom() + Jpize.input().getScroll() * (camera.getZoom() / 8));
-        }else if(options.getKey(KeyMapping.ZOOM).isReleased())
+        else if(options.getKey(KeyMapping.ZOOM).pressed()){
+            camera.setZoom(camera.getZoom() + Jpize.getScroll() * (camera.getZoom() / 8));
+        }else if(options.getKey(KeyMapping.ZOOM).up())
             camera.setZoom(1);
 
         // Ping server
-        if(Key.P.isDown())
+        if(Key.P.down())
             minecraft.getConnection().sendPacket(new C2SPacketPing(System.nanoTime()));
 
         // Polygon Mode
-        if(Key.F9.isDown())
+        if(Key.F9.down())
             Gl.polygonMode(GlFace.FRONT_AND_BACK, GlPolygonMode.LINE);
-        if(Key.F8.isDown())
+        if(Key.F8.down())
             Gl.polygonMode(GlFace.FRONT_AND_BACK, GlPolygonMode.FILL);
 
         // Exit
-        if(Key.ESCAPE.isDown())
+        if(Key.ESCAPE.down())
             Jpize.exit();
 
         // Place/Destroy/Copy block
         if(blockRayCast.isSelected()){
             final LocalPlayer player = minecraft.getPlayer();
             
-            if(Btn.LEFT.isDown() || Key.U.isPressed()){
+            if(MouseBtn.LEFT.down() || Key.U.pressed()){
                 final Collection<Entity> entities = minecraft.getLevel().getEntities();
 
                 // Check intersect with player & entity
                 for(Entity entity: entities)
-                    if(entity.getAABB().isIntersectRay(blockRayCast.getRay())){
+                    if(entity.getAABB().intersect(blockRayCast.getRay())){
                         minecraft.getConnection().sendPacket(new C2SPacketHitEntity(entity.getUUID()));
                         System.out.println("You hit entity" + entity.getUUID());
                         return;
@@ -203,11 +203,11 @@ public class GameInput{
                         blockPos.z + Maths.random(1F)
                     ));
                 }
-            }else if(Btn.RIGHT.isDown() || Key.J.isPressed()){
+            }else if(MouseBtn.RIGHT.down() || Key.J.pressed()){
                 final Item item = player.getInventory().getSelectedItemStack().getItem();
                 if(item instanceof BlockItem blockItem)
                     placeBlock(ClientBlocks.COBBLESTONE); // blockItem.getBlock()
-            }else if(Btn.MIDDLE.isDown()){
+            }else if(MouseBtn.MIDDLE.down()){
                 final Vec3i blockPos = blockRayCast.getSelectedBlockPosition();
 
                 final BlockProps blockProps = level.getBlockProps(blockPos.x, blockPos.y, blockPos.z);
@@ -262,13 +262,13 @@ public class GameInput{
             
             // Check intersect with player & entity
             for(AABox box: blockBoxes){
-                blockBox.getBoundingBox().resize(box);
+                blockBox.box().resize(box);
                 
-                if(player.getAABB().isIntersectBox(blockBox))
+                if(player.getAABB().intersect(blockBox))
                     return;
                 
                 for(Entity entity: entities)
-                    if(entity.getAABB().isIntersectBox(blockBox))
+                    if(entity.getAABB().intersect(blockBox))
                         return;
             }
         }

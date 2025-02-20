@@ -1,20 +1,16 @@
 package minecraftose.main.network.packet.c2s.game;
 
-import jpize.net.tcp.packet.IPacket;
-import minecraftose.main.chunk.storage.ChunkPos;
 import minecraftose.server.network.ServerPlayerGameConnection;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
 
 import java.io.IOException;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.net.packet.NetPacket;
 
-public class C2SPacketChunkRequest extends IPacket<ServerPlayerGameConnection>{
+public class C2SPacketChunkRequest extends NetPacket<ServerPlayerGameConnection>{
     
-    public static final int PACKET_ID = 12;
-    
-    public C2SPacketChunkRequest(){
-        super(PACKET_ID);
-    }
+        
+    public C2SPacketChunkRequest(){}
     
     public long packedChunkPos;
     
@@ -26,12 +22,12 @@ public class C2SPacketChunkRequest extends IPacket<ServerPlayerGameConnection>{
     
     
     @Override
-    public void write(JpizeOutputStream stream) throws IOException{
+    public void write(ExtDataOutputStream stream) throws IOException{
         stream.writeLong(packedChunkPos);
     }
     
     @Override
-    public void read(JpizeInputStream stream) throws IOException{
+    public void read(ExtDataInputStream stream) throws IOException{
         packedChunkPos = stream.readLong();
     }
     

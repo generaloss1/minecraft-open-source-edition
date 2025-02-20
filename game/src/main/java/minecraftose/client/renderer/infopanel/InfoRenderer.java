@@ -1,11 +1,13 @@
 package minecraftose.client.renderer.infopanel;
 
-import jpize.Jpize;
-import jpize.graphics.font.BitmapFont;
-import jpize.graphics.util.batch.TextureBatch;
-import jpize.math.Maths;
-import jpize.math.vecmath.vector.Vec3f;
-import jpize.math.vecmath.vector.Vec3i;
+import jpize.app.Jpize;
+import jpize.util.Disposable;
+import jpize.util.font.Font;
+import jpize.util.math.Maths;
+import jpize.util.math.vector.Vec3f;
+import jpize.util.math.vector.Vec3i;
+import jpize.util.mesh.TextureBatch;
+import jpize.util.time.TimeUtils;
 import minecraftose.client.Minecraft;
 import minecraftose.client.audio.SoundPlayer;
 import minecraftose.client.chunk.builder.ChunkBuilder;
@@ -24,12 +26,10 @@ import minecraftose.main.modification.loader.Modification;
 import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
 import minecraftose.main.time.GameTime;
-import jpize.util.Disposable;
-import jpize.util.Utils;
 
 import java.util.Collection;
 
-public class InfoRenderer implements Disposable{
+public class InfoRenderer implements Disposable {
     
     private final GameRenderer gameRenderer;
     
@@ -44,13 +44,13 @@ public class InfoRenderer implements Disposable{
         this.gameRenderer = gameRenderer;
         
         textBatch = gameRenderer.getTextComponentBatch();
-        batch = new TextureBatch(200);
+        batch = new TextureBatch();
         
         animationEnded = true;
         
         // Open
         new Thread(()->{
-            Utils.delayElapsed(500);
+            TimeUtils.delaySeconds(0.5F);
             setOpen(true);
         }).start();
     }
@@ -60,7 +60,7 @@ public class InfoRenderer implements Disposable{
         final int width = Jpize.getWidth() / 2;
         
         if(!animationEnded){
-            final float animationSpeed = Math.max(0.03F, 1 - animationTimeLine * animationTimeLine) * Jpize.getDt() * 5;
+            final float animationSpeed = Math.max(0.03F, 1 - animationTimeLine * animationTimeLine) * Jpize.getDeltaTime() * 5;
             
             if(open){ // open
                 animationTimeLine += animationSpeed;
@@ -115,7 +115,7 @@ public class InfoRenderer implements Disposable{
         infoLineNum = 0;
         hintLineNum = 0;
         
-        batch.begin();
+        batch.setup();
         textBatch.setBackgroundColor(0, 0, 0, 0.2);
         
         /* -------- INFO -------- */
@@ -181,8 +181,8 @@ public class InfoRenderer implements Disposable{
 
         // Rotation
         info(TextColor.DARK_GREEN, "Rotation", TextColor.AQUA,
-            "Yaw: " + String.format("%.1f", Maths.frac(camera.getRotation().yaw, -180, 180)) +
-            " Pitch: " + String.format("%.1f", camera.getRotation().pitch)
+            "Yaw: " + String.format("%.1f", Maths.frac(camera.rotation().getYaw(), -180, 180)) +
+            " Pitch: " + String.format("%.1f", camera.rotation().getPitch())
         );
         
         // Speed
@@ -267,7 +267,7 @@ public class InfoRenderer implements Disposable{
         hint(new Component().color(TextColor.ORANGE).text(options.getKey(KeyMapping.TOGGLE_PERSPECTIVE)).color(TextColor.GRAY).text(" - Toggle perspective"));
         hint(new Component().color(TextColor.ORANGE).text(options.getKey(KeyMapping.ZOOM) + " + Mouse Wheel").color(TextColor.GRAY).text(" - zoom"));
 
-        batch.end();
+        batch.render();
     }
     
     
@@ -288,20 +288,20 @@ public class InfoRenderer implements Disposable{
     }
     
     private void info(Component text){
-        final BitmapFont font = textBatch.getFont();
+        final Font font = textBatch.getFont();
 
         infoLineNum++;
         final float x = 5 + panelOffsetX;
-        final float y = Jpize.getHeight() - 5 - font.getOptions().getAdvanceScaled() * infoLineNum;
+        final float y = Jpize.getHeight() - 5 - font.getLineAdvanceScaled() * infoLineNum;
         textBatch.drawComponent(text, x, y);
     }
     
     private void hint(Component text){
-        final BitmapFont font = textBatch.getFont();
+        final Font font = textBatch.getFont();
 
         hintLineNum++;
         final float x = Jpize.getWidth() - 5 - textBatch.getFont().getTextWidth(text.toString()) - panelOffsetX;
-        final float y = Jpize.getHeight() - 5 - font.getOptions().getAdvanceScaled() * hintLineNum;
+        final float y = Jpize.getHeight() - 5 - font.getLineAdvanceScaled() * hintLineNum;
         textBatch.drawComponent(text, x, y);
     }
     

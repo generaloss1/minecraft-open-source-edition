@@ -1,15 +1,15 @@
 package minecraftose.client.renderer.level;
 
+import jpize.gl.shader.Shader;
 import jpize.util.Disposable;
-import jpize.util.file.Resource;
-import jpize.graphics.util.Shader;
-import jpize.math.vecmath.matrix.Matrix4f;
-import jpize.math.vecmath.vector.Vec3f;
+import jpize.util.math.matrix.Matrix4f;
+import jpize.util.math.vector.Vec3f;
+import jpize.util.res.Resource;
 import minecraftose.client.block.shape.BlockCursor;
-import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.control.BlockRayCast;
+import minecraftose.client.control.camera.PlayerCamera;
 
-public class BlockSelectorRenderer implements Disposable{
+public class BlockSelectorRenderer implements Disposable {
     
     private final LevelRenderer levelRenderer;
     private final Shader shader;
@@ -18,7 +18,7 @@ public class BlockSelectorRenderer implements Disposable{
     public BlockSelectorRenderer(LevelRenderer levelRenderer){
         this.levelRenderer = levelRenderer;
         
-        this.shader = new Shader(Resource.internal("shader/line.vert"), Resource.internal("shader/line.frag"));
+        this.shader = new Shader(Resource.internal("/shader/line.vert"), Resource.internal("/shader/line.frag"));
         
         this.translationMatrix = new Matrix4f();
     }
@@ -30,11 +30,11 @@ public class BlockSelectorRenderer implements Disposable{
             return;
         
         shader.bind();
-        shader.setUniform("u_projection", camera.getProjection());
-        shader.setUniform("u_view", camera.getView());
+        shader.uniform("u_projection", camera.getProjection());
+        shader.uniform("u_view", camera.getView());
         
-        translationMatrix.toTranslated(new Vec3f(rayCast.getSelectedBlockPosition()).sub(camera.getX(), 0, camera.getZ()));
-        shader.setUniform("u_model", translationMatrix);
+        translationMatrix.setTranslate(new Vec3f(rayCast.getSelectedBlockPosition()).sub(camera.getX(), 0, camera.getZ()));
+        shader.uniform("u_model", translationMatrix);
         
         final BlockCursor shape = rayCast.getSelectedBlockProps().getCursor();
         if(shape != null)

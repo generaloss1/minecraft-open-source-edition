@@ -1,28 +1,28 @@
 package minecraftose.client.audio;
 
-import jpize.al.listener.AlListener;
+import jpize.audio.al.buffer.AlBuffer;
+import jpize.audio.al.listener.AlListener;
+import jpize.audio.al.source.AlSource;
 import jpize.util.Disposable;
-import jpize.audio.sound.AudioBuffer;
-import jpize.audio.sound.AudioSource;
 import minecraftose.client.Minecraft;
 import minecraftose.main.audio.Sound;
 
-public class SoundPlayer implements Disposable{
+public class SoundPlayer implements Disposable {
 
     public static final int MAX_SOUND_SOURCES = 64;
 
 
     private final Minecraft minecraft;
-    private final AudioSource[] sources;
+    private final AlSource[] sources;
 
     public SoundPlayer(Minecraft minecraft){
         this.minecraft = minecraft;
 
         System.out.println("[Client]: Initialize audio player");
 
-        this.sources = new AudioSource[MAX_SOUND_SOURCES];
+        this.sources = new AlSource[MAX_SOUND_SOURCES];
         for(int i = 0; i < sources.length; i++){
-            sources[i] = new AudioSource();
+            sources[i] = new AlSource();
             sources[i].setRelative(false); //: ?
         }
 
@@ -31,7 +31,7 @@ public class SoundPlayer implements Disposable{
 
 
     public void play(Sound sound, float volume, float pitch, float x, float y, float z){
-        final AudioBuffer buffer = minecraft.getResources().getSound(sound.getID());
+        final AlBuffer buffer = minecraft.getResources().getSound(sound.getID());
         if(buffer == null){
             System.err.println("Sound " + sound.name() + " is not found");
             return;
@@ -39,7 +39,7 @@ public class SoundPlayer implements Disposable{
         play(buffer, volume, pitch * sound.pitch(), x, y, z);
     }
 
-    public void play(AudioBuffer buffer, float volume, float pitch, float x, float y, float z){
+    public void play(AlBuffer buffer, float volume, float pitch, float x, float y, float z){
         if(buffer == null)
             return;
 
@@ -47,7 +47,7 @@ public class SoundPlayer implements Disposable{
         if(sourceIndex == -1)
             return;
 
-        final AudioSource source = sources[sourceIndex];
+        final AlSource source = sources[sourceIndex];
         source.setBuffer(buffer);
         source.setGain(volume);
         source.setPitch(pitch);
@@ -66,7 +66,7 @@ public class SoundPlayer implements Disposable{
 
     public int getPlayingSoundsNum(){
         int playing = 0;
-        for(AudioSource source: sources)
+        for(AlSource source: sources)
             if(source.isPlaying())
                 playing++;
 
@@ -76,7 +76,7 @@ public class SoundPlayer implements Disposable{
 
     @Override
     public void dispose(){
-        for(AudioSource source: sources)
+        for(AlSource source: sources)
             source.dispose();
     }
 

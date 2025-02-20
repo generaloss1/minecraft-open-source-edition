@@ -1,17 +1,18 @@
 package minecraftose.client.chunk.mesh;
 
-import jpize.Jpize;
+
+import jpize.app.Jpize;
 import jpize.gl.buffer.GlBufUsage;
+import jpize.gl.buffer.VertexBuffer;
 import jpize.gl.type.GlType;
+import jpize.gl.vertex.GlVertAttr;
 import jpize.gl.vertex.GlVertexArray;
-import jpize.gl.vertex.GlVertexAttr;
-import jpize.graphics.buffer.VertexBuffer;
 import jpize.util.Disposable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChunkMesh implements Disposable{
+public class ChunkMesh implements Disposable {
 
     private final ChunkMeshType type;
     private final List<Float> verticesList;
@@ -27,22 +28,22 @@ public class ChunkMesh implements Disposable{
         this.verticesList = new ArrayList<>();
         this.verticesPackedList = new ArrayList<>();
 
-        Jpize.execSync(() -> {
+        Jpize.syncExecutor().exec(() -> {
             this.vao = new GlVertexArray();
             this.vbo = new VertexBuffer();
             this.vbo.enableAttributes(
-                    new GlVertexAttr(3, GlType.FLOAT), // position
-                    new GlVertexAttr(2, GlType.FLOAT), // uv
-                    new GlVertexAttr(4, GlType.FLOAT), // color
-                    new GlVertexAttr(3, GlType.FLOAT)  // ao, skyLight, blockLight
+                    new GlVertAttr(3, GlType.FLOAT), // position
+                    new GlVertAttr(2, GlType.FLOAT), // uv
+                    new GlVertAttr(4, GlType.FLOAT), // color
+                    new GlVertAttr(3, GlType.FLOAT)  // ao, skyLight, blockLight
             );
 
             this.pvao = new GlVertexArray();
             this.pvbo = new VertexBuffer();
             this.pvbo.enableAttributes(
-                    new GlVertexAttr(1, GlType.FLOAT), // packed_1
-                    new GlVertexAttr(1, GlType.FLOAT), // packed_2
-                    new GlVertexAttr(1, GlType.FLOAT)  // packed_3
+                    new GlVertAttr(1, GlType.FLOAT), // packed_1
+                    new GlVertAttr(1, GlType.FLOAT), // packed_2
+                    new GlVertAttr(1, GlType.FLOAT)  // packed_3
             );
         });
     }
@@ -78,14 +79,14 @@ public class ChunkMesh implements Disposable{
         for(int i = 0; i < verticesList.size(); i++)
             verticesArray[i] = verticesList.get(i);
 
-        Jpize.execSync(() -> vbo.setData(verticesArray, GlBufUsage.DYNAMIC_DRAW));
+        Jpize.syncExecutor().exec(() -> vbo.setData(verticesArray, GlBufUsage.DYNAMIC_DRAW));
         verticesList.clear();
 
         final int[] verticesPackedArray = new int[verticesPackedList.size()];
         for(int i = 0; i < verticesPackedList.size(); i++)
             verticesPackedArray[i] = verticesPackedList.get(i);
 
-        Jpize.execSync(() -> pvbo.setData(verticesPackedArray, GlBufUsage.DYNAMIC_DRAW));
+        Jpize.syncExecutor().exec(() -> pvbo.setData(verticesPackedArray, GlBufUsage.DYNAMIC_DRAW));
         verticesPackedList.clear();
 
 

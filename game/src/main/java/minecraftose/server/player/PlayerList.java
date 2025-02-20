@@ -1,8 +1,8 @@
 package minecraftose.server.player;
 
-import jpize.math.vecmath.vector.Vec3f;
-import jpize.net.tcp.TcpConnection;
-import jpize.net.tcp.packet.IPacket;
+import jpize.util.math.vector.Vec3f;
+import jpize.util.net.packet.NetPacket;
+import jpize.util.net.tcp.TCPConnection;
 import minecraftose.main.network.packet.s2c.game.*;
 import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
@@ -42,7 +42,7 @@ public class PlayerList{
     }
     
     
-    public void addNewPlayer(String name, TcpConnection connection){
+    public void addNewPlayer(String name, TCPConnection connection){
         // Get level & Spawn position
         final LevelS level;
         final Vec3f spawnPosition;
@@ -104,24 +104,24 @@ public class PlayerList{
     }
     
     
-    public void broadcastPacket(IPacket<?> packet){
+    public void broadcastPacket(NetPacket<?> packet){
         for(ServerPlayer player: playerMap.values())
             player.sendPacket(packet);
     }
 
-    public void broadcastPacketExcept(IPacket<?> packet, ServerPlayer except){
+    public void broadcastPacketExcept(NetPacket<?> packet, ServerPlayer except){
         for(ServerPlayer player: playerMap.values())
             if(player != except)
                 player.sendPacket(packet);
     }
 
-    public void broadcastPacketLevel(LevelS level, IPacket<?> packet){
+    public void broadcastPacketLevel(LevelS level, NetPacket<?> packet){
         for(ServerPlayer player: playerMap.values())
             if(player.getLevel() == level)
                 player.sendPacket(packet);
     }
 
-    public void broadcastPacketLevelExcept(LevelS level, IPacket<?> packet, ServerPlayer except){
+    public void broadcastPacketLevelExcept(LevelS level, NetPacket<?> packet, ServerPlayer except){
         for(ServerPlayer player: playerMap.values())
             if(player.getLevel() == level && player != except)
                 player.sendPacket(packet);

@@ -1,11 +1,11 @@
 package minecraftose.client.entity.model;
 
-import jpize.util.file.Resource;
-import jpize.graphics.texture.Texture;
-import jpize.graphics.util.Shader;
+import jpize.gl.shader.Shader;
+import jpize.gl.texture.Texture2D;
+import jpize.util.res.Resource;
 import minecraftose.client.control.camera.PlayerCamera;
-import minecraftose.main.entity.Player;
 import minecraftose.client.entity.AbstractClientPlayer;
+import minecraftose.main.entity.Player;
 
 public class HumanoidModel{
     
@@ -16,14 +16,14 @@ public class HumanoidModel{
     protected final AbstractClientPlayer player;
     protected final ModelPart torso, head, leftLeg, rightLeg, leftArm, rightArm;
     protected final Shader shader;
-    protected final Texture skinTexture;
+    protected final Texture2D skinTexture;
     
     public HumanoidModel(AbstractClientPlayer player){
         this.player = player;
         
-        shader = new Shader(Resource.internal("shader/level/entity/model.vert"), Resource.internal("shader/level/entity/model.frag"));
+        shader = new Shader(Resource.internal("/shader/level/entity/model.vert"), Resource.internal("/shader/level/entity/model.frag"));
         final int skinID = (Math.abs(player.getName().hashCode()) % 20 + 1);
-        skinTexture = new Texture("texture/skin/skin" + skinID + ".png");
+        skinTexture = new Texture2D("/texture/skin/skin" + skinID + ".png");
         
         head = new ModelPart(new BoxBuilder(-4 * w, 0 * w, -4 * w,  4 * w, 8 * w, 4 * w)
             .nx(1, 1, 1, 1, 24 * t, 8  * t, 32 * t, 16 * t)
@@ -100,10 +100,10 @@ public class HumanoidModel{
             return;
         
         shader.bind();
-        shader.setUniform("u_projection", camera.getProjection());
-        shader.setUniform("u_view", camera.getView());
-        shader.setUniform("u_texture", skinTexture);
-        shader.setUniform("u_skyBrightness", camera.getMinecraft().getRenderer().getWorldRenderer().getSkyRenderer().getSkyBrightness());
+        shader.uniform("u_projection", camera.getProjection());
+        shader.uniform("u_view", camera.getView());
+        shader.uniform("u_texture", skinTexture);
+        shader.uniform("u_skyBrightness", camera.getMinecraft().getRenderer().getWorldRenderer().getSkyRenderer().getSkyBrightness());
 
         torso.render(camera, shader, "u_model");
         head.render(camera, shader, "u_model");

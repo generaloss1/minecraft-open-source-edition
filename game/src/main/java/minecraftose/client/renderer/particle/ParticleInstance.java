@@ -1,10 +1,10 @@
 package minecraftose.client.renderer.particle;
 
-import jpize.graphics.texture.Region;
-import jpize.graphics.util.color.Color;
-import jpize.math.Maths;
-import jpize.math.vecmath.vector.Vec3f;
-import jpize.physic.utils.Velocity3f;
+
+import jpize.util.color.Color;
+import jpize.util.math.Maths;
+import jpize.util.math.vector.Vec3f;
+import jpize.util.region.Region;
 
 public class ParticleInstance{
     
@@ -16,7 +16,7 @@ public class ParticleInstance{
     public Region region;
     public float lifeTimeSeconds;
     public Vec3f position;
-    public Velocity3f velocity;
+    public Vec3f velocity;
     public float rotation, size;
     public Color color;
     
@@ -26,7 +26,7 @@ public class ParticleInstance{
         this.position = position.copy();
         this.creationTime = System.currentTimeMillis();
         this.color = particle.color.copy();
-        this.velocity = new Velocity3f();
+        this.velocity = new Vec3f();
     }
     
     public void update(){

@@ -1,12 +1,11 @@
 package minecraftose.main.entity;
 
-import jpize.math.Maths;
-import jpize.math.util.EulerAngles;
-import jpize.math.vecmath.vector.Vec3f;
-import jpize.physic.axisaligned.box.AABox;
-import jpize.physic.axisaligned.box.AABoxBody;
-import jpize.physic.axisaligned.box.AABoxCollider;
-import jpize.physic.utils.Velocity3f;
+import jpize.util.math.EulerAngles;
+import jpize.util.math.Maths;
+import jpize.util.math.axisaligned.AABox;
+import jpize.util.math.axisaligned.AABoxBody;
+import jpize.util.math.axisaligned.AABoxCollider;
+import jpize.util.math.vector.Vec3f;
 import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.client.block.shape.BlockCollide;
@@ -16,7 +15,6 @@ import minecraftose.main.Dir;
 import minecraftose.main.Tickable;
 import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.chunk.ChunkBase;
-import minecraftose.main.chunk.ChunkUtils;
 import minecraftose.main.level.Level;
 
 import java.util.List;
@@ -29,7 +27,7 @@ public abstract class Entity implements Tickable{
     protected final EntityType<?> entityType;
     protected final Vec3f position;
     protected final EulerAngles rotation;
-    protected final Velocity3f velocity;
+    protected final Vec3f velocity;
     protected UUID uuid;
     protected AABoxBody aabb;
     
@@ -43,7 +41,7 @@ public abstract class Entity implements Tickable{
         this.entityType = entityType;
         this.position = new Vec3f();
         this.rotation = new EulerAngles();
-        this.velocity = new Velocity3f();
+        this.velocity = new Vec3f();
         this.uuid = UUID.randomUUID();
         this.aabb = new AABoxBody(entityType.getBoundingBox(), position);
 
@@ -103,7 +101,7 @@ public abstract class Entity implements Tickable{
     }
 
 
-    public Velocity3f getVelocity(){
+    public Vec3f getVelocity(){
         return velocity;
     }
 
@@ -122,7 +120,7 @@ public abstract class Entity implements Tickable{
     }
 
     public float getEyeHeight(){
-        return aabb.getBoundingBox().getSizeY() * 0.85F;
+        return aabb.box().getSizeY() * 0.85F;
     }
     
 
@@ -173,7 +171,7 @@ public abstract class Entity implements Tickable{
         if(blockBoxes == null)
             return velocity;
 
-        final Vec3f collideMovement = AABoxCollider.getCollidedMovement(velocity, aabb, blockBoxes);
+        final Vec3f collideMovement = AABoxCollider.getClippedMovement(velocity, aabb, blockBoxes);
         position.add(collideMovement);
         return collideMovement;
     }
@@ -182,7 +180,7 @@ public abstract class Entity implements Tickable{
     public void updateBlockBoxes(){ //: private
         blockBoxes.clear();
 
-        final Velocity3f velocity = getVelocity();
+        final Vec3f velocity = getVelocity();
         final Vec3f min = aabb.getMin();
         final Vec3f max = aabb.getMax();
 
@@ -223,7 +221,7 @@ public abstract class Entity implements Tickable{
 
                     for(AABox boundingBox: shape.getBoxes()){
                         final AABoxBody box = new AABoxBody(boundingBox);
-                        box.getPosition().set(x, y, z);
+                        box.position().set(x, y, z);
 
                         blockBoxes.add(box);
                     }

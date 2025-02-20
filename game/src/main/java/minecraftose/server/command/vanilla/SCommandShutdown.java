@@ -1,12 +1,12 @@
 package minecraftose.server.command.vanilla;
 
+import jpize.util.time.AsyncRunnable;
+import minecraftose.main.command.CommandContext;
+import minecraftose.main.command.builder.Commands;
 import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
-import minecraftose.main.command.CommandContext;
 import minecraftose.server.Server;
 import minecraftose.server.command.ServerCommandDispatcher;
-import minecraftose.main.command.builder.Commands;
-import jpize.util.time.JpizeRunnable;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -27,14 +27,14 @@ public class SCommandShutdown{
         server.broadcast(new Component().color(TextColor.DARK_RED).text("Shutting down the server..."));
 
         final AtomicInteger counterInt = new AtomicInteger(3);
-        new JpizeRunnable(() -> {
+        new AsyncRunnable(() -> {
             if(counterInt.get() == 0)
                 server.stop();
             else{
                 server.broadcast(new Component().color(TextColor.DARK_RED).text(counterInt));
                 counterInt.set(counterInt.get() - 1);
             }
-        }).runTimerAsync(1000, 1000);
+        }).runInterval(1000L, 1000L);
     }
 
     private static void shutdownNow(CommandContext context){

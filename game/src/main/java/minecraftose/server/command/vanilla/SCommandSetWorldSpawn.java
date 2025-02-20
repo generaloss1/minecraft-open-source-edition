@@ -1,11 +1,11 @@
 package minecraftose.server.command.vanilla;
 
-import jpize.math.vecmath.vector.Vec3f;
+import jpize.util.math.vector.Vec3f;
+import minecraftose.main.command.CommandContext;
+import minecraftose.main.command.builder.Commands;
 import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
-import minecraftose.main.command.CommandContext;
 import minecraftose.server.command.ServerCommandDispatcher;
-import minecraftose.main.command.builder.Commands;
 import minecraftose.server.level.LevelS;
 import minecraftose.server.player.ServerPlayer;
 

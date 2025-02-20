@@ -1,14 +1,14 @@
 package minecraftose.client.block.model;
 
-import jpize.graphics.texture.Region;
-import jpize.graphics.util.color.Color;
-import jpize.graphics.util.color.IColor;
-import jpize.math.vecmath.vector.Vec2f;
-import jpize.math.vecmath.vector.Vec3f;
+import jpize.util.color.AbstractColor;
+import jpize.util.color.Color;
+import jpize.util.math.vector.Vec2f;
+import jpize.util.math.vector.Vec3f;
+import jpize.util.region.Region;
 import minecraftose.client.block.BlockRotation;
 import minecraftose.client.chunk.mesh.ChunkMesh;
 
-public class Face extends Quad{
+public class Face extends Quad {
 
     protected final Vec2f t1, t2, t3, t4;
     protected Color color;
@@ -24,7 +24,7 @@ public class Face extends Quad{
         this.faceData = face.faceData;
     }
 
-    public Face(Quad quad, Vec2f t1, Vec2f t2, Vec2f t3, Vec2f t4, IColor color){
+    public Face(Quad quad, Vec2f t1, Vec2f t2, Vec2f t3, Vec2f t4, AbstractColor color){
         super(quad);
         this.t1 = t1;
         this.t2 = t2;
@@ -33,7 +33,7 @@ public class Face extends Quad{
         this.color = new Color(color);
     }
 
-    public Face(Vec3f p1, Vec3f p2, Vec3f p3, Vec3f p4, Vec2f t1, Vec2f t2, Vec2f t3, Vec2f t4, IColor color){
+    public Face(Vec3f p1, Vec3f p2, Vec3f p3, Vec3f p4, Vec2f t1, Vec2f t2, Vec2f t3, Vec2f t4, AbstractColor color){
         this(
             new Quad(p1, p2, p3, p4),
             t1, t2, t3, t4,
@@ -41,7 +41,7 @@ public class Face extends Quad{
         );
     }
 
-    public Face(Quad quad, Region region, IColor color){
+    public Face(Quad quad, Region region, AbstractColor color){
         this(
             quad,
             new Vec2f(region.u1(), region.v1()),
@@ -56,7 +56,7 @@ public class Face extends Quad{
         this(quad, region, Color.WHITE);
     }
 
-    public Face(Vec3f p1, Vec3f p2, Vec3f p3, Vec3f p4, Region region, IColor color){
+    public Face(Vec3f p1, Vec3f p2, Vec3f p3, Vec3f p4, Region region, AbstractColor color){
         this(
             new Quad(p1, p2, p3, p4),
             region,
@@ -67,7 +67,7 @@ public class Face extends Quad{
 
     public void putFace(final ChunkMesh mesh,
                         float x, float y, float z,
-                        IColor col1, IColor col2, IColor col3, IColor col4,
+                        AbstractColor col1, AbstractColor col2, AbstractColor col3, AbstractColor col4,
                         float ao1, float ao2, float ao3, float ao4,
                         float sl1, float sl2, float sl3, float sl4,
                         float bl1, float bl2, float bl3, float bl4){
@@ -80,30 +80,30 @@ public class Face extends Quad{
 
     public void putFloats(final ChunkMesh mesh,
                           float x, float y, float z,
-                          IColor col1, IColor col2, IColor col3, IColor col4,
+                          AbstractColor col1, AbstractColor col2, AbstractColor col3, AbstractColor col4,
                           float ao1, float ao2, float ao3, float ao4,
                           float sl1, float sl2, float sl3, float sl4,
                           float bl1, float bl2, float bl3, float bl4){
 
-        final float r1 = this.color.r() * col1.r();
-        final float g1 = this.color.g() * col1.g();
-        final float b1 = this.color.b() * col1.b();
-        final float a1 = this.color.a() * col1.a();
+        final float r1 = this.color.red * col1.getRed();
+        final float g1 = this.color.green * col1.getGreen();
+        final float b1 = this.color.blue * col1.getBlue();
+        final float a1 = this.color.alpha * col1.getAlpha();
 
-        final float r2 = this.color.r() * col2.r();
-        final float g2 = this.color.g() * col2.g();
-        final float b2 = this.color.b() * col2.b();
-        final float a2 = this.color.a() * col2.a();
+        final float r2 = this.color.red * col2.getRed();
+        final float g2 = this.color.green * col2.getGreen();
+        final float b2 = this.color.blue * col2.getBlue();
+        final float a2 = this.color.alpha * col2.getAlpha();
 
-        final float r3 = this.color.r() * col3.r();
-        final float g3 = this.color.g() * col3.g();
-        final float b3 = this.color.b() * col3.b();
-        final float a3 = this.color.a() * col3.a();
+        final float r3 = this.color.red * col3.getRed();
+        final float g3 = this.color.green * col3.getGreen();
+        final float b3 = this.color.blue * col3.getBlue();
+        final float a3 = this.color.alpha * col3.getAlpha();
 
-        final float r4 = this.color.r() * col4.r();
-        final float g4 = this.color.g() * col4.g();
-        final float b4 = this.color.b() * col4.b();
-        final float a4 = this.color.a() * col4.a();
+        final float r4 = this.color.red * col4.getRed();
+        final float g4 = this.color.green * col4.getGreen();
+        final float b4 = this.color.blue * col4.getBlue();
+        final float a4 = this.color.alpha * col4.getAlpha();
 
         final float p1x = pos[0].x + x; final float p1y = pos[0].y + y; final float p1z = pos[0].z + z;
         final float p2x = pos[1].x + x; final float p2y = pos[1].y + y; final float p2z = pos[1].z + z;
@@ -122,30 +122,30 @@ public class Face extends Quad{
 
     private void putFloatsFlipped(final ChunkMesh mesh,
                                   float x, float y, float z,
-                                  IColor col1, IColor col2, IColor col3, IColor col4,
+                                  AbstractColor col1, AbstractColor col2, AbstractColor col3, AbstractColor col4,
                                   float ao1, float ao2, float ao3, float ao4,
                                   float sl1, float sl2, float sl3, float sl4,
                                   float bl1, float bl2, float bl3, float bl4){
 
-        final float r1 = this.color.r() * col1.r();
-        final float g1 = this.color.g() * col1.g();
-        final float b1 = this.color.b() * col1.b();
-        final float a1 = this.color.a() * col1.a();
+        final float r1 = this.color.red * col1.getRed();
+        final float g1 = this.color.green * col1.getGreen();
+        final float b1 = this.color.blue * col1.getBlue();
+        final float a1 = this.color.alpha * col1.getAlpha();
 
-        final float r2 = this.color.r() * col2.r();
-        final float g2 = this.color.g() * col2.g();
-        final float b2 = this.color.b() * col2.b();
-        final float a2 = this.color.a() * col2.a();
+        final float r2 = this.color.red * col2.getRed();
+        final float g2 = this.color.green * col2.getGreen();
+        final float b2 = this.color.blue * col2.getBlue();
+        final float a2 = this.color.alpha * col2.getAlpha();
 
-        final float r3 = this.color.r() * col3.r();
-        final float g3 = this.color.g() * col3.g();
-        final float b3 = this.color.b() * col3.b();
-        final float a3 = this.color.a() * col3.a();
+        final float r3 = this.color.red * col3.getRed();
+        final float g3 = this.color.green * col3.getGreen();
+        final float b3 = this.color.blue * col3.getBlue();
+        final float a3 = this.color.alpha * col3.getAlpha();
 
-        final float r4 = this.color.r() * col4.r();
-        final float g4 = this.color.g() * col4.g();
-        final float b4 = this.color.b() * col4.b();
-        final float a4 = this.color.a() * col4.a();
+        final float r4 = this.color.red * col4.getRed();
+        final float g4 = this.color.green * col4.getGreen();
+        final float b4 = this.color.blue * col4.getBlue();
+        final float a4 = this.color.alpha * col4.getAlpha();
 
         final float p1x = pos[0].x + x; final float p1y = pos[0].y + y; final float p1z = pos[0].z + z;
         final float p2x = pos[1].x + x; final float p2y = pos[1].y + y; final float p2z = pos[1].z + z;
@@ -165,7 +165,7 @@ public class Face extends Quad{
 
     public void putFacePacked(final ChunkMesh mesh,
                               int x, int y, int z,
-                              IColor col1, IColor col2, IColor col3, IColor col4,
+                              AbstractColor col1, AbstractColor col2, AbstractColor col3, AbstractColor col4,
                               float ao1, float ao2, float ao3, float ao4,
                               float sl1, float sl2, float sl3, float sl4,
                               float bl1, float bl2, float bl3, float bl4){
@@ -178,30 +178,30 @@ public class Face extends Quad{
 
     public void putPacked(final ChunkMesh mesh,
                           int x, int y, int z,
-                          IColor col1, IColor col2, IColor col3, IColor col4,
+                          AbstractColor col1, AbstractColor col2, AbstractColor col3, AbstractColor col4,
                           float ao1, float ao2, float ao3, float ao4,
                           float sl1, float sl2, float sl3, float sl4,
                           float bl1, float bl2, float bl3, float bl4){
 
-        final float r1 = this.color.r() * col1.r();
-        final float g1 = this.color.g() * col1.g();
-        final float b1 = this.color.b() * col1.b();
-        final float a1 = this.color.a() * col1.a();
+        final float r1 = this.color.red * col1.getRed();
+        final float g1 = this.color.green * col1.getGreen();
+        final float b1 = this.color.blue * col1.getBlue();
+        final float a1 = this.color.alpha * col1.getAlpha();
 
-        final float r2 = this.color.r() * col2.r();
-        final float g2 = this.color.g() * col2.g();
-        final float b2 = this.color.b() * col2.b();
-        final float a2 = this.color.a() * col2.a();
+        final float r2 = this.color.red * col2.getRed();
+        final float g2 = this.color.green * col2.getGreen();
+        final float b2 = this.color.blue * col2.getBlue();
+        final float a2 = this.color.alpha * col2.getAlpha();
 
-        final float r3 = this.color.r() * col3.r();
-        final float g3 = this.color.g() * col3.g();
-        final float b3 = this.color.b() * col3.b();
-        final float a3 = this.color.a() * col3.a();
+        final float r3 = this.color.red * col3.getRed();
+        final float g3 = this.color.green * col3.getGreen();
+        final float b3 = this.color.blue * col3.getBlue();
+        final float a3 = this.color.alpha * col3.getAlpha();
 
-        final float r4 = this.color.r() * col4.r();
-        final float g4 = this.color.g() * col4.g();
-        final float b4 = this.color.b() * col4.b();
-        final float a4 = this.color.a() * col4.a();
+        final float r4 = this.color.red * col4.getRed();
+        final float g4 = this.color.green * col4.getGreen();
+        final float b4 = this.color.blue * col4.getBlue();
+        final float a4 = this.color.alpha * col4.getAlpha();
 
         final int p1x = (int) pos[0].x + x; final int p1y = (int) pos[0].y + y; final int p1z = (int) pos[0].z + z;
         final int p2x = (int) pos[1].x + x; final int p2y = (int) pos[1].y + y; final int p2z = (int) pos[1].z + z;
@@ -220,30 +220,30 @@ public class Face extends Quad{
 
     private void putPackedFlipped(final ChunkMesh mesh,
                                   int x, int y, int z,
-                                  IColor col1, IColor col2, IColor col3, IColor col4,
+                                  AbstractColor col1, AbstractColor col2, AbstractColor col3, AbstractColor col4,
                                   float ao1, float ao2, float ao3, float ao4,
                                   float sl1, float sl2, float sl3, float sl4,
                                   float bl1, float bl2, float bl3, float bl4){
 
-        final float r1 = this.color.r() * col1.r();
-        final float g1 = this.color.g() * col1.g();
-        final float b1 = this.color.b() * col1.b();
-        final float a1 = this.color.a() * col1.a();
+        final float r1 = this.color.red * col1.getRed();
+        final float g1 = this.color.green * col1.getGreen();
+        final float b1 = this.color.blue * col1.getBlue();
+        final float a1 = this.color.alpha * col1.getAlpha();
 
-        final float r2 = this.color.r() * col2.r();
-        final float g2 = this.color.g() * col2.g();
-        final float b2 = this.color.b() * col2.b();
-        final float a2 = this.color.a() * col2.a();
+        final float r2 = this.color.red * col2.getRed();
+        final float g2 = this.color.green * col2.getGreen();
+        final float b2 = this.color.blue * col2.getBlue();
+        final float a2 = this.color.alpha * col2.getAlpha();
 
-        final float r3 = this.color.r() * col3.r();
-        final float g3 = this.color.g() * col3.g();
-        final float b3 = this.color.b() * col3.b();
-        final float a3 = this.color.a() * col3.a();
+        final float r3 = this.color.red * col3.getRed();
+        final float g3 = this.color.green * col3.getGreen();
+        final float b3 = this.color.blue * col3.getBlue();
+        final float a3 = this.color.alpha * col3.getAlpha();
 
-        final float r4 = this.color.r() * col4.r();
-        final float g4 = this.color.g() * col4.g();
-        final float b4 = this.color.b() * col4.b();
-        final float a4 = this.color.a() * col4.a();
+        final float r4 = this.color.red * col4.getRed();
+        final float g4 = this.color.green * col4.getGreen();
+        final float b4 = this.color.blue * col4.getBlue();
+        final float a4 = this.color.alpha * col4.getAlpha();
 
         final int p1x = (int) pos[0].x + x; final int p1y = (int) pos[0].y + y; final int p1z = (int) pos[0].z + z;
         final int p2x = (int) pos[1].x + x; final int p2y = (int) pos[1].y + y; final int p2z = (int) pos[1].z + z;
@@ -267,7 +267,7 @@ public class Face extends Quad{
     }
 
     public Face color(double r, double g, double b){
-        color.set3(r, g, b);
+        color.set(r, g, b);
         return this;
     }
 
@@ -287,9 +287,7 @@ public class Face extends Quad{
         final Vec3f rp3 = pos[2].copy().sub(0.5).mulMat4(rotation.getMatrix()).add(0.5);
         final Vec3f rp4 = pos[3].copy().sub(0.5).mulMat4(rotation.getMatrix()).add(0.5);
 
-        final Face face = new Face(rp1, rp2, rp3, rp4, t1.copy(), t2.copy(), t3.copy(), t4.copy(), color);
-
-        return face;
+        return new Face(rp1, rp2, rp3, rp4, t1.copy(), t2.copy(), t3.copy(), t4.copy(), color);
     }
 
 

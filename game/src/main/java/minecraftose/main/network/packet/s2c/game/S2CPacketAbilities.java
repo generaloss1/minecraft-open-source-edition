@@ -1,19 +1,16 @@
 package minecraftose.main.network.packet.s2c.game;
 
-import jpize.net.tcp.packet.IPacket;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.net.packet.NetPacket;
 import minecraftose.client.network.ClientPacketHandler;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
 
 import java.io.IOException;
 
-public class S2CPacketAbilities extends IPacket<ClientPacketHandler>{
+public class S2CPacketAbilities extends NetPacket<ClientPacketHandler> {
     
-    public static final int PACKET_ID = 21;
     
-    public S2CPacketAbilities(){
-        super(PACKET_ID);
-    }
+    public S2CPacketAbilities(){ }
     
     
     public boolean flyEnabled;
@@ -25,12 +22,12 @@ public class S2CPacketAbilities extends IPacket<ClientPacketHandler>{
     
     
     @Override
-    public void write(JpizeOutputStream stream) throws IOException{
+    public void write(ExtDataOutputStream stream) throws IOException{
         stream.writeBoolean(flyEnabled);
     }
     
     @Override
-    public void read(JpizeInputStream stream) throws IOException{
+    public void read(ExtDataInputStream stream) throws IOException{
         flyEnabled = stream.readBoolean();
     }
 

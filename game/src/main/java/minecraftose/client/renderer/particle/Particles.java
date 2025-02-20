@@ -1,8 +1,9 @@
 package minecraftose.client.renderer.particle;
 
-import jpize.Jpize;
-import jpize.graphics.texture.Texture;
-import jpize.math.Maths;
+
+import jpize.app.Jpize;
+import jpize.gl.texture.Texture2D;
+import jpize.util.math.Maths;
 
 public enum Particles{
     
@@ -11,10 +12,10 @@ public enum Particles{
             instance.size = Maths.random(0.05F, 0.25F);
             instance.velocity.set(Maths.random(-0.05F, 0.05F), 0, Maths.random(-0.05F, 0.05F));
         })
-        .texture(new Texture("texture/block/planks.png"))
+        .texture(new Texture2D("/texture/block/planks.png"))
         .alphaFunc(time->1 - time)
         .animate(instance->{
-            instance.velocity.y -= Jpize.getDt() * 0.5;
+            instance.velocity.y -= Jpize.getDeltaTime() * 0.5F;
             instance.velocity.mul(0.95);
             instance.position.add(instance.velocity);
         })

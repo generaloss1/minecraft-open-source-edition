@@ -2,8 +2,6 @@ package minecraftose.main.chunk;
 
 import minecraftose.main.chunk.storage.SectionPos;
 
-import static minecraftose.main.chunk.ChunkUtils.getIndex;
-
 public class ChunkSection{
 
     public final SectionPos position;

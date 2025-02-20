@@ -1,6 +1,6 @@
 package minecraftose.client.level;
 
-import jpize.math.Maths;
+import jpize.util.math.Maths;
 import minecraftose.client.Minecraft;
 import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.ClientBlocks;
@@ -9,7 +9,6 @@ import minecraftose.main.biome.Biome;
 import minecraftose.main.chunk.ChunkBase;
 import minecraftose.main.chunk.storage.ChunkPos;
 import minecraftose.main.chunk.storage.HeightmapType;
-import minecraftose.main.entity.Entity;
 import minecraftose.main.level.Level;
 
 import static minecraftose.main.chunk.ChunkUtils.MAX_LIGHT_LEVEL;

@@ -1,19 +1,16 @@
 package minecraftose.main.network.packet.s2c.game;
 
-import jpize.net.tcp.packet.IPacket;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.net.packet.NetPacket;
 import minecraftose.client.network.ClientPacketHandler;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
 
 import java.io.IOException;
 
-public class S2CPacketBlockUpdate extends IPacket<ClientPacketHandler>{
+public class S2CPacketBlockUpdate extends NetPacket<ClientPacketHandler> {
     
-    public static final int PACKET_ID = 10;
-    
-    public S2CPacketBlockUpdate(){
-        super(PACKET_ID);
-    }
+        
+    public S2CPacketBlockUpdate(){}
     
     public int x, y, z;
     public short blockData;
@@ -29,7 +26,7 @@ public class S2CPacketBlockUpdate extends IPacket<ClientPacketHandler>{
     
     
     @Override
-    public void write(JpizeOutputStream stream) throws IOException{
+    public void write(ExtDataOutputStream stream) throws IOException{
         stream.writeInt(x);
         stream.writeInt(y);
         stream.writeInt(z);
@@ -37,7 +34,7 @@ public class S2CPacketBlockUpdate extends IPacket<ClientPacketHandler>{
     }
     
     @Override
-    public void read(JpizeInputStream stream) throws IOException{
+    public void read(ExtDataInputStream stream) throws IOException{
         x = stream.readInt();
         y = stream.readInt();
         z = stream.readInt();

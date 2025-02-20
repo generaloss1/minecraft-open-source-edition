@@ -1,9 +1,9 @@
 package minecraftose.client.entity.model;
 
-import jpize.graphics.mesh.IndexedMesh;
-import jpize.graphics.util.Shader;
-import jpize.math.util.EulerAngles;
-import jpize.math.vecmath.vector.Vec3f;
+import jpize.gl.shader.Shader;
+import jpize.util.math.EulerAngles;
+import jpize.util.math.vector.Vec3f;
+import jpize.util.mesh.IndexedMesh;
 import minecraftose.client.control.camera.PlayerCamera;
 
 public class ModelPart{
@@ -30,7 +30,7 @@ public class ModelPart{
         
         if(shader == null || !show)
             return;
-        shader.setUniform(modelMatrixUniform, pose.getModelMatrix());
+        shader.uniform(modelMatrixUniform, pose.getModelMatrix());
         mesh.render();
     }
     

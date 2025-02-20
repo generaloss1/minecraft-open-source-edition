@@ -1,23 +1,19 @@
 package minecraftose.client.audio;
 
-import jpize.util.Disposable;
-import jpize.audio.sound.AudioBuffer;
-import jpize.audio.sound.AudioSource;
-import jpize.math.Maths;
+import jpize.audio.util.AlMusic;
+import jpize.util.math.Maths;
 import minecraftose.client.Minecraft;
 
-public class MusicPlayer implements Disposable{
+public class MusicPlayer {
 
     private final Minecraft minecraft;
 
-    private final AudioSource source;
+    private AlMusic music;
     private MusicGroup group;
     private int index;
 
     public MusicPlayer(Minecraft minecraft){
         this.minecraft = minecraft;
-        this.source = new AudioSource();
-        this.source.setGain(0.15);
     }
 
     public Minecraft getMinecraft(){
@@ -26,7 +22,8 @@ public class MusicPlayer implements Disposable{
 
 
     public void setGroup(MusicGroup group){
-        source.stop();
+        if(music != null)
+            music.stop();
         if(group.getList().length == 0)
             return;
 
@@ -37,16 +34,22 @@ public class MusicPlayer implements Disposable{
 
     private void play(){
         final String musicID = group.getList()[index];
-        final AudioBuffer buffer = minecraft.getResources().getMusic(musicID);
-        if(buffer == null){
+        music = minecraft.getResources().getMusic(musicID);
+        if(music == null){
             System.err.println("Music " + musicID + " is not found");
             return;
         }
 
-        source.setBuffer(buffer);
-        source.play(this::playNext);
+        music.setGain(0.15);
+        music.setOnComplete(this::playNext);
+        music.play();
 
         System.out.println("Playing: " + musicID + "(" + index + ")");
+    }
+
+    public void update() {
+        if(music != null)
+            music.update();
     }
 
     private void playNext(){
@@ -55,11 +58,6 @@ public class MusicPlayer implements Disposable{
             index = 0;
 
         play();
-    }
-
-    @Override
-    public void dispose(){
-        source.dispose();
     }
 
 }

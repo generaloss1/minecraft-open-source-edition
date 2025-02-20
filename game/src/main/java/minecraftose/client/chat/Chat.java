@@ -1,13 +1,13 @@
 package minecraftose.client.chat;
 
+import jpize.util.input.TextInput;
 import minecraftose.client.Minecraft;
 import minecraftose.client.command.ClientCommandDispatcher;
 import minecraftose.main.chat.source.MessageSource;
 import minecraftose.main.chat.source.MessageSourceOther;
-import minecraftose.main.network.packet.s2c.game.S2CPacketChatMessage;
 import minecraftose.main.network.packet.c2s.game.C2SPacketChatMessage;
+import minecraftose.main.network.packet.s2c.game.S2CPacketChatMessage;
 import minecraftose.main.text.Component;
-import jpize.util.io.TextProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ public class Chat{
     
     private final Minecraft minecraft;
     private final CopyOnWriteArrayList<ChatMessage> messageList;
-    private final TextProcessor textProcessor;
+    private final TextInput textProcessor;
     private boolean opened;
     
     private final List<String> history;
@@ -27,11 +27,16 @@ public class Chat{
         this.minecraft = minecraft;
         this.messageList = new CopyOnWriteArrayList<>();
         this.history = new ArrayList<>();
-        this.textProcessor = new TextProcessor(false);
-        
-        textProcessor.setActive(false);
+        this.textProcessor = new TextInput();
+        this.textProcessor.setMaxLines(1);
+        this.textProcessor.disable();
         
         putMessage(new MessageSourceOther(), new Component().text("Enter /help for command list"));
+    }
+
+
+    public boolean isCursorRender() {
+        return true;
     }
     
     
@@ -54,7 +59,7 @@ public class Chat{
     
     
     public String getEnteringText(){
-        return textProcessor.getString();
+        return textProcessor.makeString();
     }
 
     private void processMessage(String message){
@@ -72,9 +77,9 @@ public class Chat{
     }
 
     public void enter(){
-        final String message = textProcessor.getString();
+        final String message = textProcessor.makeString();
         processMessage(message);
-        textProcessor.clear();
+        textProcessor.setLine("");
         
         if(!history.isEmpty() && history.get(history.size() - 1).equals(message))
             return;
@@ -86,8 +91,8 @@ public class Chat{
     public void historyUp(){
         if(!history.isEmpty() && historyPointer == history.size() - 1 && !history.get(history.size() - 1).equals(textProcessor.toString())){
             historyPointer++;
-            if(!textProcessor.getString().isBlank())
-                history.add(textProcessor.getString());
+            if(!textProcessor.makeString().isBlank())
+                history.add(textProcessor.makeString());
         }
         
         if(historyPointer - 1 < 0)
@@ -95,8 +100,7 @@ public class Chat{
         
         historyPointer--;
         
-        textProcessor.removeLine();
-        textProcessor.insertLine(history.get(historyPointer));
+        textProcessor.setLine(history.get(historyPointer));
     }
     
     public void historyDown(){
@@ -105,12 +109,11 @@ public class Chat{
         
         historyPointer++;
         
-        textProcessor.removeLine();
-        textProcessor.insertLine(history.get(historyPointer));
+        textProcessor.setLine(history.get(historyPointer));
     }
     
     public int getCursorX(){
-        return textProcessor.getCursorX();
+        return textProcessor.getX();
     }
     
     
@@ -120,14 +123,14 @@ public class Chat{
     
     private void setOpened(boolean opened){
         this.opened = opened;
-        textProcessor.setActive(opened);
+        textProcessor.enable(opened);
         minecraft.getPlayer().getInput().getRotation().setEnabled(!opened);
     }
     
     public void close(){
-        minecraft.getPlayer().getInput().getRotation().lockNextFrame();
+        minecraft.getPlayer().getInput().getRotation().lockInputs(1);
         historyPointer = history.size() - 1;
-        textProcessor.removeLine();
+        textProcessor.setLine("");
         setOpened(false);
     }
     
@@ -137,11 +140,11 @@ public class Chat{
     
     public void openAsCommandLine(){
         open();
-        textProcessor.insertChar('/');
+        textProcessor.insert("/");
     }
     
     
-    public TextProcessor getTextProcessor(){
+    public TextInput getTextProcessor(){
         return textProcessor;
     }
     

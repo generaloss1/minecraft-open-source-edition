@@ -1,9 +1,9 @@
 package minecraftose.client.entity;
 
-import jpize.Jpize;
-import jpize.math.Mathc;
-import jpize.math.Maths;
-import jpize.math.vecmath.vector.Vec3f;
+import jpize.app.Jpize;
+import jpize.util.math.Mathc;
+import jpize.util.math.Maths;
+import jpize.util.math.vector.Vec3f;
 import jpize.util.time.Stopwatch;
 import minecraftose.client.Minecraft;
 import minecraftose.client.block.BlockProps;
@@ -18,7 +18,7 @@ import minecraftose.main.inventory.PlayerInventory;
 import minecraftose.main.item.ItemStack;
 import minecraftose.main.item.Items;
 
-public class LocalPlayer extends AbstractClientPlayer{
+public class LocalPlayer extends AbstractClientPlayer {
 
     protected final PlayerInput input;
     protected float jumpDownY, lastVelocityY, fallHeight;
@@ -64,7 +64,7 @@ public class LocalPlayer extends AbstractClientPlayer{
                 
                 // Jump-boost
                 if(isSprinting()){
-                    final float yaw = rotation.yaw * Maths.ToRad;
+                    final float yaw = rotation.yaw * Maths.TO_RAD;
                     final float jumpBoost = 0.2F;
                     velocity.x += jumpBoost * Mathc.cos(yaw);
                     velocity.z += jumpBoost * Mathc.sin(yaw);
@@ -96,7 +96,7 @@ public class LocalPlayer extends AbstractClientPlayer{
             );
             velocity.add(push);
             minecraft.getCamera().push(push);
-            Jpize.execSync(() -> minecraft.getSoundPlayer().play(SoundGroup.EXPLODE.random(), 1, 1, position.x, position.y, position.z) );
+            Jpize.syncExecutor().exec(() -> minecraft.getSoundPlayer().play(SoundGroup.EXPLODE.random(), 1, 1, position.x, position.y, position.z) );
         }
 
         // Gravity
@@ -187,12 +187,12 @@ public class LocalPlayer extends AbstractClientPlayer{
         }
 
         // Move
-        velocity.zeroThatLess(0.003);
+        velocity.zeroCompsThatLess(0.003);
         final Vec3f collideMovement = collideMovement(super.velocity);
-        velocity.zeroThatBigger(collideMovement);
+        velocity.zeroCompsThatBigger(collideMovement);
 
         // Walk dist
-        walkDist.add(Math.min(0.25F, collideMovement.lenXZ() * 0.6F));
+        walkDist.add(Math.min(0.25F, collideMovement.lenh() * 0.6F));
         moveDist.add(collideMovement.len() * 0.6F);
 
         // Step sounds

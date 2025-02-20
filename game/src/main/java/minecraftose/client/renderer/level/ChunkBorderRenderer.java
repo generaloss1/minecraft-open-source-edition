@@ -1,19 +1,20 @@
 package minecraftose.client.renderer.level;
 
-import jpize.util.Disposable;
-import jpize.util.file.Resource;
+import jpize.gl.shader.Shader;
 import jpize.gl.tesselation.GlPrimitive;
 import jpize.gl.type.GlType;
-import jpize.graphics.mesh.IndexedMesh;
-import jpize.gl.vertex.GlVertexAttr;
-import jpize.graphics.util.Shader;
-import jpize.math.vecmath.matrix.Matrix4f;
-import jpize.math.vecmath.vector.Vec3f;
+import jpize.gl.vertex.GlVertAttr;
+import jpize.util.Disposable;
+import jpize.util.math.matrix.Matrix4f;
+import jpize.util.math.vector.Vec3f;
+import jpize.util.mesh.IndexedMesh;
+import jpize.util.res.Resource;
 import minecraftose.client.control.camera.PlayerCamera;
 
-import static minecraftose.main.chunk.ChunkBase.*;
+import static minecraftose.main.chunk.ChunkBase.HEIGHT;
+import static minecraftose.main.chunk.ChunkBase.SIZE;
 
-public class ChunkBorderRenderer implements Disposable{
+public class ChunkBorderRenderer implements Disposable {
     
     private final LevelRenderer levelRenderer;
     private final Shader shader;
@@ -24,12 +25,12 @@ public class ChunkBorderRenderer implements Disposable{
     public ChunkBorderRenderer(LevelRenderer levelRenderer){
         this.levelRenderer = levelRenderer;
         
-        this.shader = new Shader(Resource.internal("shader/line.vert"), Resource.internal("shader/line.frag"));
+        this.shader = new Shader(Resource.internal("/shader/line.vert"), Resource.internal("/shader/line.frag"));
         
-        this.mesh = new IndexedMesh(new GlVertexAttr(3, GlType.FLOAT));
+        this.mesh = new IndexedMesh(new GlVertAttr(3, GlType.FLOAT));
         this.mesh.setMode(GlPrimitive.LINES);
         
-        this.mesh.getBuffer().setData(new float[]{
+        this.mesh.vertices().setData(new float[]{
             SIZE, HEIGHT, SIZE, //0
             0   , HEIGHT, SIZE, //1
             SIZE, 0     , SIZE, //2
@@ -39,7 +40,7 @@ public class ChunkBorderRenderer implements Disposable{
             SIZE, 0     , 0   , //6
             0   , 0     , 0   , //7
         });
-        this.mesh.getIndexBuffer().setData(new int[]{
+        this.mesh.indices().setData(new int[]{
             7, 6, 6, 2, 2, 3, 3, 7, //Top
             0, 4, 4, 5, 5, 1, 1, 0, //Bottom
             0, 2, 2, 6, 6, 4, 4, 0, //Left
@@ -70,12 +71,12 @@ public class ChunkBorderRenderer implements Disposable{
             return;
         
         shader.bind();
-        shader.setUniform("u_projection", camera.getProjection());
-        shader.setUniform("u_view", camera.getView());
+        shader.uniform("u_projection", camera.getProjection());
+        shader.uniform("u_view", camera.getView());
         
         final Vec3f position = new Vec3f(camera.chunkX() * SIZE, 0, camera.chunkZ() * SIZE).sub(camera.getX(), 0, camera.getZ());
-        translationMatrix.toTranslated(position);
-        shader.setUniform("u_model", translationMatrix);
+        translationMatrix.setTranslate(position);
+        shader.uniform("u_model", translationMatrix);
         
         mesh.render();
     }

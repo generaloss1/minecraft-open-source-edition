@@ -1,12 +1,12 @@
 package minecraftose.main.level.structure;
 
-import jpize.util.file.Resource;
-import jpize.math.Maths;
-import jpize.math.vecmath.vector.Vec2f;
-import jpize.math.vecmath.vector.Vec3i;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.math.Maths;
+import jpize.util.math.vector.Vec2f;
+import jpize.util.math.vector.Vec3i;
+import jpize.util.res.Resource;
 import minecraftose.client.block.ClientBlock;
 import minecraftose.server.level.LevelS;
-import jpize.util.io.JpizeInputStream;
 
 import java.io.IOException;
 
@@ -45,8 +45,8 @@ public class Structure{
 
     public static void loadTo(LevelS level, String name, int x, int y, int z){
         // File
-        final Resource file = Resource.internal("struct/" + name + ".struct");
-        try(final JpizeInputStream inStream = file.jpizeIn()){
+        final Resource file = Resource.internal("/struct/" + name + ".struct");
+        try(final ExtDataInputStream inStream = file.inStreamExt()){
             // Read
             final Vec3i size = inStream.readVec3i();
 

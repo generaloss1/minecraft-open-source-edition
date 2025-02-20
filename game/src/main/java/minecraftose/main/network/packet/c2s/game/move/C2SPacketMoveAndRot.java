@@ -1,27 +1,23 @@
 package minecraftose.main.network.packet.c2s.game.move;
 
-import jpize.math.util.EulerAngles;
-import jpize.math.vecmath.vector.Vec3f;
-import jpize.net.tcp.packet.IPacket;
-import jpize.physic.utils.Velocity3f;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
+import jpize.util.math.EulerAngles;
+import jpize.util.math.vector.Vec3f;
 import minecraftose.client.entity.LocalPlayer;
 import minecraftose.server.network.ServerPlayerGameConnection;
 
 import java.io.IOException;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.net.packet.NetPacket;
 
-public class C2SPacketMoveAndRot extends IPacket<ServerPlayerGameConnection>{
+public class C2SPacketMoveAndRot extends NetPacket<ServerPlayerGameConnection>{
 
-    public static final int PACKET_ID = 24;
-
-    public C2SPacketMoveAndRot(){
-        super(PACKET_ID);
-    }
+    
+    public C2SPacketMoveAndRot(){}
 
 
     public Vec3f position;
-    public Velocity3f velocity;
+    public Vec3f velocity;
     public EulerAngles rotation;
 
     public C2SPacketMoveAndRot(LocalPlayer localPlayer){
@@ -33,16 +29,16 @@ public class C2SPacketMoveAndRot extends IPacket<ServerPlayerGameConnection>{
 
 
     @Override
-    public void write(JpizeOutputStream stream) throws IOException{
+    public void write(ExtDataOutputStream stream) throws IOException{
         stream.writeVec3f(position);
         stream.writeVec3f(velocity);
         stream.writeEulerAngles(rotation);
     }
 
     @Override
-    public void read(JpizeInputStream stream) throws IOException{
+    public void read(ExtDataInputStream stream) throws IOException{
         position = stream.readVec3f();
-        velocity = new Velocity3f(stream.readVec3f());
+        velocity = new Vec3f(stream.readVec3f());
         rotation = stream.readEulerAngles();
     }
 

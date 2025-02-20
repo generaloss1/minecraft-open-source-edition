@@ -1,22 +1,19 @@
 package minecraftose.main.network.packet.s2c.game;
 
-import jpize.net.tcp.packet.IPacket;
 import minecraftose.client.network.ClientPacketHandler;
 import minecraftose.main.chunk.ChunkBase;
 import minecraftose.main.chunk.ChunkSection;
 import minecraftose.main.chunk.storage.SectionPos;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
 
 import java.io.IOException;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.net.packet.NetPacket;
 
-public class S2CPacketLightUpdate extends IPacket<ClientPacketHandler>{
+public class S2CPacketLightUpdate extends NetPacket<ClientPacketHandler>{
 
-    public static final int PACKET_ID = 24;
-
-    public S2CPacketLightUpdate(){
-        super(PACKET_ID);
-    }
+    
+    public S2CPacketLightUpdate(){}
 
     public SectionPos position;
     public byte[] light;
@@ -29,13 +26,13 @@ public class S2CPacketLightUpdate extends IPacket<ClientPacketHandler>{
 
 
     @Override
-    public void write(JpizeOutputStream stream) throws IOException{
+    public void write(ExtDataOutputStream stream) throws IOException{
         stream.writeVec3i(position);
         stream.write(light);
     }
 
     @Override
-    public void read(JpizeInputStream stream) throws IOException{
+    public void read(ExtDataInputStream stream) throws IOException{
         position = new SectionPos(stream.readVec3i());
         light = stream.readNBytes(ChunkBase.VOLUME);
     }

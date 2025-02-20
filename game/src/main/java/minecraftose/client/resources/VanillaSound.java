@@ -11,7 +11,7 @@ public class VanillaSound{
         Sound.CLICK.getID(); // init Sound class
 
         for(Sound sound: Registry.sound.collection())
-            resources.registerSound(sound.getID(), "sound/" + sound.name() + ".ogg");
+            resources.registerSound(sound.getID(), "/sound/" + sound.name() + ".ogg");
     }
 
 }

@@ -1,19 +1,16 @@
 package minecraftose.main.network.packet.c2s.game;
 
-import jpize.net.tcp.packet.IPacket;
 import minecraftose.server.network.ServerPlayerGameConnection;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
 
 import java.io.IOException;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.net.packet.NetPacket;
 
-public class C2SPacketPlayerBlockSet extends IPacket<ServerPlayerGameConnection>{
+public class C2SPacketPlayerBlockSet extends NetPacket<ServerPlayerGameConnection>{
     
-    public static final int PACKET_ID = 11;
-    
-    public C2SPacketPlayerBlockSet(){
-        super(PACKET_ID);
-    }
+        
+    public C2SPacketPlayerBlockSet(){}
     
     public int x, y, z;
     public short blockData;
@@ -29,7 +26,7 @@ public class C2SPacketPlayerBlockSet extends IPacket<ServerPlayerGameConnection>
     
     
     @Override
-    public void write(JpizeOutputStream stream) throws IOException{
+    public void write(ExtDataOutputStream stream) throws IOException{
         stream.writeInt(x);
         stream.writeInt(y);
         stream.writeInt(z);
@@ -37,7 +34,7 @@ public class C2SPacketPlayerBlockSet extends IPacket<ServerPlayerGameConnection>
     }
     
     @Override
-    public void read(JpizeInputStream stream) throws IOException{
+    public void read(ExtDataInputStream stream) throws IOException{
         x = stream.readInt();
         y = stream.readInt();
         z = stream.readInt();

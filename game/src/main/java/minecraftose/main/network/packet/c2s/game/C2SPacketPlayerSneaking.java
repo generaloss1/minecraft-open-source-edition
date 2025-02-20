@@ -1,21 +1,18 @@
 package minecraftose.main.network.packet.c2s.game;
 
-import jpize.net.tcp.packet.IPacket;
 import minecraftose.main.entity.Player;
 import minecraftose.server.network.ServerPlayerGameConnection;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
 
 import java.io.IOException;
 import java.util.UUID;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.net.packet.NetPacket;
 
-public class C2SPacketPlayerSneaking extends IPacket<ServerPlayerGameConnection>{
+public class C2SPacketPlayerSneaking extends NetPacket<ServerPlayerGameConnection>{
     
-    public static final int PACKET_ID = 16;
-    
-    public C2SPacketPlayerSneaking(){
-        super(PACKET_ID);
-    }
+        
+    public C2SPacketPlayerSneaking(){}
     
     
     public UUID playerUUID;
@@ -29,13 +26,13 @@ public class C2SPacketPlayerSneaking extends IPacket<ServerPlayerGameConnection>
     
     
     @Override
-    public void write(JpizeOutputStream stream) throws IOException{
+    public void write(ExtDataOutputStream stream) throws IOException{
         stream.writeUUID(playerUUID);
         stream.writeBoolean(sneaking);
     }
     
     @Override
-    public void read(JpizeInputStream stream) throws IOException{
+    public void read(ExtDataInputStream stream) throws IOException{
         playerUUID = stream.readUUID();
         sneaking = stream.readBoolean();
     }

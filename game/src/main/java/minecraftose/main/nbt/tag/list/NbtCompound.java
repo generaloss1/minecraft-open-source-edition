@@ -8,8 +8,6 @@ import minecraftose.main.nbt.tag.array.NbtLongArray;
 import minecraftose.main.nbt.tag.type.*;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class NbtCompound extends NbtTag<HashMap<String, NbtTag<?>>> implements Iterable<HashMap.Entry<String, NbtTag<?>>>, Comparable<NbtCompound>{
 

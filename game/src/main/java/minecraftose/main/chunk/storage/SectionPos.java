@@ -1,8 +1,9 @@
 package minecraftose.main.chunk.storage;
 
-import jpize.math.vecmath.vector.Vec3i;
 
-public class SectionPos extends Vec3i{
+import jpize.util.math.vector.Vec3i;
+
+public class SectionPos extends Vec3i {
 
     public SectionPos(Vec3i vec3){
         super(vec3);

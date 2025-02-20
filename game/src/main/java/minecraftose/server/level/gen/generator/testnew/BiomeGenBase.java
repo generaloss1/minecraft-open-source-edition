@@ -2,7 +2,7 @@ package minecraftose.server.level.gen.generator.testnew;
 
 import minecraftose.client.block.ClientBlocks;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class BiomeGenBase{
 
@@ -253,7 +253,7 @@ public class BiomeGenBase{
      * Return true if the biome supports lightning bolt spawn, either by have the bolts enabled and have rain enabled.
      */
     public boolean canSpawnLightningBolt(){
-        return this.enableSnow ? false : this.enableRain;
+        return !this.enableSnow && this.enableRain;
     }
 
     /**

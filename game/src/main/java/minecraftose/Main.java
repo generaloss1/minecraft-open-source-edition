@@ -1,8 +1,7 @@
 package minecraftose;
 
-import jpize.Jpize;
-import jpize.io.context.ContextBuilder;
-import jpize.math.Maths;
+import jpize.app.Jpize;
+import jpize.util.math.Maths;
 import minecraftose.client.Minecraft;
 import minecraftose.main.network.PlayerProfile;
 
@@ -27,15 +26,13 @@ public class Main{
         final int height = Integer.parseInt(argsMap.getOrDefault("height", "720"));
 
         // Run app
-        ContextBuilder.newContext("Minecraft Open Source Edition")
-            .ssaaSamples(4)
-            .size(width, height)
-            .register()
-            .setAdapter(Minecraft.INSTANCE);
+        Jpize.create(width, height, "Minecraft Open Source Edition")
+            .build()
+            .setApp(Minecraft.INSTANCE);
             //.setAdapter(new LerpTest());
             //.setAdapter(new BiomeGenerator());
 
-        Jpize.runContexts();
+        Jpize.run();
     }
 
     private static Map<String, String> mapArgs(String[] args){

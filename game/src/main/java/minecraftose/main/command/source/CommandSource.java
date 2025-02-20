@@ -1,6 +1,6 @@
 package minecraftose.main.command.source;
 
-import jpize.math.vecmath.vector.Vec3f;
+import jpize.util.math.vector.Vec3f;
 import minecraftose.main.level.Level;
 import minecraftose.main.text.Component;
 import minecraftose.server.Server;

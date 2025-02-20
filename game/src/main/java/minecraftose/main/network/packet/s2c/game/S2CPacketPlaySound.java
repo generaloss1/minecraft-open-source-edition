@@ -1,22 +1,19 @@
 package minecraftose.main.network.packet.s2c.game;
 
-import jpize.math.vecmath.vector.Vec3f;
-import jpize.net.tcp.packet.IPacket;
+import jpize.util.math.vector.Vec3f;
 import minecraftose.client.network.ClientPacketHandler;
 import minecraftose.main.audio.Sound;
-import jpize.util.io.JpizeInputStream;
-import jpize.util.io.JpizeOutputStream;
 import minecraftose.main.registry.Registry;
 
 import java.io.IOException;
+import jpize.util.io.ExtDataInputStream;
+import jpize.util.io.ExtDataOutputStream;
+import jpize.util.net.packet.NetPacket;
 
-public class S2CPacketPlaySound extends IPacket<ClientPacketHandler>{
+public class S2CPacketPlaySound extends NetPacket<ClientPacketHandler>{
 
-    public static final int PACKET_ID = 23;
-
-    public S2CPacketPlaySound(){
-        super(PACKET_ID);
-    }
+    
+    public S2CPacketPlaySound(){}
 
 
     public Sound sound;
@@ -38,7 +35,7 @@ public class S2CPacketPlaySound extends IPacket<ClientPacketHandler>{
 
 
     @Override
-    public void write(JpizeOutputStream stream) throws IOException{
+    public void write(ExtDataOutputStream stream) throws IOException{
         stream.writeByte(sound.getID());
         stream.writeFloat(volume);
         stream.writeFloat(pitch);
@@ -48,7 +45,7 @@ public class S2CPacketPlaySound extends IPacket<ClientPacketHandler>{
     }
 
     @Override
-    public void read(JpizeInputStream stream) throws IOException{
+    public void read(ExtDataInputStream stream) throws IOException{
         sound = Registry.sound.get(stream.readByte());
         volume = stream.readFloat();
         pitch = stream.readFloat();

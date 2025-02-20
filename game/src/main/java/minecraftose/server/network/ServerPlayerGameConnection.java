@@ -1,20 +1,20 @@
 package minecraftose.server.network;
 
-import jpize.math.vecmath.vector.Vec3f;
-import jpize.net.tcp.TcpConnection;
-import jpize.net.tcp.packet.IPacket;
-import jpize.net.tcp.packet.PacketHandler;
+import jpize.util.math.vector.Vec3f;
+import jpize.util.net.packet.NetPacket;
+import jpize.util.net.tcp.TCPConnection;
 import minecraftose.client.block.BlockProps;
 import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.ClientBlocks;
 import minecraftose.main.audio.SoundGroup;
 import minecraftose.main.audio.SoundType;
-import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.block.BlockSetType;
+import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.chunk.ChunkBase;
 import minecraftose.main.chunk.storage.HeightmapType;
 import minecraftose.main.command.source.CommandServerPlayerSource;
 import minecraftose.main.entity.Entity;
+import minecraftose.main.network.packet.PacketHandler;
 import minecraftose.main.network.packet.c2s.game.*;
 import minecraftose.main.network.packet.c2s.game.move.C2SPacketMove;
 import minecraftose.main.network.packet.c2s.game.move.C2SPacketMoveAndRot;
@@ -23,19 +23,18 @@ import minecraftose.main.network.packet.s2c.game.*;
 import minecraftose.main.text.Component;
 import minecraftose.main.text.TextColor;
 import minecraftose.server.Server;
-import minecraftose.server.level.ChunkRequestPull;
-import minecraftose.server.level.chunk.ChunkS;
 import minecraftose.server.level.LevelS;
+import minecraftose.server.level.chunk.ChunkS;
 import minecraftose.server.player.ServerPlayer;
 
-public class ServerPlayerGameConnection implements PacketHandler{
+public class ServerPlayerGameConnection implements PacketHandler {
     
     private final ServerPlayer player;
     private final Server server;
-    private final TcpConnection connection;
+    private final TCPConnection connection;
     private final CommandServerPlayerSource commandSource;
     
-    public ServerPlayerGameConnection(ServerPlayer player, TcpConnection connection){
+    public ServerPlayerGameConnection(ServerPlayer player, TCPConnection connection){
         this.player = player;
         this.server = player.getServer();
         this.connection = connection;
@@ -51,7 +50,7 @@ public class ServerPlayerGameConnection implements PacketHandler{
         connection.close();
     }
     
-    public void sendPacket(IPacket<?> packet){
+    public void sendPacket(NetPacket<?> packet){
         connection.send(packet);
     }
 
@@ -65,7 +64,7 @@ public class ServerPlayerGameConnection implements PacketHandler{
         }
         player.getLevel().playSound(SoundGroup.HIT.random(), 1, 1, entity.getPosition());
 
-        final Vec3f direction = new Vec3f().sub(entity.getPosition(), player.getPosition()).nor().add(0, 1, 0).mul(0.5);
+        final Vec3f direction = new Vec3f(entity.getPosition()).sub(player.getPosition()).nor().add(0, 1, 0).mul(0.5);
         entity.getVelocity().add(direction);
 
         if(entity instanceof ServerPlayer playerVictim){

@@ -1,9 +1,8 @@
 package minecraftose.client.renderer.infopanel;
 
 import jpize.util.Disposable;
-import jpize.util.Resizable;
-import jpize.graphics.camera.CenteredOrthographicCamera;
-import jpize.graphics.util.batch.TextureBatch;
+import jpize.util.camera.OrthographicCameraCentered;
+import jpize.util.mesh.TextureBatch;
 import minecraftose.client.control.camera.PlayerCamera;
 import minecraftose.client.renderer.GameRenderer;
 import minecraftose.server.IntegratedServer;
@@ -11,17 +10,17 @@ import minecraftose.server.level.LevelS;
 
 import java.util.Collection;
 
-public class ChunkInfoRenderer implements Resizable, Disposable{
+public class ChunkInfoRenderer implements Disposable {
 
     private final GameRenderer gameRenderer;
     private final TextureBatch batch;
-    private final CenteredOrthographicCamera camera;
+    private final OrthographicCameraCentered camera;
     private boolean open;
 
     public ChunkInfoRenderer(GameRenderer gameRenderer){
         this.gameRenderer = gameRenderer;
-        this.batch = new TextureBatch(5000);
-        this.camera = new CenteredOrthographicCamera();
+        this.batch = new TextureBatch();
+        this.camera = new OrthographicCameraCentered();
     }
 
     public GameRenderer getGameRenderer(){
@@ -44,17 +43,17 @@ public class ChunkInfoRenderer implements Resizable, Disposable{
         final float size = 20;
 
         camera.update();
-        camera.getPosition().set(playerCamera.getPosition().xz().mul(1 / 16F * size));
-        camera.setRotation(-playerCamera.getRotation().yaw + 90);
+        camera.position().set(playerCamera.position().xz().mul(1 / 16F * size));
+        camera.setRotation(-playerCamera.rotation().getYaw() + 90);
 
         batch.setAlpha(0.3);
-        batch.begin(camera);
+        batch.setup(camera);
 
         final Collection<LevelS> levels = server.getLevelManager().getLoadedLevels(); //: WHERE RENDER?
         // for(LevelS level: levels)
         //     level.getChunkProvider().render(batch, size);
 
-        batch.end();
+        batch.render();
     }
 
 
@@ -67,7 +66,6 @@ public class ChunkInfoRenderer implements Resizable, Disposable{
     }
 
 
-    @Override
     public void resize(int width, int height){
         camera.resize(width, height);
     }

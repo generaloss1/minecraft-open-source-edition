@@ -1,11 +1,11 @@
 package mymod;
 
-import jpize.Jpize;
-import jpize.util.file.Resource;
-import jpize.sdl.input.Key;
-import jpize.graphics.font.BitmapFont;
-import jpize.graphics.texture.Texture;
-import jpize.graphics.util.batch.TextureBatch;
+import jpize.app.Jpize;
+import jpize.gl.texture.Texture2D;
+import jpize.glfw.input.Key;
+import jpize.util.font.Font;
+import jpize.util.mesh.TextureBatch;
+import jpize.util.res.Resource;
 import minecraftose.client.Minecraft;
 import minecraftose.main.modification.api.ClientModInitializer;
 import minecraftose.main.text.Component;
@@ -18,8 +18,8 @@ import java.util.Collection;
 public class ModClient implements ClientModInitializer{
 
     private TextureBatch batch;
-    private Texture texture;
-    private BitmapFont font;
+    private Texture2D texture;
+    private Font font;
     
     @Override
     public void onInitializeClient(){
@@ -27,17 +27,17 @@ public class ModClient implements ClientModInitializer{
         
         batch = new TextureBatch();
         //font = FontLoader.getDefault();
-        texture = new Texture(Resource.internal("icon.png", ModClient.class));
+        texture = new Texture2D(Resource.internal(ModClient.class, "/icon.png"));
     }
     
     
     public void render(){
-        batch.begin();
+        batch.setup();
         batch.draw(texture, Jpize.getWidth() - 100, Jpize.getHeight() - 30, 100, 30);
         //font.drawText(batch, "Mod text", Jpize.getWidth() - 100, Jpize.getHeight() - 30);
-        batch.end();
+        batch.render();
         
-        if(Key.F10.isDown()){
+        if(Key.F10.down()){
             Collection<ServerPlayer> players = Minecraft.INSTANCE.getIntegratedServer().getPlayerList().getPlayers();
             for(ServerPlayer player: players)
                 player.sendMessage(new Component()

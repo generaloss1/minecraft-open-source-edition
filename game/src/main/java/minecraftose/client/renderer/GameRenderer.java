@@ -1,6 +1,6 @@
 package minecraftose.client.renderer;
 
-import jpize.io.context.JpizeApplication;
+import jpize.app.JpizeApplication;
 import minecraftose.client.Minecraft;
 import minecraftose.client.renderer.chat.ChatRenderer;
 import minecraftose.client.renderer.hand.FpsHand;
@@ -9,7 +9,7 @@ import minecraftose.client.renderer.infopanel.InfoRenderer;
 import minecraftose.client.renderer.level.LevelRenderer;
 import minecraftose.client.renderer.text.TextComponentBatch;
 
-public class GameRenderer extends JpizeApplication{
+public class GameRenderer extends JpizeApplication {
     
     private final Minecraft minecraft;
     

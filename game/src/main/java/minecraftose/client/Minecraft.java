@@ -1,18 +1,18 @@
 package minecraftose.client;
 
-import jpize.Jpize;
-import jpize.al.listener.AlListener;
+import jpize.app.Jpize;
+import jpize.app.JpizeApplication;
+import jpize.audio.AlDevices;
+import jpize.audio.al.listener.AlListener;
 import jpize.gl.Gl;
-import jpize.graphics.texture.Texture;
-import jpize.io.context.JpizeApplication;
-import jpize.math.Mathc;
-import jpize.math.Maths;
-import jpize.math.vecmath.vector.Vec3f;
-import jpize.physic.utils.Velocity3f;
-import jpize.util.Utils;
-import jpize.util.file.Resource;
+import jpize.gl.texture.Texture2D;
+import jpize.util.math.Mathc;
+import jpize.util.math.Maths;
+import jpize.util.math.vector.Vec3f;
+import jpize.util.res.Resource;
 import jpize.util.time.Sync;
 import jpize.util.time.TickGenerator;
+import jpize.util.time.TimeUtils;
 import minecraftose.Main;
 import minecraftose.client.audio.MusicGroup;
 import minecraftose.client.audio.MusicPlayer;
@@ -42,10 +42,10 @@ import minecraftose.main.block.ChunkBlockData;
 import minecraftose.main.modification.loader.ModEntryPointType;
 import minecraftose.main.modification.loader.ModLoader;
 import minecraftose.main.network.PlayerProfile;
+import minecraftose.main.network.packet.c2s.game.move.C2SPacketMove;
 import minecraftose.main.network.packet.c2s.game.move.C2SPacketMoveAndRot;
 import minecraftose.main.network.packet.c2s.game.move.C2SPacketRot;
 import minecraftose.main.network.packet.c2s.login.C2SPacketLogin;
-import minecraftose.main.network.packet.c2s.game.move.C2SPacketMove;
 import minecraftose.main.time.GameTime;
 import minecraftose.server.IntegratedServer;
 
@@ -80,6 +80,7 @@ public class Minecraft extends JpizeApplication implements Tickable{
     private LevelC level;
     
     public Minecraft(){
+        AlDevices.openDevice();
         // Create Instances //
         Thread.currentThread().setName("Render-Thread");
 
@@ -103,13 +104,12 @@ public class Minecraft extends JpizeApplication implements Tickable{
         this.musicPlayer = new MusicPlayer(this);
 
         this.renderer.init();
-        Resource.external(SharedConstants.GAME_DIR_PATH).mkDirs();
-        Resource.external(SharedConstants.MODS_PATH).mkDirs();
+        Resource.file(SharedConstants.GAME_DIR_PATH).mkdirs();
+        Resource.file(SharedConstants.MODS_PATH).mkdirs();
 
         this.options.load();
 
         this.ticks = new TickGenerator(GameTime.TICKS_PER_SECOND);
-        this.ticks.startAsync(this::tick);
 
         this.connection = new ClientConnection(this);
         
@@ -143,11 +143,17 @@ public class Minecraft extends JpizeApplication implements Tickable{
         ClientBlocks.loadBlocks(this);
 
         // Connect to server //
-        Utils.delayElapsed(1000);
+        TimeUtils.delaySeconds(1F);
         this.connect(address[0], Integer.parseInt(address[1]));
 
         // Music
         this.musicPlayer.setGroup(MusicGroup.GAME);
+    }
+
+
+    @Override
+    public void init() {
+        this.ticks.startAsync(this::tick);
     }
 
     
@@ -176,7 +182,7 @@ public class Minecraft extends JpizeApplication implements Tickable{
 
         // Update audio listener
         if(player.isRotationChanged())
-            AlListener.setOrientation(player.getRotation().getDirection().rotY(180));
+            AlListener.setOrientation(player.getRotation().getDirection(new Vec3f()).rotateY(180));
         if(player.isPositionChanged()){
             AlListener.setPosition(player.getLerpPosition().copy().add(0, player.getEyeHeight(), 0));
             AlListener.setVelocity(player.getVelocity());
@@ -195,11 +201,12 @@ public class Minecraft extends JpizeApplication implements Tickable{
         player.updateInterpolation();
         blockRayCast.update();
         camera.update();
+        musicPlayer.update();
     }
     
     public void createClientLevel(String worldName){
         if(level != null){
-            Jpize.execSync(() ->{
+            Jpize.syncExecutor().exec(() ->{
                 level.getConfiguration().setName(worldName);
                 level.getChunkProvider().removeAllChunks();
             });
@@ -244,14 +251,15 @@ public class Minecraft extends JpizeApplication implements Tickable{
         renderer.dispose();
         gameResources.dispose();
         soundPlayer.dispose();
-        musicPlayer.dispose();
+
+        AlDevices.dispose();
     }
     
     public void disconnect(){
         connection.disconnect();
         
         if(level != null){
-            Jpize.execSync(() -> {
+            Jpize.syncExecutor().exec(() -> {
                 System.out.println(10000);
                 // level.getChunkProvider().dispose(); //: deprecated dispose chunk provider
             });
@@ -349,17 +357,17 @@ public class Minecraft extends JpizeApplication implements Tickable{
             instance.rotation = Maths.random(1, 360);
             instance.lifeTimeSeconds = Maths.random(0.5F, 2F);
             instance.velocity.set(Maths.random(-0.04F, 0.04F), Maths.random(-0.02F, 0.1F), Maths.random(-0.04F, 0.04F));
-            instance.color.set3(0.6, 0.6, 0.6);
+            instance.color.set(0.6, 0.6, 0.6);
         })
-        .texture(new Texture("texture/block/grass_block_side.png"))
+        .texture(new Texture2D("/texture/block/grass_block_side.png"))
         .animate(instance->{
-            instance.velocity.y -= Jpize.getDt() * 0.35F;
+            instance.velocity.y -= Jpize.getDeltaTime() * 0.35F;
             instance.velocity.mul(0.95);
             collide(instance.position, instance.velocity);
             instance.position.add(instance.velocity);
         });
 
-    public void collide(Vec3f position, Velocity3f velocity){
+    public void collide(Vec3f position, Vec3f velocity){
         double x = velocity.x;
         double y = velocity.y;
         if(ChunkBlockData.getID(level.getBlockState(position.xFloor(), position.yFloor() + Mathc.signum(x), position.zFloor())) != 0){

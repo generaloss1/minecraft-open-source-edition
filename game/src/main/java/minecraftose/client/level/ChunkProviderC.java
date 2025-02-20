@@ -306,7 +306,7 @@ public class ChunkProviderC extends ChunkHolder<ChunkC>{
     
     
     public void unloadChunk(ChunkC chunk){
-        Jpize.execSync(() -> chunk.getMeshStack().dispose());
+        Jpize.syncExecutor().exec(() -> chunk.getMeshStack().dispose());
         chunks.removeChunk(chunk.pos());
     }
     

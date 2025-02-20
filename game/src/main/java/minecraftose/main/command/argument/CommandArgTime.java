@@ -1,7 +1,7 @@
 package minecraftose.main.command.argument;
 
-import minecraftose.main.time.TimeUnit;
 import minecraftose.main.command.source.CommandSource;
+import minecraftose.main.time.TimeUnit;
 
 public class CommandArgTime extends CommandArg{
     

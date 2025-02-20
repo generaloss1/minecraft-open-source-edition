@@ -1,6 +1,8 @@
 package jpize.tests.mcose.launcher;
 
-import jpize.net.NetUtils;
+
+import jpize.util.res.FileResource;
+import jpize.util.res.Resource;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -58,10 +60,10 @@ public class McOseClient{
     }
 
     public void downloadJar(){
-        final File jarFile = new File(gameDir + "/" + jarName);
+        final FileResource jarFile = Resource.file(gameDir + "/" + jarName);
         if(!jarFile.exists()){
             System.out.println("Downloading '" + jarName + "'...");
-            NetUtils.downloadToFile(jarUrl, jarFile);
+            jarFile.writeBytes(Resource.url(jarUrl).readBytes());
             System.out.println("Done.");
         }
     }

@@ -1,6 +1,6 @@
 package minecraftose.client.block.vanilla;
 
-import jpize.graphics.util.color.ImmutableColor;
+import jpize.util.color.ImmutableColor;
 import minecraftose.client.block.ClientBlock;
 import minecraftose.client.block.model.BlockModel;
 import minecraftose.client.block.shape.BlockCollide;
