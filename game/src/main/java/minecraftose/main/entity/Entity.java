@@ -163,7 +163,7 @@ public abstract class Entity implements Tickable{
     }
 
     public boolean isOverlapsAt(Vec3f movement){
-        return AABoxCollider.isIntersects(movement, aabb, blockBoxes);
+        return AABoxCollider.intersects(movement, aabb, blockBoxes);
     }
 
 
@@ -171,7 +171,7 @@ public abstract class Entity implements Tickable{
         if(blockBoxes == null)
             return velocity;
 
-        final Vec3f collideMovement = AABoxCollider.getClippedMovement(velocity, aabb, blockBoxes);
+        final Vec3f collideMovement = AABoxCollider.clipMovement(velocity, aabb, blockBoxes);
         position.add(collideMovement);
         return collideMovement;
     }
@@ -181,8 +181,8 @@ public abstract class Entity implements Tickable{
         blockBoxes.clear();
 
         final Vec3f velocity = getVelocity();
-        final Vec3f min = aabb.getMin();
-        final Vec3f max = aabb.getMax();
+        final Vec3f min = aabb.min();
+        final Vec3f max = aabb.max();
 
         final int beginX = Maths.floor(min.x - 1 + Math.min(0, velocity.x));
         final int beginY = Math.max(0, Math.min(ChunkBase.HEIGHT_IDX,

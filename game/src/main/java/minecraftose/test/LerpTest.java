@@ -26,10 +26,12 @@ public class LerpTest extends JpizeApplication implements Tickable {
     TickFloat y = new TickFloat();
     Vec2f velocity = new Vec2f();
 
+    @Override
     public void init(){
         tickGen.startAsync(this);
     }
 
+    @Override
     public void tick(){
         time.tick();
 
@@ -42,8 +44,8 @@ public class LerpTest extends JpizeApplication implements Tickable {
         if(Key.D.pressed()) velocity.x += speed;
         if(MouseBtn.LEFT.pressed()){
             velocity.add(
-                    (Jpize.getX() - x.value()) / 10,
-                    (Jpize.getY() - y.value()) / 10
+                (Jpize.getX() - x.value()) / 10,
+                (Jpize.getY() - y.value()) / 10
             );
         }
 
@@ -69,6 +71,7 @@ public class LerpTest extends JpizeApplication implements Tickable {
         }
     }
 
+    @Override
     public void render(){
         Gl.clearColorBuffer();
         batch.setup();
@@ -80,10 +83,21 @@ public class LerpTest extends JpizeApplication implements Tickable {
         batch.render();
     }
 
+    @Override
     public void update(){
         if(Key.ESCAPE.down())
             Jpize.exit();
-        System.out.println(Jpize.getX());
+    }
+
+    @Override
+    public void dispose() {
+        tickGen.stop();
+    }
+
+
+    public static void main(String[] args) {
+        Jpize.create(1280, 720, "Test").build().setApp(new LerpTest());
+        Jpize.run();
     }
 
 }

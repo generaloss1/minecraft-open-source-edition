@@ -264,11 +264,11 @@ public class GameInput{
             for(AABox box: blockBoxes){
                 blockBox.box().resize(box);
                 
-                if(player.getAABB().intersect(blockBox))
+                if(player.getAABB().overlaps(blockBox))
                     return;
                 
                 for(Entity entity: entities)
-                    if(entity.getAABB().intersect(blockBox))
+                    if(entity.getAABB().overlaps(blockBox))
                         return;
             }
         }

@@ -2,7 +2,6 @@ package minecraftose.client.control.camera;
 
 import jpize.app.Jpize;
 import jpize.util.camera.PerspectiveCamera;
-import jpize.util.math.EulerAngles;
 import jpize.util.math.Mathc;
 import jpize.util.math.Maths;
 import jpize.util.math.vector.Vec2d;
@@ -23,7 +22,6 @@ public class PlayerCamera extends PerspectiveCamera {
     
     private final LocalPlayer player;
     private CameraPerspective perspective;
-    private final EulerAngles angles;
     private float notInterpolatedFov;
     private float zoom;
     private boolean inWater;
@@ -36,7 +34,6 @@ public class PlayerCamera extends PerspectiveCamera {
         this.minecraft = minecraft;
         this.player = minecraft.getPlayer();
 
-        this.angles = new EulerAngles();
         this.zoom = 1F;
         
         this.perspective = CameraPerspective.FIRST_PERSON;
@@ -66,15 +63,14 @@ public class PlayerCamera extends PerspectiveCamera {
 
         // Set pos & rot
         super.position.set(player.getLerpPosition());
-        angles.set(player.getInput().getRotation().getTarget());
-        angles.clampPitch();
+        super.rotation().set(player.getInput().getRotation().getTarget());
 
         // Perspective
         final float thirdCameraDist = 4;
-        if(!perspective.isFirstPerson())
-            super.position.sub(super.getDirection().copy().mul(perspective.isMirrored() ? -thirdCameraDist : thirdCameraDist));
         if(perspective.isMirrored())
-            angles.pitch += 180;
+            super.rotation().yaw += 180;
+        if(!perspective.isFirstPerson())
+            super.position.sub(super.rotation().getDirection(new Vec3f()).copy().mul(thirdCameraDist));
 
         // Eye Height
         eyeHeight += (player.getEyeHeight() - eyeHeight) * deltaTime * 12;
@@ -93,15 +89,15 @@ public class PlayerCamera extends PerspectiveCamera {
         hitDirection.mul(0.8);
         if(hitDirection.len() > 3F)
             hitDirection.nor().mul(3F);
-        final Vec3f hitLocalDirection = hitDirection.copy().rotateY(angles.yaw);
-        angles.pitch -= hitLocalDirection.x * 1.5F;
-        angles.roll -= hitLocalDirection.z * 1.5F;
+        final Vec3f hitLocalDirection = hitDirection.copy().rotateY(super.rotation().yaw);
+        super.rotation().pitch -= hitLocalDirection.x * 1.5F;
+        super.rotation().roll -= hitLocalDirection.z * 1.5F;
 
         // Jumps
         //this.rotation.pitch -= Maths.clamp(player.getVelocity().y / 2, -10, 10);
 
         // View Bobbing
-        bobView(minecraft.getTime().getTickLerpFactor());
+        // bobView(minecraft.getTime().getTickLerpFactor());
 
         // Interpolate FOV
         final float currentFOV = super.getFOV();
@@ -111,8 +107,6 @@ public class PlayerCamera extends PerspectiveCamera {
         // Update is camera in water
         final BlockProps block = level.getBlockProps(position.xFloor(), position.yFloor(), position.zFloor());
         inWater = block.getID() == ClientBlocks.WATER.getID();
-
-        super.rotation().setRotation(-angles.yaw + 90, -angles.pitch, -angles.roll);
     }
 
     private void bobView(float t){
@@ -121,15 +115,15 @@ public class PlayerCamera extends PerspectiveCamera {
 
         final float sin = Mathc.sin(walkDist) * bobbing;
 
-        final Vec2d dx = new Vec2d(sin * 0.5).rotate(-angles.yaw);
+        final Vec2d dx = new Vec2d(sin * 0.5).rotate(-super.rotation().yaw);
         final double dy = -Math.abs(Mathc.cos(walkDist)) * bobbing;
         super.position.add(0, dy, 0).add(dx);
 
         final float rz = sin * 3;
         final float rx = Math.abs(Mathc.cos(walkDist - 0.2)) * bobbing * 5;
 
-        angles.roll += rz;
-        angles.pitch += rx;
+        super.rotation().roll += rz;
+        super.rotation().pitch += rx;
     }
     
     

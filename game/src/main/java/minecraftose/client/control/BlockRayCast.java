@@ -130,7 +130,7 @@ public class BlockRayCast{
                 }else{
                     final BlockCursor shape = block.getCursor();
                     blockMatrix.setTranslate(selectedBlock);
-                    if(Ray3f.intersectQuadMesh(ray, blockMatrix, shape.getVertices(), shape.getQuadIndices())){
+                    if(ray.intersectQuadMesh(blockMatrix, shape.getVertices(), shape.getQuadIndices())){
                         selectedFace = Dir.fromNormal(faceNormal.x, faceNormal.y, faceNormal.z);
                         selectedBlockProps = block;
                         imaginarySelectedBlock.set(selectedBlock).add(selectedFace.getNormal());

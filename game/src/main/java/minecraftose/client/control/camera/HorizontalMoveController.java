@@ -8,8 +8,8 @@ import minecraftose.client.options.Options;
 
 public class HorizontalMoveController {
 
-    private static final Vec3f FORWARD = new Vec3f(0, 0, 1);
-    private static final Vec3f LEFT = new Vec3f(-1, 0, 0);
+    private static final Vec3f FORWARD = new Vec3f(1, 0, 0);
+    private static final Vec3f LEFT = new Vec3f(0, 0, 1);
     
     private final PlayerInput playerController;
     private final Vec3f motion;
