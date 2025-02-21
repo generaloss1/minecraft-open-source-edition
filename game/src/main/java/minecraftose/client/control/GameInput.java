@@ -42,6 +42,7 @@ public class GameInput{
     
     private final Minecraft minecraft;
     private boolean f3Plus;
+    private ClientBlock selectedBlock = ClientBlocks.GRASS_BLOCK;
     
     public GameInput(Minecraft minecraft){
         this.minecraft = minecraft;
@@ -206,11 +207,12 @@ public class GameInput{
             }else if(MouseBtn.RIGHT.down() || Key.J.pressed()){
                 final Item item = player.getInventory().getSelectedItemStack().getItem();
                 if(item instanceof BlockItem blockItem)
-                    placeBlock(ClientBlocks.COBBLESTONE); // blockItem.getBlock()
+                    placeBlock(selectedBlock); // blockItem.getBlock()
             }else if(MouseBtn.MIDDLE.down()){
                 final Vec3i blockPos = blockRayCast.getSelectedBlockPosition();
 
                 final BlockProps blockProps = level.getBlockProps(blockPos.x, blockPos.y, blockPos.z);
+                selectedBlock = blockProps.getBlock();
                 final Item item = Items.COBBLESTONE; // Registry.block_item.get(blockProps.getBlock())
 
                 if(item != null){
