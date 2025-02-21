@@ -182,7 +182,7 @@ public class Minecraft extends JpizeApplication implements Tickable{
 
         // Update audio listener
         if(player.isRotationChanged())
-            AlListener.setOrientation(player.getRotation().getDirection(new Vec3f()).rotateY(180));
+            AlListener.setOrientation(player.getRotation().getDirection().rotateY(180));
         if(player.isPositionChanged()){
             AlListener.setPosition(player.getLerpPosition().copy().add(0, player.getEyeHeight(), 0));
             AlListener.setVelocity(player.getVelocity());

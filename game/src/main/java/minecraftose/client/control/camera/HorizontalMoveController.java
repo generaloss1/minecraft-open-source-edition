@@ -24,7 +24,7 @@ public class HorizontalMoveController {
         
         final Minecraft minecraft = playerController.getPlayer().getMinecraft();
         final Options options = minecraft.getOptions();
-        final Vec3f forward = minecraft.getPlayer().getRotation().getDirectionHorizontal(new Vec3f());
+        final Vec3f forward = minecraft.getPlayer().getRotation().getDirectionHorizontal();
         final Vec3f left = forward.copy().rotateY(90);
 
         if(options.getKey(KeyMapping.FORWARD).pressed()) motion.add(forward);

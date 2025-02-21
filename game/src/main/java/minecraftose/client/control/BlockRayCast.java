@@ -61,7 +61,7 @@ public class BlockRayCast{
         
         // Update ray
         final LocalPlayer player = minecraft.getPlayer();
-        ray.direction().set(player.getRotation().getDirection(new Vec3f()));
+        ray.direction().set(player.getRotation().getDirection());
         ray.origin().set(player.getLerpPosition().copy().add(0, player.getEyeHeight(), 0));
         
         // Get pos, dir, len

@@ -116,7 +116,7 @@ public class PlayerModel extends HumanoidModel{
         final Options options = minecraft.getOptions();
         final PlayerCamera camera = minecraft.getCamera();
         if(options.isFirstPersonModel() && camera.getPerspective().isFirstPerson()){
-            final Vec3f offset = player.getRotation().getDirectionHorizontal(new Vec3f()).mul(-4 * w);
+            final Vec3f offset = player.getRotation().getDirectionHorizontal().mul(-4 * w);
             torso.getPosition().add(offset);
             head.setShow(false);
         }else

@@ -70,7 +70,7 @@ public class PlayerCamera extends PerspectiveCamera {
         if(perspective.isMirrored())
             super.rotation().yaw += 180;
         if(!perspective.isFirstPerson())
-            super.position.sub(super.rotation().getDirection(new Vec3f()).copy().mul(thirdCameraDist));
+            super.position.sub(super.rotation().getDirection().copy().mul(thirdCameraDist));
 
         // Eye Height
         eyeHeight += (player.getEyeHeight() - eyeHeight) * deltaTime * 12;
